@@ -4,9 +4,9 @@ import LandingIntro from './LandingIntro'
 import ErrorText from '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
 import {login} from "../../auth/jwtService";
+import {NotificationManager} from "react-notifications";
 
 function Login() {
-	
 	const navigate = useNavigate()
 	
 	const [loading, setLoading] = useState(false)
@@ -28,6 +28,7 @@ function Login() {
 				.then(() => {
 					setTimeout(() => {
 						navigate("/app/dashboard");
+						NotificationManager.success('Muvaffaqiyatli kirildi!', 'Success');
 					}, 200);
 				})
 				.catch((err) => {
