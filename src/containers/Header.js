@@ -11,6 +11,7 @@ import {RIGHT_DRAWER_TYPES} from '../utils/globalConstantUtil'
 import {Link} from 'react-router-dom'
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import {UserCircleIcon} from "@heroicons/react/20/solid";
+import {logout} from "../auth/jwtService";
 
 function Header() {
 	
@@ -39,6 +40,7 @@ function Header() {
 	
 	function logoutUser() {
 		localStorage.clear();
+		logout()
 		window.location.href = '/'
 	}
 	

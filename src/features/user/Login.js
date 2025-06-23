@@ -27,7 +27,7 @@ function Login() {
 			login(loginObj)
 				.then(() => {
 					setTimeout(() => {
-						navigate("/main");
+						navigate("/app/dashboard");
 					}, 200);
 				})
 				.catch((err) => {
