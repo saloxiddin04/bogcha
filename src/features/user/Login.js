@@ -1,32 +1,40 @@
 import {useState} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import LandingIntro from './LandingIntro'
 import ErrorText from '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
+import {login} from "../../auth/jwtService";
 
 function Login() {
 	
-	const INITIAL_LOGIN_OBJ = {
-		password: "",
-		emailId: ""
-	}
+	const navigate = useNavigate()
 	
 	const [loading, setLoading] = useState(false)
 	const [errorMessage, setErrorMessage] = useState("")
-	const [loginObj, setLoginObj] = useState(INITIAL_LOGIN_OBJ)
+	const [loginObj, setLoginObj] = useState({
+		password: "",
+		email: ""
+	})
 	
 	const submitForm = (e) => {
 		e.preventDefault()
 		setErrorMessage("")
 		
-		if (loginObj.emailId.trim() === "") return setErrorMessage("Email Id is required! (use any value)")
+		if (loginObj.email.trim() === "") return setErrorMessage("Email Id is required! (use any value)")
 		if (loginObj.password.trim() === "") return setErrorMessage("Password is required! (use any value)")
 		else {
 			setLoading(true)
+			login(loginObj)
+				.then(() => {
+					setTimeout(() => {
+						navigate("/main");
+					}, 200);
+				})
+				.catch((err) => {
+					setErrorMessage(err.response.data.detail || err.message);
+				});
 			// Call API to check user credentials and save token in localstorage
-			localStorage.setItem("token", "DumyTokenHere")
 			setLoading(false)
-			window.location.href = '/app/welcome'
 		}
 	}
 	
@@ -50,8 +58,8 @@ function Login() {
 								
 								<InputText
 									type="mail"
-									defaultValue={loginObj.emailId}
-									updateType="emailId"
+									defaultValue={loginObj.email}
+									updateType="email"
 									containerStyle="mt-4"
 									labelTitle="Email"
 									updateFormValue={updateFormValue}
