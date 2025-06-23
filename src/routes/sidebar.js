@@ -13,6 +13,7 @@ import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
 import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
 import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
 import UserGroupIcon from "@heroicons/react/24/outline/UserGroupIcon";
+import {RectangleGroupIcon, UserCircleIcon} from "@heroicons/react/20/solid";
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -53,6 +54,19 @@ const routes = [
     path: '/app/calendar', // url
     icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
     name: 'Calendar', // name that appear in Sidebar
+  },
+  
+  {
+    path: '', //no url needed as this has submenu
+    icon: <RectangleGroupIcon className={`${iconClasses} inline`}/>, // icon component
+    name: 'Groups', // name that appear in Sidebar
+    submenu: [
+      {
+        path: '/app/groups',
+        icon: <UsersIcon className={submenuIconClasses}/>,
+        name: 'Groups',
+      },
+    ]
   },
 
   {
