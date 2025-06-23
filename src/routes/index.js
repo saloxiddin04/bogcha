@@ -14,7 +14,7 @@ const Team = lazy(() => import('../pages/protected/Team'))
 const Transactions = lazy(() => import('../pages/protected/Transactions'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
-
+const Users = lazy(() => import("../pages/protected/Users"))
 
 const routes = [
   {
@@ -28,6 +28,10 @@ const routes = [
   {
     path: '/leads',
     component: Leads,
+  },
+  {
+    path: "/users",
+    component: Users
   },
   {
     path: '/settings-team',
