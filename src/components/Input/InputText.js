@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useEffect, useState} from "react"
 
 
 function InputText({
@@ -14,6 +14,10 @@ function InputText({
 	
 	const [value, setValue] = useState(defaultValue)
 	
+	useEffect(() => {
+		setValue(defaultValue)
+	}, [defaultValue])
+	
 	const updateInputValue = (val) => {
 		setValue(val)
 		updateFormValue({updateType, value: val})
@@ -24,8 +28,23 @@ function InputText({
 			<label className="label">
 				<span className={"label-text text-base-content " + labelStyle}>{labelTitle}</span>
 			</label>
-			<input type={type || "text"} value={value} placeholder={placeholder || ""}
-			       onChange={(e) => updateInputValue(e.target.value)} className="input  input-bordered w-full "/>
+			{type === "checkbox" ? (
+				<input
+					type={"checkbox"}
+					checked={value}
+					onChange={(e) => updateInputValue(e.target.checked)}
+					placeholder={placeholder || ""}
+					className="checkbox checkbox-primary"
+				/>
+			) : (
+				<input
+					type={type || "text"}
+					value={value}
+					placeholder={placeholder || ""}
+					onChange={(e) => updateInputValue(e.target.value)}
+					className="input input-bordered w-full"
+				/>
+			)}
 		</div>
 	)
 }

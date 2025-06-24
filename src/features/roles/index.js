@@ -1,8 +1,7 @@
 import React from 'react';
-import moment from "moment";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import TitleCard from "../../components/Cards/TitleCard";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 import {PencilIcon} from "@heroicons/react/20/solid";
@@ -24,7 +23,6 @@ const TopSideButtons = () => {
 }
 
 const Roles = () => {
-	const {leads} = useSelector(state => state.lead)
 	
 	return (
 		<div>

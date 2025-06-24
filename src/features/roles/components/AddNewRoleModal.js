@@ -7,14 +7,14 @@ import {showNotification} from "../../common/headerSlice"
 function AddNewRoleModal({closeModal}) {
 	const dispatch = useDispatch()
 	const [errorMessage, setErrorMessage] = useState("")
-	const [leadObj, setLeadObj] = useState({
+	const [roleObj, setRoleObj] = useState({
 		name: "",
 		is_active: false
 	})
 	
 	
 	const saveNewLead = () => {
-		if (leadObj.name.trim() === "") return setErrorMessage("Name is required!")
+		if (roleObj.name.trim() === "") return setErrorMessage("Name is required!")
 		else {
 			dispatch(showNotification({message: "New Role Added!", status: 1}))
 			closeModal()
@@ -23,16 +23,16 @@ function AddNewRoleModal({closeModal}) {
 	
 	const updateFormValue = ({updateType, value}) => {
 		setErrorMessage("")
-		setLeadObj({...leadObj, [updateType]: value})
+		setRoleObj({...roleObj, [updateType]: value})
 	}
 	
 	return (
 		<>
 			
-			<InputText type="text" defaultValue={leadObj.name} updateType="first_name" containerStyle="mt-4"
+			<InputText type="text" defaultValue={roleObj.name} updateType="name" containerStyle="mt-4"
 			           labelTitle="Name" updateFormValue={updateFormValue}/>
 			
-			<InputText type="checkbox" defaultValue={leadObj.is_active} updateType="is_active" containerStyle="mt-4"
+			<InputText type="checkbox" defaultValue={roleObj.is_active} updateType="is_active" containerStyle="mt-4"
 			           labelTitle="Status" updateFormValue={updateFormValue}/>
 			
 			
