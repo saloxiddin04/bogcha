@@ -5,6 +5,7 @@ import {closeModal} from '../features/common/modalSlice'
 import AddLeadModalBody from '../features/leads/components/AddLeadModalBody'
 import ConfirmationModalBody from '../features/common/components/ConfirmationModalBody'
 import AddUserModalBody from "../features/users/components/AddUserModalBody";
+import AddNewRoleModal from "../features/roles/components/AddNewRoleModal";
 
 
 function ModalLayout() {
@@ -34,6 +35,7 @@ function ModalLayout() {
 						{
 							[MODAL_BODY_TYPES.LEAD_ADD_NEW]: <AddLeadModalBody closeModal={close} extraObject={extraObject}/>,
 							[MODAL_BODY_TYPES.USER_ADD_NEW]: <AddUserModalBody closeModal={close} extraObject={extraObject}/>,
+							[MODAL_BODY_TYPES.ROLE_ADD_NEW]: <AddNewRoleModal closeModal={close} extraObject={extraObject}/>,
 							[MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close}/>,
 							[MODAL_BODY_TYPES.DEFAULT]: <div></div>
 						}[bodyType]

@@ -16,6 +16,7 @@ const Bills = lazy(() => import('../pages/protected/Bills'))
 const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const Users = lazy(() => import("../pages/protected/Users"))
 const Groups = lazy(() => import("../pages/protected/Groups"))
+const Roles = lazy(() => import("../pages/protected/Roles"))
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: "/groups",
     component: Groups
   },
+  {
+    path: "/roles",
+    component: Roles
+  },
+  
   {
     path: '/settings-team',
     component: Team,
