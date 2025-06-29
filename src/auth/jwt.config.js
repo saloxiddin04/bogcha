@@ -1,4 +1,5 @@
 // Endpoints here
+// export const loginEndpoint = "/api/v1/users/login/";
 export const loginEndpoint = "/users/login/";
 export const registerEndpoint = "/users/register/";
 export const verifyEndpoint = "/users/users/verify_sms_code/";

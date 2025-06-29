@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import moment from "moment/moment";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import TitleCard from "../../components/Cards/TitleCard";
 import {useDispatch, useSelector} from "react-redux";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
+import {PencilIcon} from "@heroicons/react/20/solid";
+import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
+import Pagination from "../../components/Pagination";
+import {useNavigate} from "react-router-dom";
 
 const TopSideButtons = () => {
 	
@@ -22,60 +26,108 @@ const TopSideButtons = () => {
 }
 
 const Users = () => {
-	const {leads} = useSelector(state => state.lead)
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+	const {users} = useSelector(state => state.users)
+	
+	const [currentPage, setCurrentPage] = useState(1);
 	
 	return (
 		<>
 			<TitleCard title="Current Users" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				
-				{/* Leads List in table format loaded from slice after api call */}
 				<div className="overflow-x-auto w-full">
 					<table className="table w-full">
 						<thead>
-						<tr>
-							<th>Name</th>
-							<th>Email Id</th>
-							<th>Created At</th>
-							<th>Status</th>
-							<th>Assigned To</th>
-							<th></th>
+						<tr className="text-center">
+							<th>ID</th>
+							<th>First name</th>
+							<th>Last name</th>
+							<th>Phone number</th>
+							<th>Roles</th>
+							<th>Is active</th>
+							<th>Birthday</th>
+							<th>Actions</th>
 						</tr>
 						</thead>
 						<tbody>
 						{
-							leads.map((l, k) => {
+							users?.map((l, k) => {
 								return (
 									<tr key={k}>
 										<td>
-											<div className="flex items-center space-x-3">
-												<div className="avatar">
-													<div className="mask mask-squircle w-12 h-12">
-														<img src={l.avatar} alt="Avatar"/>
-													</div>
-												</div>
-												<div>
-													<div className="font-bold">{l.first_name}</div>
-													<div className="text-sm opacity-50">{l.last_name}</div>
-												</div>
-											</div>
+											ID
 										</td>
-										<td>{l.email}</td>
-										<td>{moment(new Date()).add(-5 * (k + 2), 'days').format("DD MMM YY")}</td>
-										<td>test</td>
-										<td>{l.last_name}</td>
+										<td>
+											First name
+										</td>
+										<td>Last name</td>
+										<td>Phone number</td>
+										<td>Roles</td>
+										<td>Is active</td>
+										<td>Birth day</td>
 										<td>
 											<button
 												className="btn btn-square btn-ghost"
-												onClick={() => console.log("remove")}><TrashIcon className="w-5"
-											/>
+												onClick={() => console.log("remove")}
+											>
+												<TrashIcon className="w-5"
+												/>
+											</button>
+											<button
+												className="btn btn-square btn-ghost"
+												onClick={() => console.log("remove")}
+											>
+												<PencilIcon className="w-5"
+												/>
 											</button>
 										</td>
 									</tr>
 								)
 							})
 						}
+						
+						<tr className="text-center">
+							<td>
+								ID
+							</td>
+							<td>
+								First name
+							</td>
+							<td>Last name</td>
+							<td>Phone number</td>
+							<td>Roles</td>
+							<td>Is active</td>
+							<td>Birth day</td>
+							<td className="flex gap-1 justify-center">
+								<button
+									className="btn btn-square btn-error text-white"
+									onClick={() => console.log("remove")}
+								>
+									<TrashIcon className="w-5"/>
+								</button>
+								<button
+									className="btn btn-square btn-warning text-white"
+									onClick={() => console.log("remove")}
+								>
+									<PencilIcon className="w-5"/>
+								</button>
+								<button
+									className="btn btn-square btn-success text-white"
+									onClick={() => console.log("remove")}
+								>
+									<ChevronRightIcon className="w-5"/>
+								</button>
+							</td>
+						</tr>
 						</tbody>
 					</table>
+					
+					<Pagination
+						currentPage={1}
+						totalPages={10}
+						onPageChange={setCurrentPage}
+					/>
 				</div>
 			</TitleCard>
 		</>
