@@ -5,7 +5,7 @@ import TitleCard from "../../../components/Cards/TitleCard"
 import { showNotification } from '../../common/headerSlice'
 import InputText from '../../../components/Input/InputText'
 import TextAreaInput from '../../../components/Input/TextAreaInput'
-import ToogleInput from '../../../components/Input/ToogleInput'
+import ToogleInput from '../../../components/Input/ToggleInput'
 
 function ProfileSettings(){
 

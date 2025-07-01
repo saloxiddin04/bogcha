@@ -30,7 +30,6 @@ const TopSideButtons = () => {
 
 const Users = () => {
 	const dispatch = useDispatch()
-	const navigate = useNavigate()
 	const {users, loading} = useSelector(state => state.users)
 	
 	useEffect(() => {

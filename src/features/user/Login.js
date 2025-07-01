@@ -34,7 +34,6 @@ function Login() {
 				.catch((err) => {
 					setErrorMessage(err.response.data.detail || err.message);
 				});
-			// Call API to check user credentials and save token in localstorage
 			setLoading(false)
 		}
 	}

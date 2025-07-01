@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 
-function ToogleInput({labelTitle, labelStyle, type, containerStyle, defaultValue, placeholder, updateFormValue, updateType}){
+function ToggleInput({labelTitle, labelStyle, type, containerStyle, defaultValue, placeholder, updateFormValue, updateType}){
 
     const [value, setValue] = useState(defaultValue)
 
@@ -21,4 +21,4 @@ function ToogleInput({labelTitle, labelStyle, type, containerStyle, defaultValue
 }
 
 
-export default ToogleInput
+export default ToggleInput
