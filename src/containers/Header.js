@@ -46,8 +46,6 @@ function Header() {
 		})
 	}
 	
-	console.log(getUserData())
-	
 	return (
 		// navbar fixed  flex-none justify-between bg-base-300  z-10 shadow-md
 		

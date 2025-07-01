@@ -13,8 +13,6 @@ export const leadsSlice = createSlice({
 		leads: []
 	},
 	reducers: {
-		
-		
 		addNewLead: (state, action) => {
 			let {newLeadObj} = action.payload
 			state.leads = [...state.leads, newLeadObj]
@@ -25,18 +23,18 @@ export const leadsSlice = createSlice({
 			state.leads.splice(index, 1)
 		}
 	},
-	
-	extraReducers: {
-		[getLeadsContent.pending]: state => {
-			state.isLoading = true
-		},
-		[getLeadsContent.fulfilled]: (state, action) => {
-			state.leads = action.payload.data
-			state.isLoading = false
-		},
-		[getLeadsContent.rejected]: state => {
-			state.isLoading = false
-		},
+	extraReducers: builder => {
+		builder
+			.addCase(getLeadsContent.pending, (state) => {
+				state.isLoading = true
+			})
+			.addCase(getLeadsContent.fulfilled, (state, {payload}) => {
+				state.leads = payload
+				state.isLoading = false
+			})
+			.addCase(getLeadsContent.rejected, (state) => {
+				state.isLoading = true
+			})
 	}
 })
 
