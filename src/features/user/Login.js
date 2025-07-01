@@ -13,14 +13,14 @@ function Login() {
 	const [errorMessage, setErrorMessage] = useState("")
 	const [loginObj, setLoginObj] = useState({
 		password: "",
-		email: ""
+		phone_number: ""
 	})
 	
 	const submitForm = (e) => {
 		e.preventDefault()
 		setErrorMessage("")
 		
-		if (loginObj.email.trim() === "") return setErrorMessage("Email Id is required! (use any value)")
+		if (loginObj.phone_number.trim() === "") return setErrorMessage("Email Id is required! (use any value)")
 		if (loginObj.password.trim() === "") return setErrorMessage("Password is required! (use any value)")
 		else {
 			setLoading(true)
@@ -58,11 +58,11 @@ function Login() {
 							<div className="mb-4">
 								
 								<InputText
-									type="mail"
-									defaultValue={loginObj.email}
-									updateType="email"
+									type="text"
+									defaultValue={loginObj.phone_number}
+									updateType="phone_number"
 									containerStyle="mt-4"
-									labelTitle="Email"
+									labelTitle="Phone number"
 									updateFormValue={updateFormValue}
 								/>
 								

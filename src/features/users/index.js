@@ -32,6 +32,10 @@ const Users = () => {
 	
 	const [currentPage, setCurrentPage] = useState(1);
 	
+	const handlePageChange = (page) => {
+		setCurrentPage(page);
+	};
+	
 	return (
 		<>
 			<TitleCard title="Current Users" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>

@@ -11,7 +11,7 @@ import {RIGHT_DRAWER_TYPES} from '../utils/globalConstantUtil'
 import {Link} from 'react-router-dom'
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import {UserCircleIcon} from "@heroicons/react/20/solid";
-import {logout} from "../auth/jwtService";
+import {getRefreshToken, getUserData, logout} from "../auth/jwtService";
 
 function Header() {
 	
@@ -39,10 +39,14 @@ function Header() {
 	
 	
 	function logoutUser() {
+		const refresh = getRefreshToken()
 		localStorage.clear();
-		logout()
-		window.location.href = '/'
+		logout({refresh}).then(() => {
+			window.location.href = '/'
+		})
 	}
+	
+	console.log(getUserData())
 	
 	return (
 		// navbar fixed  flex-none justify-between bg-base-300  z-10 shadow-md
@@ -95,9 +99,10 @@ function Header() {
 					
 					{/* Profile icon, opening menu on click */}
 					<div className="dropdown dropdown-end ml-4">
-						<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+						<label tabIndex={0} className="flex gap-2 items-center w-full btn btn-ghost btn-circle avatar">
+							<h1>{getUserData()?.full_name}</h1>
 							<div className="w-10 rounded-full">
-								<UserCircleIcon />
+								<UserCircleIcon/>
 								{/*<img src="https://placeimg.com/80/80/people" alt="profile"/>*/}
 							</div>
 						</label>

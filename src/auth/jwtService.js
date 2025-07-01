@@ -1,7 +1,7 @@
 import $axios from "../plugins/axios";
 import {
 	forgotPasswordEndpoint,
-	loginEndpoint, passwordChangeEndpoint,
+	loginEndpoint, logoutEndpoint, passwordChangeEndpoint,
 	refreshEndpoint,
 	refreshTokenKeyName,
 	registerEndpoint,
@@ -13,14 +13,16 @@ export function login(...args) {
 	return $axios.post(loginEndpoint, ...args).then((res) => {
 		setAccessToken(res.data.access);
 		setRefreshToken(res.data.refresh);
-		setUserData(res.data.data);
+		parseJwt(res?.data?.access)
 	});
 }
 
-export function logout() {
-	document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-	document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-	document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+export function logout(...args) {
+	return $axios.post(logoutEndpoint, ...args).then(() => {
+		document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	})
 	// localStorage.clear()
 	// window.location.reload();
 }
@@ -57,6 +59,16 @@ export function getRefreshToken() {
 	return getCookie(refreshTokenKeyName);
 }
 
+export function parseJwt(token) {
+	const base64Url = token.split('.')[1];
+	const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+	const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+		return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+	}).join(''));
+	setUserData(JSON.parse(jsonPayload))
+	return JSON.parse(jsonPayload);
+}
+
 export function setUserData(value) {
 	setCookie(userKeyName, JSON.stringify(value), 7);
 }
@@ -82,7 +94,7 @@ export function setCookie(name, value, expirationDays) {
 	document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
-function getCookie(name) {
+export function getCookie(name) {
 	const cookieString = document.cookie;
 	const cookieArray = cookieString.split("; ");
 	for (const cookie of cookieArray) {
