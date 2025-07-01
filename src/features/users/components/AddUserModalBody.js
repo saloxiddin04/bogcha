@@ -56,10 +56,13 @@ const AddUserModalBody = ({closeModal}) => {
 		if (userObj.roles.length === 0) return setErrorMessage("Role is required!")
 		else {
 			dispatch(createUser(userObj)).then(({payload}) => {
-				console.log("payload", payload)
+				if (payload?.status_code === 200) {
+					dispatch(showNotification({message: "New User Added!", status: 1}))
+					closeModal()
+				} else {
+					dispatch(showNotification({status: 0}))
+				}
 			})
-			dispatch(showNotification({message: "New Role Added!", status: 1}))
-			closeModal()
 		}
 	}
 	
@@ -92,6 +95,13 @@ const AddUserModalBody = ({closeModal}) => {
 				defaultValue={userObj.phone_number}
 				updateType="phone_number"
 				labelTitle="Phone number"
+				updateFormValue={updateFormValue}
+			/>
+			<InputText
+				type="date"
+				defaultValue={userObj.birth_day}
+				updateType="birth_day"
+				labelTitle="Birth day"
 				updateFormValue={updateFormValue}
 			/>
 			<SelectBox
