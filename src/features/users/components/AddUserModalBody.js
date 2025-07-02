@@ -8,6 +8,7 @@ import {getRoles} from "../../roles/rolesSlice";
 import {showNotification} from "../../common/headerSlice";
 import {clearUserDetail, createUser, getUser, updateUser} from "../usersSlice";
 import Loader from "../../../containers/Loader";
+import FileUploadInput from "../../../components/Input/FileUploadInput";
 
 const AddUserModalBody = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
@@ -25,6 +26,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		phone_number: "",
 		roles: [],
 		birth_day: "",
+		profile_picture: "",
 		status: false
 	};
 	
@@ -35,6 +37,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		phone_number: "",
 		roles: [],
 		birth_day: "",
+		profile_picture: "",
 		status: false
 	});
 	
@@ -48,6 +51,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 						password: undefined,
 						phone_number: payload?.phone_number ?? "",
 						birth_day: payload?.birth_day ?? "",
+						profile_picture: payload?.profile_picture ?? "",
 						status: payload?.is_active ?? false,
 						roles: payload?.roles?.map(role => Number(role.id)) ?? [],
 					});
@@ -94,8 +98,22 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		if (userObj.birth_day.trim() === "") return setErrorMessage("Birth day is required!");
 		if (userObj.roles.length === 0) return setErrorMessage("Role is required!");
 		
+		const formData = new FormData()
+		formData.append("first_name", userObj?.first_name)
+		formData.append("last_name", userObj?.last_name)
+		formData.append("phone_number", userObj?.phone_number)
+		if (!isEditMode) {
+			formData.append("password", userObj?.password)
+		}
+		formData.append("birth_day", userObj?.birth_day)
+		userObj?.roles?.forEach(role => {
+			formData.append("roles", Number(role));
+		});
+		formData.append("profile_picture", userObj.profile_picture)
+		formData.append("status", userObj.status)
+		
 		const action = isEditMode ? updateUser : createUser;
-		const params = isEditMode ? {id: extraObject?.userId, data: userObj} : userObj
+		const params = isEditMode ? {id: extraObject?.userId, data: formData} : formData
 		
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 200) {
@@ -109,6 +127,13 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				dispatch(showNotification({status: 0}));
 			}
 		});
+	};
+	
+	const handleUpdate = ({updateType, value}) => {
+		setUserObj(prev => ({
+			...prev,
+			[updateType]: value
+		}));
 	};
 	
 	if (loading || loaderRole) return <Loader/>
@@ -152,6 +177,14 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				updateType="birth_day"
 				labelTitle="Birth day"
 				updateFormValue={updateFormValue}
+			/>
+			<FileUploadInput
+				labelTitle="Fayl yuklang"
+				updateType="profile_picture"
+				updateFormValue={handleUpdate}
+				multiple={false}
+				accept=".pdf,.jpg,.png"
+				containerStyle="mt-4"
 			/>
 			<SelectBox
 				options={roleOptions}
