@@ -1,19 +1,11 @@
 /** Icons are imported separatly to reduce build time */
-import BellIcon from '@heroicons/react/24/outline/BellIcon'
 import Squares2X2Icon from '@heroicons/react/24/outline/Squares2X2Icon'
-import WalletIcon from '@heroicons/react/24/outline/WalletIcon'
-import DocumentIcon from '@heroicons/react/24/outline/DocumentIcon'
-import ExclamationTriangleIcon from '@heroicons/react/24/outline/ExclamationTriangleIcon'
 import CalendarDaysIcon from '@heroicons/react/24/outline/CalendarDaysIcon'
-import ArrowRightOnRectangleIcon from '@heroicons/react/24/outline/ArrowRightOnRectangleIcon'
-import UserIcon from '@heroicons/react/24/outline/UserIcon'
 import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
 import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
-import KeyIcon from '@heroicons/react/24/outline/KeyIcon'
-import DocumentDuplicateIcon from '@heroicons/react/24/outline/DocumentDuplicateIcon'
 import UserGroupIcon from "@heroicons/react/24/outline/UserGroupIcon";
-import {RectangleGroupIcon, UserCircleIcon} from "@heroicons/react/20/solid";
+import {RectangleGroupIcon} from "@heroicons/react/20/solid";
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
