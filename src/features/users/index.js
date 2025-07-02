@@ -62,18 +62,19 @@ const Users = () => {
 			}
 		}))
 	}
-		
-		
-		return (
+	
+	
+	return (
 		<>
 			<TitleCard title="Current Users" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				
 				<div className="overflow-x-auto w-full">
-					{loading ? <Loader /> : (
+					{loading ? <Loader/> : (
 						<table className="table w-full">
 							<thead>
 							<tr className="text-center">
 								<th>ID</th>
+								<th>Picture</th>
 								<th>First name</th>
 								<th>Last name</th>
 								<th>Phone number</th>
@@ -90,6 +91,9 @@ const Users = () => {
 									<tr key={item?.id} className="text-center">
 										<td>
 											{item?.id}
+										</td>
+										<td>
+											<img className="rounded-full w-full h-12 object-contain" src={item?.profile_picture} alt=""/>
 										</td>
 										<td>
 											{item?.first_name}
