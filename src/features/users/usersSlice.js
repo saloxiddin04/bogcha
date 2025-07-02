@@ -23,7 +23,7 @@ export const getUser = createAsyncThunk(
 	"users/getUser",
 	async (params, thunkAPI) => {
 		try {
-			const response = await instance.get(`/users/user/${params}/`)
+			const response = await instance.get(`/users/${params}/`)
 			return response.data?.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)
@@ -57,9 +57,27 @@ export const deleteUser = createAsyncThunk(
 	}
 )
 
+export const updateUser = createAsyncThunk(
+	"users/updateUser",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.patch(`/users/${params?.id}/`, params?.data);
+			await thunkAPI.dispatch(getUsers({ page_size: 10, page: 1 }));
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
 const usersSlice = createSlice({
 	name: "users",
 	initialState,
+	reducers: {
+		clearUserDetail: (state) => {
+			state.user = null;
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(getUsers.pending, (state) => {
@@ -86,6 +104,18 @@ const usersSlice = createSlice({
 				state.loading = false
 			})
 		
+		// updateUser
+		builder
+			.addCase(updateUser.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(updateUser.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(updateUser.rejected, (state) => {
+				state.loading = false
+			})
+		
 		// createUser
 		builder
 			.addCase(createUser.pending, (state) => {
@@ -104,8 +134,8 @@ const usersSlice = createSlice({
 				state.loading = true
 			})
 			.addCase(getUser.fulfilled, (state, {payload}) => {
-				state.user = payload
 				state.loading = false
+				state.user = payload
 			})
 			.addCase(getUser.rejected, (state) => {
 				state.loading = false
@@ -113,4 +143,5 @@ const usersSlice = createSlice({
 	}
 })
 
+export const {clearUserDetail} = usersSlice.actions
 export default usersSlice.reducer

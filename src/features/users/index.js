@@ -1,15 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import moment from "moment/moment";
+import React, {useEffect} from 'react';
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import TitleCard from "../../components/Cards/TitleCard";
 import {useDispatch, useSelector} from "react-redux";
 import {openModal} from "../common/modalSlice";
-import {CONFIRMATION_MODAL_CLOSE_TYPES, MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
+import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 import {PencilIcon} from "@heroicons/react/20/solid";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import Pagination from "../../components/Pagination";
-import {useNavigate} from "react-router-dom";
-import {deleteUser, getUsers} from "./usersSlice";
+import {getUsers} from "./usersSlice";
 import Loader from "../../containers/Loader";
 
 const TopSideButtons = () => {
@@ -53,7 +51,20 @@ const Users = () => {
 		}));
 	};
 	
-	return (
+	const openAddNewUserModal = (userId) => {
+		dispatch(openModal({
+			title: "Edit User",
+			bodyType: MODAL_BODY_TYPES.USER_ADD_NEW,
+			extraObject: {
+				notification: 'Successfully edited!',
+				userId,
+				is_edit: true
+			}
+		}))
+	}
+		
+		
+		return (
 		<>
 			<TitleCard title="Current Users" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				
@@ -97,13 +108,13 @@ const Users = () => {
 											</button>
 											<button
 												className="btn btn-square btn-warning text-white"
-												onClick={() => console.log("remove")}
+												onClick={() => openAddNewUserModal(item?.id)}
 											>
 												<PencilIcon className="w-5"/>
 											</button>
 											<button
 												className="btn btn-square btn-success text-white"
-												onClick={() => console.log("remove")}
+												onClick={() => openAddNewUserModal(item?.id)}
 											>
 												<ChevronRightIcon className="w-5"/>
 											</button>
