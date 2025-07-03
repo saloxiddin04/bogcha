@@ -19,6 +19,45 @@ export const getRoles = createAsyncThunk(
 	}
 )
 
+export const createRole = createAsyncThunk(
+	"roles/createRole",
+	async (payload, thunkAPI) => {
+		try {
+			const response = await instance.post("/users/role_create/", payload)
+			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
+			return response.data?.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
+export const updateRole = createAsyncThunk(
+	"roles/updateRole",
+	async (payload, thunkAPI) => {
+		try {
+			const response = await instance.patch(`/users/role_create/${payload?.id}/`, payload?.data)
+			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
+			return response.data?.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
+export const deleteRole = createAsyncThunk(
+	"roles/deleteRole",
+	async (payload, thunkAPI) => {
+		try {
+			const response = await instance.delete(`/users/role_delete/${payload}/`)
+			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
+			return response
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
 const rolesSlice = createSlice({
 	name: "roles",
 	initialState,
@@ -32,6 +71,42 @@ const rolesSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getRoles.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// createRole
+		builder
+			.addCase(createRole.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(createRole.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(createRole.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// updateRole
+		builder
+			.addCase(updateRole.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(updateRole.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(updateRole.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// deleteRole
+		builder
+			.addCase(deleteRole.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(deleteRole.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(deleteRole.rejected, (state) => {
 				state.loading = false
 			})
 	}

@@ -6,6 +6,7 @@ import ConfirmationModalBody from '../features/common/components/ConfirmationMod
 import AddUserModalBody from "../features/users/components/AddUserModalBody";
 import AddNewRoleModal from "../features/roles/components/AddNewRoleModal";
 import {deleteUser} from "../features/users/usersSlice";
+import {deleteRole} from "../features/roles/rolesSlice";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -16,6 +17,9 @@ function ModalLayout() {
 	const ACTION_HANDLERS = {
 		DELETE_USER: (params) => dispatch(deleteUser(params)).then(({payload}) => {
 			return payload
+		}),
+		DELETE_ROLE: (params) => dispatch(deleteRole(params)).then(({payload}) => {
+			return payload;
 		})
 	};
 	

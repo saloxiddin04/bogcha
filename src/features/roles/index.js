@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import TitleCard from "../../components/Cards/TitleCard";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 import {PencilIcon} from "@heroicons/react/20/solid";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
+import Loader from "../../containers/Loader";
+import Pagination from "../../components/Pagination";
+import {getRoles} from "./rolesSlice";
 
 const TopSideButtons = () => {
 	
@@ -17,12 +20,36 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="inline-block float-right">
-			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New Role</button>
+			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New Role
+			</button>
 		</div>
 	)
 }
 
 const Roles = () => {
+	const dispatch = useDispatch()
+	const {loading, roles} = useSelector((state) => state.roles)
+	
+	useEffect(() => {
+		dispatch(getRoles())
+	}, [dispatch])
+	
+	const deleteCurrentRole = (id) => {
+		dispatch(openModal({
+			title: 'Confirmation',
+			bodyType: 'CONFIRMATION',
+			extraObject: {
+				message: 'Are you sure you want to delete this role?',
+				notification: 'Successfully deleted!',
+				actionKey: 'DELETE_ROLE',
+				payload: id
+			}
+		}));
+	};
+	
+	const handlePageChange = (page) => {
+		dispatch(getRoles({page_size: 1, page}))
+	};
 	
 	return (
 		<div>
@@ -30,46 +57,54 @@ const Roles = () => {
 				
 				{/* Leads List in table format loaded from slice after api call */}
 				<div className="overflow-x-auto w-full">
-					<table className="table w-full">
-						<thead>
-						<tr className="text-center">
-							<th>ID</th>
-							<th>Name</th>
-							<th>Status</th>
-							<th>Actions</th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr className="text-center">
-							<td>
-								1
-							</td>
-							<td>test</td>
-							<td>Active</td>
-							<td className="flex gap-1 justify-center">
-								<button
-									className="btn btn-square btn-error text-white"
-									onClick={() => console.log("remove")}
-								>
-									<TrashIcon className="w-5"/>
-								</button>
-								<button
-									className="btn btn-square btn-warning text-white"
-									onClick={() => console.log("remove")}
-								>
-									<PencilIcon className="w-5"/>
-								</button>
-								<button
-									className="btn btn-square btn-success text-white"
-									onClick={() => console.log("remove")}
-								>
-									<ChevronRightIcon className="w-5"/>
-								</button>
-							</td>
-						</tr>
-						</tbody>
-					</table>
+					{loading ? <Loader/> : (
+						<table className="table w-full">
+							<thead>
+							<tr className="text-center">
+								<th>ID</th>
+								<th>Name</th>
+								<th>Status</th>
+								<th>Actions</th>
+							</tr>
+							</thead>
+							<tbody>
+							{roles?.results?.map((item) => (
+								<tr key={item?.id} className="text-center">
+									<td>{item?.id}</td>
+									<td>{item?.name}</td>
+									<td>{item?.is_active ? "Active" : "No active"}</td>
+									<td className="flex gap-1 justify-center">
+										<button
+											className="btn btn-square btn-error text-white"
+											onClick={() => deleteCurrentRole(item?.id)}
+										>
+											<TrashIcon className="w-5"/>
+										</button>
+										<button
+											className="btn btn-square btn-warning text-white"
+											onClick={() => console.log("remove")}
+										>
+											<PencilIcon className="w-5"/>
+										</button>
+										<button
+											className="btn btn-square btn-success text-white"
+											onClick={() => console.log("remove")}
+										>
+											<ChevronRightIcon className="w-5"/>
+										</button>
+									</td>
+								</tr>
+							))}
+							</tbody>
+						</table>
+					)}
 				</div>
+				
+				<Pagination
+					totalItems={roles?.count}
+					itemsPerPage={10}
+					onPageChange={handlePageChange}
+				/>
 			</TitleCard>
 		</div>
 	);
