@@ -47,6 +47,18 @@ const Roles = () => {
 		}));
 	};
 	
+	const openAddNewRoleModal = (id) => {
+		dispatch(openModal({
+			title: "Edit Role",
+			bodyType: MODAL_BODY_TYPES.ROLE_ADD_NEW,
+			extraObject: {
+				notification: 'Successfully edited!',
+				id,
+				is_edit: true
+			}
+		}))
+	}
+	
 	const handlePageChange = (page) => {
 		dispatch(getRoles({page_size: 1, page}))
 	};
@@ -82,7 +94,7 @@ const Roles = () => {
 										</button>
 										<button
 											className="btn btn-square btn-warning text-white"
-											onClick={() => console.log("remove")}
+											onClick={() => openAddNewRoleModal(item?.id)}
 										>
 											<PencilIcon className="w-5"/>
 										</button>

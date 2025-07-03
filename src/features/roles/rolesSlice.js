@@ -19,6 +19,18 @@ export const getRoles = createAsyncThunk(
 	}
 )
 
+export const getRole = createAsyncThunk(
+	"roles/getRole",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get(`users/role/${params}/`)
+			return response.data?.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
 export const createRole = createAsyncThunk(
 	"roles/createRole",
 	async (payload, thunkAPI) => {
@@ -36,7 +48,7 @@ export const updateRole = createAsyncThunk(
 	"roles/updateRole",
 	async (payload, thunkAPI) => {
 		try {
-			const response = await instance.patch(`/users/role_create/${payload?.id}/`, payload?.data)
+			const response = await instance.patch(`/users/role_update/${payload?.id}/`, payload?.data)
 			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
 			return response.data?.data
 		} catch (e) {
@@ -71,6 +83,19 @@ const rolesSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getRoles.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getRole
+		builder
+			.addCase(getRole.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getRole.fulfilled, (state, {payload}) => {
+				state.loading = false
+				state.role = payload
+			})
+			.addCase(getRole.rejected, (state) => {
 				state.loading = false
 			})
 		

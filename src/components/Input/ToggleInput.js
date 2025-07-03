@@ -1,11 +1,15 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 
 
 function ToggleInput({labelTitle, labelStyle, type, containerStyle, defaultValue, placeholder, updateFormValue, updateType}){
 
     const [value, setValue] = useState(defaultValue)
+    
+    useEffect(() => {
+        setValue(defaultValue)
+    }, [defaultValue])
 
-    const updateToogleValue = () => {
+    const updateToggleValue = () => {
         setValue(!value)
         updateFormValue({updateType, value : !value})
     }
@@ -14,7 +18,7 @@ function ToggleInput({labelTitle, labelStyle, type, containerStyle, defaultValue
         <div className={`form-control w-full ${containerStyle}`}>
             <label className="label cursor-pointer">
                 <span className={"label-text text-base-content " + labelStyle}>{labelTitle}</span>
-                <input type="checkbox" className="toggle" checked={value}  onChange={(e) => updateToogleValue()}/>
+                <input type="checkbox" className="toggle" checked={value}  onChange={(e) => updateToggleValue()}/>
             </label>
         </div>
     )
