@@ -63,6 +63,7 @@
 // export default SelectBox
 
 import Select from 'react-select';
+import {useEffect, useState} from "react";
 
 function SelectBox({
 	                   labelTitle,
@@ -74,6 +75,13 @@ function SelectBox({
 	                   isMulti = false,
 	                   defaultValue = null
                    }) {
+	
+	const [value, setValue] = useState(defaultValue)
+	
+	useEffect(() => {
+		setValue(defaultValue)
+	}, [defaultValue])
+	
 	const handleChange = (selected) => {
 		if (isMulti) {
 			updateFormValue({

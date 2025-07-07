@@ -9,6 +9,7 @@ import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import Loader from "../../containers/Loader";
 import Pagination from "../../components/Pagination";
 import {getRoles} from "./rolesSlice";
+import {useNavigate} from "react-router-dom";
 
 const TopSideButtons = () => {
 	
@@ -28,6 +29,7 @@ const TopSideButtons = () => {
 
 const Roles = () => {
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 	const {loading, roles} = useSelector((state) => state.roles)
 	
 	useEffect(() => {
@@ -100,7 +102,7 @@ const Roles = () => {
 										</button>
 										<button
 											className="btn btn-square btn-success text-white"
-											onClick={() => console.log("remove")}
+											onClick={() => navigate(`${item?.id}`)}
 										>
 											<ChevronRightIcon className="w-5"/>
 										</button>

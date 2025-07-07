@@ -13,7 +13,7 @@ function Login() {
 	const [errorMessage, setErrorMessage] = useState("")
 	const [loginObj, setLoginObj] = useState({
 		password: "",
-		phone_number: ""
+		phone_number: "+998"
 	})
 	
 	const submitForm = (e) => {

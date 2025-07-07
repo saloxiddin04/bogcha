@@ -17,6 +17,7 @@ const ProfileSettings = lazy(() => import('../pages/protected/ProfileSettings'))
 const Users = lazy(() => import("../pages/protected/Users"))
 const Groups = lazy(() => import("../pages/protected/Groups"))
 const Roles = lazy(() => import("../pages/protected/Roles"))
+const Permissions = lazy(() => import("../pages/protected/Permissions"))
 
 const routes = [
   {
@@ -42,6 +43,12 @@ const routes = [
   {
     path: "/roles",
     component: Roles
+  },
+  
+  // Permissions
+  {
+    path: "/roles/:id",
+    component: Permissions
   },
   
   {
