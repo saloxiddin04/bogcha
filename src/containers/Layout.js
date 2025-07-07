@@ -7,10 +7,14 @@ import {removeNotificationMessage} from "../features/common/headerSlice"
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import ModalLayout from "./ModalLayout"
+import {getAccessToken} from "../auth/jwtService";
+import WebSocketHandler from "../auth/WebSocketHandler";
 
 function Layout() {
 	const dispatch = useDispatch()
 	const {newNotificationMessage, newNotificationStatus} = useSelector(state => state.header)
+	
+	const token = getAccessToken()
 	
 	useEffect(() => {
 		if (newNotificationMessage !== "") {
@@ -22,6 +26,7 @@ function Layout() {
 	
 	return (
 		<>
+			{token && <WebSocketHandler />}
 			{ /* Left drawer - containing page content and side bar (always open) */}
 			<div className="drawer  lg:drawer-open">
 				<input id="left-sidebar-drawer" type="checkbox" className="drawer-toggle"/>

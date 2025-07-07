@@ -100,7 +100,8 @@ function Header() {
 						<label tabIndex={0} className="flex gap-2 items-center w-full btn btn-ghost btn-circle avatar">
 							<h1>{getUserData()?.full_name}</h1>
 							<div className="w-10 rounded-full">
-								<UserCircleIcon/>
+								<img className="object-cover" src={getUserData()?.profile_picture} alt="profile_picture"/>
+								{/*<UserCircleIcon/>*/}
 								{/*<img src="https://placeimg.com/80/80/people" alt="profile"/>*/}
 							</div>
 						</label>
