@@ -19,30 +19,22 @@ export function login(...args) {
 }
 
 export function logout(...args) {
+	document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	document.cookie = "permissions=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+	
+	window.location.href = "/login";
 	return $axios.post(logoutEndpoint, ...args).then(() => {
 		document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		document.cookie = "permissions=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		
+		window.location.href = "/login";
 	})
 	// localStorage.clear()
 	// window.location.reload();
-}
-
-export function register(...args) {
-	return $axios.post(registerEndpoint, ...args);
-}
-
-export function verify(...args) {
-	return $axios.post(verifyEndpoint, ...args)
-}
-
-export function forgotPasswordJwt(...args) {
-	return $axios.post(forgotPasswordEndpoint, ...args)
-}
-
-export function changePassword(...args) {
-	return $axios.patch(passwordChangeEndpoint, ...args)
 }
 
 export function setAccessToken(value) {
@@ -82,12 +74,6 @@ export function getUserData() {
 	if (userCookie) return JSON.parse(userCookie.split("=")[1] || '{}');
 }
 
-export function refreshToken() {
-	return $axios.post(refreshEndpoint, {
-		refresh: getRefreshToken(),
-	});
-}
-
 export function setCookie(name, value, expirationDays) {
 	const date = new Date();
 	date.setTime(date.getTime() + expirationDays * 24 * 60 * 60 * 1000);
@@ -107,3 +93,8 @@ export function getCookie(name) {
 	}
 	return null;
 }
+
+export const hasPermission = (permissionList = [], required) => {
+	if (!required) return true;
+	return permissionList.includes(required);
+};

@@ -1,22 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {openModal} from "../common/modalSlice";
-import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 import TitleCard from "../../components/Cards/TitleCard";
 import {useParams} from "react-router-dom";
 import {getAllPermissions, getChildPermissions, updatePermission} from "./permissionsSlice";
-import Loader from "../../containers/Loader";
 import ToggleInput from "../../components/Input/ToggleInput";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import {showNotification} from "../common/headerSlice";
 
 const TopSideButtons = ({onClick}) => {
-	
-	const dispatch = useDispatch()
-	
-	const openAddNewLeadModal = () => {
-		dispatch(openModal({title: "Add New Role", bodyType: MODAL_BODY_TYPES.ROLE_ADD_NEW}))
-	}
 	
 	return (
 		<div className="inline-block float-right">

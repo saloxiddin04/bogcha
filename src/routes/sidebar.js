@@ -25,7 +25,8 @@ const routes = [
   {
     path: '/app/users',
     icon: <UserGroupIcon className={iconClasses} />,
-    name: "Users"
+    name: "Users",
+    permission: "user_page"
   },
   {
     path: '/app/calendar', // url
@@ -50,6 +51,7 @@ const routes = [
     path: '/app/roles', //no url needed as this has submenu
     icon: <Cog6ToothIcon className={`${iconClasses} inline`}/>, // icon component
     name: 'Roles',
+    permission: "role"
   },
 
   // {

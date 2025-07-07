@@ -23,7 +23,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		first_name: "",
 		last_name: "",
 		password: "",
-		phone_number: "",
+		phone_number: "+998",
 		roles: [],
 		birth_day: "",
 		profile_picture: "",
@@ -34,7 +34,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		first_name: "",
 		last_name: "",
 		password: "",
-		phone_number: "",
+		phone_number: "+998",
 		roles: [],
 		birth_day: "",
 		profile_picture: "",
@@ -97,6 +97,8 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		if (!isEditMode && userObj.password.trim() === "") return setErrorMessage("Password is required!");
 		if (userObj.birth_day.trim() === "") return setErrorMessage("Birth day is required!");
 		if (userObj.roles.length === 0) return setErrorMessage("Role is required!");
+		if (userObj.profile_picture.trim() === "") return setErrorMessage("Profile picture is required!");
+		if (userObj.phone_number.length === 3) return setErrorMessage("Phone number is required!");
 		
 		const formData = new FormData()
 		formData.append("first_name", userObj?.first_name)
@@ -194,7 +196,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				updateType="roles"
 				updateFormValue={updateSelectBoxValue}
 				isMulti={true}
-				defaultValue={roleOptions?.filter(opt => userObj.roles?.includes(opt.value))}
+				defaultValue={roleOptions?.filter(opt => userObj?.roles?.includes(opt.value))}
 			/>
 			
 			<ToggleInput

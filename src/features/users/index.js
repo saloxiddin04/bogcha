@@ -9,10 +9,13 @@ import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import Pagination from "../../components/Pagination";
 import {getUsers} from "./usersSlice";
 import Loader from "../../containers/Loader";
+import {getCookie, hasPermission} from "../../auth/jwtService";
 
 const TopSideButtons = () => {
 	
 	const dispatch = useDispatch()
+	
+	const permissionList = getCookie("permissions")
 	
 	const openAddNewLeadModal = () => {
 		dispatch(openModal({title: "Add New User", bodyType: MODAL_BODY_TYPES.USER_ADD_NEW}))
@@ -20,8 +23,14 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="inline-block float-right">
-			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New User
-			</button>
+			{hasPermission(permissionList, "user_add") && (
+				<button
+					className="btn px-6 btn-sm normal-case btn-primary"
+					onClick={() => openAddNewLeadModal()}
+				>
+					Add New User
+				</button>
+			)}
 		</div>
 	)
 }

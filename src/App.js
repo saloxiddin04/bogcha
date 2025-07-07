@@ -4,14 +4,17 @@ import {themeChange} from 'theme-change'
 
 import ProtectedRoute from './routes/ProtectedRoute'
 import {NotificationContainer} from "react-notifications";
+import {getAccessToken} from "./auth/jwtService";
 
 // Lazy-loaded pages
 const Layout = lazy(() => import('./containers/Layout'))
 const Login = lazy(() => import('./pages/Login'))
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
-const Register = lazy(() => import('./pages/Register'))
+const NotFound = lazy(() => import("./pages/protected/404"))
 
 function App() {
+	
+	const token = getAccessToken()
+	
 	useEffect(() => {
 		themeChange(false)
 	}, [])
@@ -21,9 +24,12 @@ function App() {
 			<Router>
 				<Suspense fallback={<div>Loading...</div>}>
 					<Routes>
-						<Route path="/login" element={<Login/>}/>
-						<Route path="/forgot-password" element={<ForgotPassword/>}/>
-						<Route path="/register" element={<Register/>}/>
+						<Route
+							path="/login"
+							element={
+								token ? <Navigate to={"/app/dashboard"} replace/> : <Login/>
+							}
+						/>
 						
 						<Route
 							path="/app/*"
@@ -34,7 +40,12 @@ function App() {
 							}
 						/>
 						
-						<Route path="*" element={<Navigate to="/login" replace/>}/>
+						<Route
+							path="*"
+							element={
+								token ? <NotFound/> : <Navigate to={"/login"} replace/>
+							}
+						/>
 					</Routes>
 				</Suspense>
 			</Router>
