@@ -23,14 +23,14 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="inline-block float-right">
-			{hasPermission(permissionList, "user_add") && (
+			{/*{hasPermission(permissionList, "user_add") && (*/}
 				<button
 					className="btn px-6 btn-sm normal-case btn-primary"
 					onClick={() => openAddNewLeadModal()}
 				>
 					Add New User
 				</button>
-			)}
+			{/*)}*/}
 		</div>
 	)
 }

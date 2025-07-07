@@ -29,7 +29,9 @@ function LeftSidebar() {
 						Kids</Link>
 				</li>
 				{
-					routes?.filter(route => hasPermission(permissionList, route.permission))?.map((route, k) => {
+					routes
+						// ?.filter(route => hasPermission(permissionList, route.permission))
+						?.map((route, k) => {
 						return (
 							<li className="" key={k}>
 								{
