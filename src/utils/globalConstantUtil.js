@@ -7,6 +7,7 @@ module.exports = Object.freeze({
         USER_ADD_NEW: "USER_ADD_NEW",
         ROLE_ADD_NEW: "ROLE_ADD_NEW",
         GROUP_ADD_NEW: "GROUP_ADD_NEW",
+        POST_ADD_NEW: "POST_ADD_NEW",
         DEFAULT : "",
     },
 

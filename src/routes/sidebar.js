@@ -5,7 +5,7 @@ import Cog6ToothIcon from '@heroicons/react/24/outline/Cog6ToothIcon'
 import InboxArrowDownIcon from '@heroicons/react/24/outline/InboxArrowDownIcon'
 import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
 import UserGroupIcon from "@heroicons/react/24/outline/UserGroupIcon";
-import {RectangleGroupIcon} from "@heroicons/react/20/solid";
+import {ChatBubbleBottomCenterTextIcon} from "@heroicons/react/20/solid";
 
 const iconClasses = `h-6 w-6`
 const submenuIconClasses = `h-5 w-5`
@@ -58,6 +58,13 @@ const routes = [
     icon: <Cog6ToothIcon className={`${iconClasses} inline`}/>, // icon component
     name: 'Roles',
     permission: "role"
+  },
+  
+  {
+    path: '/app/smm', //no url needed as this has submenu
+    icon: <ChatBubbleBottomCenterTextIcon className={`${iconClasses} inline`}/>, // icon component
+    name: 'SMM Post',
+    // permission: "role"
   },
 
   // {

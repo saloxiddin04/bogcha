@@ -81,7 +81,7 @@ const Groups = () => {
 							</thead>
 							<tbody>
 							{
-								groups?.data?.map((item, index) => {
+								groups?.data?.map((item) => {
 									return (
 										<tr key={item?.id}>
 											<td>{item?.id}</td>

@@ -19,6 +19,8 @@ const Groups = lazy(() => import("../pages/protected/Groups"))
 const Roles = lazy(() => import("../pages/protected/Roles"))
 const Permissions = lazy(() => import("../pages/protected/Permissions"))
 
+const SmmPost = lazy(() => import("../pages/protected/SmmPost"))
+
 const routes = [
   {
     path: '/dashboard', // the url
@@ -43,6 +45,12 @@ const routes = [
   {
     path: "/roles",
     component: Roles
+  },
+  
+  // smm post
+  {
+    path: "/smm",
+    component: SmmPost
   },
   
   // Permissions

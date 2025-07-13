@@ -9,7 +9,6 @@ import Loader from "../../../containers/Loader";
 
 const AddGroupModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
-	const {isOpen} = useSelector((state) => state.modal)
 	
 	const {loading, teachers, children} = useSelector((state) => state.groups)
 	

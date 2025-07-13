@@ -9,6 +9,8 @@ import {deleteUser} from "../features/users/usersSlice";
 import {deleteRole} from "../features/roles/rolesSlice";
 import AddGroupModal from "../features/groups/components/AddGroupModal";
 import {deleteGroup} from "../features/groups/groupsSlice";
+import AddPostModal from "../features/smmPost/components/AddPostModal";
+import {deletePost} from "../features/smmPost/smmPostSlice";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -25,7 +27,10 @@ function ModalLayout() {
 		}),
 		DELETE_GROUP: (params) => dispatch(deleteGroup(params)).then(({payload}) => {
 			return payload;
-		})
+		}),
+		DELETE_POST: (params) => dispatch(deletePost(params)).then(({payload}) => {
+			return payload;
+		}),
 	};
 	
 	const remove = () => {
@@ -46,6 +51,7 @@ function ModalLayout() {
 							[MODAL_BODY_TYPES.USER_ADD_NEW]: <AddUserModalBody closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.ROLE_ADD_NEW]: <AddNewRoleModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.GROUP_ADD_NEW]: <AddGroupModal closeModal={close} extraObject={extraObject} />,
+							[MODAL_BODY_TYPES.POST_ADD_NEW]: <AddPostModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close} remove={remove} />,
 							[MODAL_BODY_TYPES.DEFAULT]: <div></div>
 						}[bodyType]
