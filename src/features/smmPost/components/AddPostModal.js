@@ -36,7 +36,16 @@ const AddPostModal = ({closeModal, extraObject}) => {
 		if (extraObject?.id && extraObject?.is_edit) {
 			dispatch(getPost(extraObject?.id)).then(({payload}) => {
 				if (payload) {
-				
+					dispatch(getAllParentsForPost(payload?.data?.users?.map((user) => user?.id))).then(() => {
+						setPostObj({
+							title: payload?.data?.title ?? "",
+							description: payload?.data?.description ?? "",
+							author: payload?.data?.author ?? "",
+							groups: payload?.data?.groups?.map((item) => item?.id) ?? [],
+							users: payload?.data?.users?.map((item) => item?.id) ?? [],
+						})
+						setFileInputs(payload?.data?.files)
+					})
 				}
 			})
 		}
