@@ -6,6 +6,7 @@ module.exports = Object.freeze({
         CONFIRMATION : "CONFIRMATION",
         USER_ADD_NEW: "USER_ADD_NEW",
         ROLE_ADD_NEW: "ROLE_ADD_NEW",
+        GROUP_ADD_NEW: "GROUP_ADD_NEW",
         DEFAULT : "",
     },
 

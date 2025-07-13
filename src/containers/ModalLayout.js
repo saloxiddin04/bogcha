@@ -7,6 +7,8 @@ import AddUserModalBody from "../features/users/components/AddUserModalBody";
 import AddNewRoleModal from "../features/roles/components/AddNewRoleModal";
 import {deleteUser} from "../features/users/usersSlice";
 import {deleteRole} from "../features/roles/rolesSlice";
+import AddGroupModal from "../features/groups/components/AddGroupModal";
+import {deleteGroup} from "../features/groups/groupsSlice";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -19,6 +21,9 @@ function ModalLayout() {
 			return payload
 		}),
 		DELETE_ROLE: (params) => dispatch(deleteRole(params)).then(({payload}) => {
+			return payload;
+		}),
+		DELETE_GROUP: (params) => dispatch(deleteGroup(params)).then(({payload}) => {
 			return payload;
 		})
 	};
@@ -40,6 +45,7 @@ function ModalLayout() {
 							[MODAL_BODY_TYPES.LEAD_ADD_NEW]: <AddLeadModalBody closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.USER_ADD_NEW]: <AddUserModalBody closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.ROLE_ADD_NEW]: <AddNewRoleModal closeModal={close} extraObject={extraObject} />,
+							[MODAL_BODY_TYPES.GROUP_ADD_NEW]: <AddGroupModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close} remove={remove} />,
 							[MODAL_BODY_TYPES.DEFAULT]: <div></div>
 						}[bodyType]

@@ -14,13 +14,13 @@ const TopSideButtons = () => {
 	
 	const dispatch = useDispatch()
 	
-	const openAddNewLeadModal = () => {
-		dispatch(openModal({title: "Add New User", bodyType: MODAL_BODY_TYPES.USER_ADD_NEW}))
+	const openAddNewGroupModal = () => {
+		dispatch(openModal({title: "Add New Group", bodyType: MODAL_BODY_TYPES.GROUP_ADD_NEW}))
 	}
 	
 	return (
 		<div className="inline-block float-right">
-			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New Group</button>
+			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewGroupModal()}>Add New Group</button>
 		</div>
 	)
 }
@@ -37,6 +37,31 @@ const Groups = () => {
 	const handlePageChange = (page) => {
 		dispatch(getAllGroups({page_size: 1, page}))
 	};
+	
+	const deleteCurrentGroup = (id) => {
+		dispatch(openModal({
+			title: 'Confirmation',
+			bodyType: 'CONFIRMATION',
+			extraObject: {
+				message: 'Are you sure you want to delete this group?',
+				notification: 'Successfully deleted!',
+				actionKey: 'DELETE_GROUP',
+				payload: id
+			}
+		}));
+	};
+	
+	const openAddNewGroupModal = (id) => {
+		dispatch(openModal({
+			title: "Edit Group",
+			bodyType: MODAL_BODY_TYPES.GROUP_ADD_NEW,
+			extraObject: {
+				notification: 'Successfully edited!',
+				id,
+				is_edit: true
+			}
+		}))
+	}
 	
 	return (
 		<>
@@ -56,7 +81,7 @@ const Groups = () => {
 							</thead>
 							<tbody>
 							{
-								groups?.map((item, index) => {
+								groups?.data?.map((item, index) => {
 									return (
 										<tr key={item?.id}>
 											<td>{item?.id}</td>
@@ -66,19 +91,19 @@ const Groups = () => {
 											<td className="flex gap-1 justify-center">
 												<button
 													className="btn btn-square btn-error text-white"
-													// onClick={() => deleteCurrentUser(item?.id)}
+													onClick={() => deleteCurrentGroup(item?.id)}
 												>
 													<TrashIcon className="w-5"/>
 												</button>
 												<button
 													className="btn btn-square btn-warning text-white"
-													// onClick={() => openAddNewUserModal(item?.id)}
+													onClick={() => openAddNewGroupModal(item?.id)}
 												>
 													<PencilIcon className="w-5"/>
 												</button>
 												<button
 													className="btn btn-square btn-success text-white"
-													// onClick={() => openAddNewUserModal(item?.id)}
+													onClick={() => openAddNewGroupModal(item?.id)}
 												>
 													<ChevronRightIcon className="w-5"/>
 												</button>
@@ -93,7 +118,7 @@ const Groups = () => {
 				</div>
 				
 				<Pagination
-					totalItems={groups?.count}
+					totalItems={groups?.pagination?.total_items}
 					itemsPerPage={10}
 					onPageChange={handlePageChange}
 				/>
