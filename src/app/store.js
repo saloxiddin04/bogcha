@@ -6,6 +6,7 @@ import leadsSlice from '../features/leads/leadSlice'
 import usersSlice from "../features/users/usersSlice";
 import rolesSlice from "../features/roles/rolesSlice";
 import permissionsSlice from "../features/permissions/permissionsSlice";
+import groupsSlice from "../features/groups/groupsSlice";
 
 const combinedReducer = {
   header : headerSlice,
@@ -14,7 +15,8 @@ const combinedReducer = {
   lead : leadsSlice,
   users: usersSlice,
   roles: rolesSlice,
-  permissions: permissionsSlice
+  permissions: permissionsSlice,
+  groups: groupsSlice
 }
 
 export default configureStore({

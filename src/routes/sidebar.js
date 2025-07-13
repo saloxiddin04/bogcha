@@ -34,17 +34,23 @@ const routes = [
     name: 'Calendar', // name that appear in Sidebar
   },
   
+  // {
+  //   path: '', //no url needed as this has submenu
+  //   icon: <RectangleGroupIcon className={`${iconClasses} inline`}/>, // icon component
+  //   name: 'Groups', // name that appear in Sidebar
+  //   submenu: [
+  //     {
+  //       path: '/app/groups',
+  //       icon: <UsersIcon className={submenuIconClasses}/>,
+  //       name: 'Groups',
+  //     },
+  //   ]
+  // },
+  
   {
-    path: '', //no url needed as this has submenu
-    icon: <RectangleGroupIcon className={`${iconClasses} inline`}/>, // icon component
-    name: 'Groups', // name that appear in Sidebar
-    submenu: [
-      {
-        path: '/app/groups',
-        icon: <UsersIcon className={submenuIconClasses}/>,
-        name: 'Groups',
-      },
-    ]
+    path: '/app/groups',
+    icon: <UsersIcon className={submenuIconClasses}/>,
+    name: 'Groups',
   },
   
   {
