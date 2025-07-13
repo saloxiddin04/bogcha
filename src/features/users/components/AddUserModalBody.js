@@ -9,12 +9,15 @@ import {showNotification} from "../../common/headerSlice";
 import {clearUserDetail, createUser, getUser, updateUser} from "../usersSlice";
 import Loader from "../../../containers/Loader";
 import FileUploadInput from "../../../components/Input/FileUploadInput";
+import {getAllChildren} from "../../groups/groupsSlice";
+import moment from "moment";
 
 const AddUserModalBody = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
 	const {isOpen} = useSelector((state) => state.modal)
 	const {roles, loading: loaderRole} = useSelector((state) => state.roles)
 	const {loading} = useSelector((state) => state.users)
+	const {children} = useSelector(state => state.groups)
 	
 	const [errorMessage, setErrorMessage] = useState("")
 	
@@ -27,7 +30,11 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		roles: [],
 		birth_day: "",
 		profile_picture: "",
-		status: false
+		status: false,
+		person_type: "",
+		children: [],
+		height: "",
+		weight: ""
 	};
 	
 	const [userObj, setUserObj] = useState({
@@ -38,7 +45,11 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		roles: [],
 		birth_day: "",
 		profile_picture: "",
-		status: false
+		status: false,
+		person_type: "",
+		children: [],
+		height: "",
+		weight: ""
 	});
 	
 	useEffect(() => {
@@ -62,6 +73,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 	
 	useEffect(() => {
 		dispatch(getRoles({page: 1, page_size: 1000}))
+		dispatch(getAllChildren({page: 1, page_size: 1000}))
 	}, [dispatch])
 	
 	useEffect(() => {
@@ -91,13 +103,28 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 			value: Number(role.id)
 		}));
 	
+	const childrenOptions = children
+		?.map(child => ({
+			label: child?.full_name,
+			value: Number(child?.id)
+		}));
+	
+	const personTypeOptions = [
+		{label: "Family member", value: "FAMILY_MEMBER"},
+		{label: "Children", value: "CHILDREN"},
+		{label: "Employee", value: "EMPLOYEE"},
+		{label: "Teacher", value: "TEACHER"}
+	]
+	
 	const saveNewUser = () => {
 		if (userObj.first_name.trim() === "") return setErrorMessage("First Name is required!");
 		if (userObj.last_name.trim() === "") return setErrorMessage("Last Name is required!");
 		if (!isEditMode && userObj.password.trim() === "") return setErrorMessage("Password is required!");
 		if (userObj.birth_day.trim() === "") return setErrorMessage("Birth day is required!");
 		if (userObj.roles.length === 0) return setErrorMessage("Role is required!");
-		if (userObj.profile_picture.trim() === "") return setErrorMessage("Profile picture is required!");
+		if (userObj.person_type.trim() === "") return setErrorMessage("Person type is required!");
+		if (userObj.person_type === "FAMILY_MEMBER" && userObj.children.length === 0) return setErrorMessage("Children is required!");
+		if (!userObj.profile_picture) return setErrorMessage("Profile picture is required!");
 		if (userObj.phone_number.length === 3) return setErrorMessage("Phone number is required!");
 		
 		const formData = new FormData()
@@ -113,6 +140,14 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		});
 		formData.append("profile_picture", userObj.profile_picture)
 		formData.append("status", userObj.status)
+		formData.append("person_type", userObj.person_type)
+		formData.append("height", userObj.height)
+		formData.append("weight", userObj.weight)
+		if (userObj.person_type === "FAMILY_MEMBER") {
+			userObj?.children?.map((child) => (
+				formData.append("children", Number(child))
+			))
+		}
 		
 		const action = isEditMode ? updateUser : createUser;
 		const params = isEditMode ? {id: extraObject?.userId, data: formData} : formData
@@ -203,6 +238,46 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				updateType="status" labelTitle="Status" defaultValue={userObj.status ?? false}
 				updateFormValue={updateFormValue}
 				containerStyle={"mt-2"}
+			/>
+			
+			<SelectBox
+				options={personTypeOptions}
+				labelTitle="Select person type"
+				placeholder="Choose roles..."
+				containerStyle="w-full"
+				updateType="person_type"
+				updateFormValue={updateSelectBoxValue}
+				isMulti={false}
+				defaultValue={personTypeOptions?.filter(opt => userObj?.person_type?.includes(opt.value))}
+			/>
+			
+			{userObj.person_type === "FAMILY_MEMBER" && (
+				<SelectBox
+					options={childrenOptions}
+					labelTitle="Select Children"
+					placeholder="Choose children..."
+					containerStyle="w-full"
+					updateType="children"
+					updateFormValue={updateSelectBoxValue}
+					isMulti={true}
+					defaultValue={childrenOptions?.filter(opt => userObj?.children?.includes(opt.value))}
+				/>
+			)}
+			
+			<InputText
+				type="text"
+				defaultValue={userObj.height ?? ""}
+				updateType="height"
+				labelTitle="Height"
+				updateFormValue={updateFormValue}
+			/>
+			
+			<InputText
+				type="text"
+				defaultValue={userObj.weight ?? ""}
+				updateType="weight"
+				labelTitle="Weight"
+				updateFormValue={updateFormValue}
 			/>
 			
 			<ErrorText styleClass="mt-16">{errorMessage}</ErrorText>
