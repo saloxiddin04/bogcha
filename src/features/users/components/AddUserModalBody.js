@@ -65,6 +65,10 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 						profile_picture: payload?.profile_picture ?? "",
 						status: payload?.is_active ?? false,
 						roles: payload?.roles?.map(role => Number(role.id)) ?? [],
+						children: payload?.children?.map(child => Number(child.id)) ?? [],
+						person_type: payload?.person_type ?? "",
+						height: payload?.height ?? "",
+						weight: payload?.weight ?? "",
 					});
 				}
 			});
