@@ -44,7 +44,7 @@ const AddPostModal = ({closeModal, extraObject}) => {
 							groups: payload?.data?.groups?.map((item) => item?.id) ?? [],
 							users: payload?.data?.users?.map((item) => item?.id) ?? [],
 						})
-						setFileInputs(payload?.data?.files)
+						setFileInputs(payload?.data?.files?.length > 0 ? payload?.data?.files : [{id: Date.now(), files: []}])
 					})
 				}
 			})
@@ -86,7 +86,7 @@ const AddPostModal = ({closeModal, extraObject}) => {
 		const formData = new FormData()
 		formData.append("title", postObj?.title)
 		formData.append("description", postObj?.description)
-		formData.append("author", postObj?.author)
+		formData.append("author", getUserData()?.id)
 		postObj?.groups?.forEach((item, index) => (
 			formData.append(`groups${index+1}`, item)
 		))
@@ -167,36 +167,39 @@ const AddPostModal = ({closeModal, extraObject}) => {
 				}
 			/>
 			
-			{fileInputs.map((item, index) => (
-				<div key={item.id} className="flex items-end gap-4 mt-4">
-					<FileUploadInput
-						labelTitle={`Fayl yuklang ${index + 1}`}
-						updateType="files"
-						updateFormValue={({ updateType, value }) => {
-							setFileInputs(prev =>
-								prev.map(f =>
-									f.id === item.id ? { ...f, files: value } : f
-								)
-							);
-						}}
-						multiple={true}
-					/>
-					<button
-						type="button"
-						className="btn btn-success"
-						onClick={addFileInput}
-					>
-						+
-					</button>
-					{fileInputs.length > 1 && (
+			{fileInputs?.map((item, index) => (
+				<div key={index}>
+					<div key={item.id} className="flex items-end gap-4 mt-4">
+						<FileUploadInput
+							labelTitle={`Fayl yuklang ${index + 1}`}
+							updateType="files"
+							updateFormValue={({updateType, value}) => {
+								setFileInputs(prev =>
+									prev.map(f =>
+										f.id === item.id ? {...f, files: value} : f
+									)
+								);
+							}}
+							multiple={true}
+						/>
 						<button
 							type="button"
-							className="btn btn-error"
-							onClick={() => removeFileInput(item.id)}
+							className="btn btn-success"
+							onClick={addFileInput}
 						>
-							-
+							+
 						</button>
-					)}
+						{fileInputs.length > 1 && (
+							<button
+								type="button"
+								className="btn btn-error"
+								onClick={() => removeFileInput(item.id)}
+							>
+								-
+							</button>
+						)}
+					</div>
+					<h1>{item?.file_name}</h1>
 				</div>
 			))}
 			

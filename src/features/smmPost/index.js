@@ -5,11 +5,10 @@ import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 import TitleCard from "../../components/Cards/TitleCard";
 import {getAllPosts} from "./smmPostSlice";
-import Loader from "../../containers/Loader";
 import Pagination from "../../components/Pagination";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import Bars3Icon from "@heroicons/react/24/outline/Bars3Icon";
-import {PencilIcon} from "@heroicons/react/20/solid";
+import {PaperAirplaneIcon, PencilIcon} from "@heroicons/react/20/solid";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 
 const TopSideButtons = () => {
@@ -77,60 +76,75 @@ const SmmPost = () => {
 		<>
 			<TitleCard title="Current SMM Post" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				<div className="overflow-x-auto w-full">
-					{loading ? <Loader /> : (
-						<table className="table w-full">
-							<thead>
-							<tr className="text-center">
-								<th>ID</th>
-								<th>Title</th>
-								<th>Author</th>
-								<th>Children</th>
-								<th>Description</th>
-								<th>Post and history</th>
-								<th>Actions</th>
+					<table className="table w-full">
+						<thead>
+						<tr className="text-center">
+							<th>ID</th>
+							<th>Title</th>
+							<th>Author</th>
+							<th>Children</th>
+							<th>Description</th>
+							<th>Post and history</th>
+							<th>Actions</th>
+						</tr>
+						</thead>
+						<tbody>
+						{posts?.data?.map((item) => (
+							<tr key={item?.id} className="text-center">
+								<td>{item?.id}</td>
+								<td>{item?.title}</td>
+								<td>{item?.author?.full_name}</td>
+								<td>{item?.users?.length}</td>
+								<td>{item?.description}</td>
+								<td>
+									<button
+										className="btn btn-square btn-success text-white"
+										// onClick={() => deleteCurrentGroup(item?.id)}
+									>
+										<Bars3Icon className="w-5"/>
+									</button>
+								</td>
+								<td className="flex gap-1 justify-center">
+									<button
+										className="btn btn-square btn-success text-white"
+										onClick={() => {
+											dispatch(openModal({
+												title: 'Confirmation',
+												bodyType: 'CONFIRMATION',
+												extraObject: {
+													message: 'Are you sure you want to send this post?',
+													// notification: 'Successfully deleted!',
+													// actionKey: 'DELETE_POST',
+													// payload: id
+												}
+											}));
+										}}
+									>
+										<PaperAirplaneIcon className="w-5"/>
+									</button>
+									<button
+										className="btn btn-square btn-error text-white"
+										onClick={() => deleteCurrentPost(item?.id)}
+									>
+										<TrashIcon className="w-5"/>
+									</button>
+									<button
+										className="btn btn-square btn-warning text-white"
+										onClick={() => openAddNewPostModal(item?.id)}
+									>
+										<PencilIcon className="w-5"/>
+									</button>
+									<button
+										className="btn btn-square btn-success text-white"
+										onClick={() => openAddNewPostModal(item?.id)}
+									>
+										<ChevronRightIcon className="w-5"/>
+									</button>
+								</td>
 							</tr>
-							</thead>
-							<tbody>
-							{posts?.data?.map((item) => (
-								<tr key={item?.id}>
-									<td>{item?.id}</td>
-									<td>{item?.title}</td>
-									<td>{item?.author?.full_name}</td>
-									<td>{item?.users?.length}</td>
-									<td>{item?.description}</td>
-									<td>
-										<button
-											className="btn btn-square btn-success text-white"
-											// onClick={() => deleteCurrentGroup(item?.id)}
-										>
-											<Bars3Icon className="w-5"/>
-										</button>
-									</td>
-									<td className="flex gap-1 justify-center">
-										<button
-											className="btn btn-square btn-error text-white"
-											onClick={() => deleteCurrentPost(item?.id)}
-										>
-											<TrashIcon className="w-5"/>
-										</button>
-										<button
-											className="btn btn-square btn-warning text-white"
-											onClick={() => openAddNewPostModal(item?.id)}
-										>
-											<PencilIcon className="w-5"/>
-										</button>
-										<button
-											className="btn btn-square btn-success text-white"
-											onClick={() => openAddNewPostModal(item?.id)}
-										>
-											<ChevronRightIcon className="w-5"/>
-										</button>
-									</td>
-								</tr>
-							))}
-							</tbody>
-						</table>
-					)}
+						))}
+						</tbody>
+					</table>
 				</div>
 				
 				<Pagination
