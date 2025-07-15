@@ -131,6 +131,10 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		if (!userObj.profile_picture) return setErrorMessage("Profile picture is required!");
 		if (userObj.phone_number.length === 3) return setErrorMessage("Phone number is required!");
 		
+		const formattedBirthDay = userObj?.birth_day
+			? userObj?.birth_day?.split("-")?.reverse()?.join(".")
+			: "";
+		
 		const formData = new FormData()
 		formData.append("first_name", userObj?.first_name)
 		formData.append("last_name", userObj?.last_name)
@@ -138,7 +142,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		if (!isEditMode) {
 			formData.append("password", userObj?.password)
 		}
-		formData.append("birth_day", userObj?.birth_day)
+		formData.append("birth_day", formattedBirthDay);
 		userObj?.roles?.forEach(role => {
 			formData.append("roles", Number(role));
 		});

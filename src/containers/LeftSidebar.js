@@ -38,7 +38,6 @@ function LeftSidebar() {
 									route.submenu ?
 										<SidebarSubmenu {...route}/> :
 										(<NavLink
-											end
 											to={route.path}
 											className={({isActive}) => `${isActive ? 'font-semibold  bg-base-200 ' : 'font-normal'}`}>
 											{route.icon} {route.name}

@@ -64,6 +64,7 @@ function InputText({
 	                   placeholder,
 	                   updateFormValue,
 	                   updateType,
+	disabled
                    }) {
 	const [value, setValue] = useState(defaultValue);
 	const [showPassword, setShowPassword] = useState(false); // 👈 password visibility state
@@ -95,15 +96,17 @@ function InputText({
 					onChange={(e) => updateInputValue(e.target.checked)}
 					placeholder={placeholder || ""}
 					className="checkbox checkbox-primary"
+					disabled={disabled}
 				/>
 			) : (
 				<div className="relative">
 					<input
-						type={type === "password" && !showPassword ? "password" : "text"}
+						type={type === "password" ? (!showPassword ? "password" : "text") : type}
 						value={value}
 						placeholder={placeholder || ""}
 						onChange={(e) => updateInputValue(e.target.value)}
 						className="input input-bordered w-full pr-10"
+						disabled={disabled}
 					/>
 					{type === "password" && (
 						<button
