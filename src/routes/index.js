@@ -24,6 +24,9 @@ const SmmPost = lazy(() => import("../pages/protected/SmmPost"))
 const ChildrenPage = lazy(() => import("../pages/protected/Children"))
 const ChildrenDetail = lazy(() => import("../features/childrenPage/components/childrenDetail"))
 
+const CheckKids = lazy(() => import("../pages/protected/CheckKids"))
+const CheckKidsDetail = lazy(() => import("../features/checkKids/components/checkKidsDetail"))
+
 const routes = [
   {
     path: '/dashboard', // the url
@@ -64,6 +67,16 @@ const routes = [
   {
     path: "/child/:id",
     component: ChildrenDetail
+  },
+  
+  // check kids
+  {
+    path: "/check-kids",
+    component: CheckKids
+  },
+  {
+    path: "/check-kids/:id",
+    component: CheckKidsDetail
   },
   
   // Permissions
