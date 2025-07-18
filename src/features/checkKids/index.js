@@ -27,10 +27,10 @@ const CheckKids = () => {
 						<tbody>
 						<tr className="text-center">
 							<td>1</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
+							<td>Jasurbek Anvarov</td>
+							<td>Anvar Temurov</td>
+							<td>ISE-II</td>
+							<td>A'lochi bola</td>
 							<td className="flex gap-1 justify-center">
 								<button
 									className="btn btn-square btn-success text-white"

@@ -12,7 +12,7 @@ const CheckKidsDetail = () => {
 				<div className="flex justify-between items-center">
 					<div className="flex flex-col w-[49%] justify-center items-center">
 						<UserCircleIcon className="w-48"/>
-						<h1>Test Testov Testovich</h1>
+						<h1>Jasurbek Anvarov Anvarovich</h1>
 					</div>
 					<div className="w-[49%] flex flex-col gap-2">
 						<InputText
