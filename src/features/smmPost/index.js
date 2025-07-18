@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {getCookie} from "../../auth/jwtService";
+import {hasPermission} from "../../auth/jwtService";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 import TitleCard from "../../components/Cards/TitleCard";
@@ -15,22 +15,20 @@ const TopSideButtons = () => {
 	
 	const dispatch = useDispatch()
 	
-	const permissionList = getCookie("permissions")
-	
 	const openAddNewLeadModal = () => {
 		dispatch(openModal({title: "Add New Post", bodyType: MODAL_BODY_TYPES.POST_ADD_NEW}))
 	}
 	
 	return (
 		<div className="inline-block float-right">
-			{/*{hasPermission(permissionList, "user_add") && (*/}
+			{hasPermission("smm_add") && (
 			<button
 				className="btn px-6 btn-sm normal-case btn-primary"
 				onClick={() => openAddNewLeadModal()}
 			>
 				Add New Post
 			</button>
-			{/*)}*/}
+			)}
 		</div>
 	)
 }
@@ -119,24 +117,28 @@ const SmmPost = () => {
 												}
 											}));
 										}}
+										disabled={!hasPermission("smm_post_t")}
 									>
 										<PaperAirplaneIcon className="w-5"/>
 									</button>
 									<button
 										className="btn btn-square btn-error text-white"
 										onClick={() => deleteCurrentPost(item?.id)}
+										disabled={!hasPermission("smm_del")}
 									>
 										<TrashIcon className="w-5"/>
 									</button>
 									<button
 										className="btn btn-square btn-warning text-white"
 										onClick={() => openAddNewPostModal(item?.id)}
+										disabled={!hasPermission("smm_edit")}
 									>
 										<PencilIcon className="w-5"/>
 									</button>
 									<button
 										className="btn btn-square btn-success text-white"
 										onClick={() => openAddNewPostModal(item?.id)}
+										disabled={!hasPermission("smm_det")}
 									>
 										<ChevronRightIcon className="w-5"/>
 									</button>

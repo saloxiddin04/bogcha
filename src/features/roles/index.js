@@ -10,6 +10,7 @@ import Loader from "../../containers/Loader";
 import Pagination from "../../components/Pagination";
 import {getRoles} from "./rolesSlice";
 import {useNavigate} from "react-router-dom";
+import {hasPermission} from "../../auth/jwtService";
 
 const TopSideButtons = () => {
 	
@@ -21,8 +22,10 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="inline-block float-right">
-			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New Role
-			</button>
+			{hasPermission("role_add") && (
+				<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewLeadModal()}>Add New Role
+				</button>
+			)}
 		</div>
 	)
 }
@@ -69,56 +72,62 @@ const Roles = () => {
 		<div>
 			<TitleCard title="Current Roles" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				
-				{/* Leads List in table format loaded from slice after api call */}
-				<div className="overflow-x-auto w-full">
-					{loading ? <Loader/> : (
-						<table className="table w-full">
-							<thead>
-							<tr className="text-center">
-								<th>ID</th>
-								<th>Name</th>
-								<th>Status</th>
-								<th>Actions</th>
-							</tr>
-							</thead>
-							<tbody>
-							{roles?.results?.map((item) => (
-								<tr key={item?.id} className="text-center">
-									<td>{item?.id}</td>
-									<td>{item?.name}</td>
-									<td>{item?.is_active ? "Active" : "No active"}</td>
-									<td className="flex gap-1 justify-center">
-										<button
-											className="btn btn-square btn-error text-white"
-											onClick={() => deleteCurrentRole(item?.id)}
-										>
-											<TrashIcon className="w-5"/>
-										</button>
-										<button
-											className="btn btn-square btn-warning text-white"
-											onClick={() => openAddNewRoleModal(item?.id)}
-										>
-											<PencilIcon className="w-5"/>
-										</button>
-										<button
-											className="btn btn-square btn-success text-white"
-											onClick={() => navigate(`${item?.id}`)}
-										>
-											<ChevronRightIcon className="w-5"/>
-										</button>
-									</td>
-								</tr>
-							))}
-							</tbody>
-						</table>
-					)}
-				</div>
-				
-				<Pagination
-					totalItems={roles?.count}
-					itemsPerPage={10}
-					onPageChange={handlePageChange}
-				/>
+				{hasPermission("role_table") && (
+					<>
+						<div className="overflow-x-auto w-full">
+							{loading ? <Loader/> : (
+								<table className="table w-full">
+									<thead>
+									<tr className="text-center">
+										<th>ID</th>
+										<th>Name</th>
+										<th>Status</th>
+										<th>Actions</th>
+									</tr>
+									</thead>
+									<tbody>
+									{roles?.results?.map((item) => (
+										<tr key={item?.id} className="text-center">
+											<td>{item?.id}</td>
+											<td>{item?.name}</td>
+											<td>{item?.is_active ? "Active" : "No active"}</td>
+											<td className="flex gap-1 justify-center">
+												<button
+													className="btn btn-square btn-error text-white"
+													onClick={() => deleteCurrentRole(item?.id)}
+													disabled={!hasPermission("role_del")}
+												>
+													<TrashIcon className="w-5"/>
+												</button>
+												<button
+													className="btn btn-square btn-warning text-white"
+													onClick={() => openAddNewRoleModal(item?.id)}
+													disabled={!hasPermission("role_edit")}
+												>
+													<PencilIcon className="w-5"/>
+												</button>
+												<button
+													className="btn btn-square btn-success text-white"
+													onClick={() => navigate(`${item?.id}`)}
+													disabled={!hasPermission("role_det")}
+												>
+													<ChevronRightIcon className="w-5"/>
+												</button>
+											</td>
+										</tr>
+									))}
+									</tbody>
+								</table>
+							)}
+						</div>
+						
+						<Pagination
+							totalItems={roles?.count}
+							itemsPerPage={10}
+							onPageChange={handlePageChange}
+						/>
+					</>
+				)}
 			</TitleCard>
 		</div>
 	);

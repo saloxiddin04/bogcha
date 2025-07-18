@@ -15,7 +15,7 @@ const WebSocketHandler = () => {
 		
 		// ws.current = new WebSocket(`ws://0.0.0.0:8048/ws/?token=${token}`);
 		// ws.current = new WebSocket(`ws://192.168.31.21:8048/ws/?token=${token}`);
-		ws.current = new WebSocket(`ws://0c58395646dd.ngrok-free.app/ws/?token=${token}`);
+		ws.current = new WebSocket(`ws://2c32dc89f603.ngrok-free.app/ws/?token=${token}`);
 		
 		ws.current.onopen = () => {
 			console.log('✅ WebSocket connected');

@@ -94,7 +94,8 @@ export function getCookie(name) {
 	return null;
 }
 
-export const hasPermission = (permissionList = [], required) => {
+export const hasPermission = (required) => {
+	const permissionList = getCookie("permissions")
 	if (!required) return true;
 	return permissionList.includes(required);
 };

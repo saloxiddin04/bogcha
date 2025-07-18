@@ -9,6 +9,7 @@ import Loader from "../../containers/Loader";
 import Pagination from "../../components/Pagination";
 import {PencilIcon} from "@heroicons/react/20/solid";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
+import {hasPermission} from "../../auth/jwtService";
 
 const TopSideButtons = () => {
 	
@@ -20,7 +21,10 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="inline-block float-right">
-			<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewGroupModal()}>Add New Group</button>
+			{hasPermission("group_add") && (
+				<button className="btn px-6 btn-sm normal-case btn-primary" onClick={() => openAddNewGroupModal()}>Add New
+					Group</button>
+			)}
 		</div>
 	)
 }
@@ -66,62 +70,68 @@ const Groups = () => {
 	return (
 		<>
 			<TitleCard title="Current Groups" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
-				
-				<div className="overflow-x-auto w-full">
-					{loading ? <Loader/> : (
-						<table className="table w-full">
-							<thead>
-							<tr>
-								<th>Id</th>
-								<th>Name</th>
-								<th>Teacher</th>
-								<th>Children count</th>
-								<th className="text-center">Action</th>
-							</tr>
-							</thead>
-							<tbody>
-							{
-								groups?.data?.map((item) => {
-									return (
-										<tr key={item?.id}>
-											<td>{item?.id}</td>
-											<td>{item?.name}</td>
-											<td>{item?.teachers?.map(teacher => teacher?.full_name).join(', ')}</td>
-											<td>{item?.children_count}</td>
-											<td className="flex gap-1 justify-center">
-												<button
-													className="btn btn-square btn-error text-white"
-													onClick={() => deleteCurrentGroup(item?.id)}
-												>
-													<TrashIcon className="w-5"/>
-												</button>
-												<button
-													className="btn btn-square btn-warning text-white"
-													onClick={() => openAddNewGroupModal(item?.id)}
-												>
-													<PencilIcon className="w-5"/>
-												</button>
-												<button
-													className="btn btn-square btn-success text-white"
-													onClick={() => openAddNewGroupModal(item?.id)}
-												>
-													<ChevronRightIcon className="w-5"/>
-												</button>
-											</td>
-										</tr>
-									)
-								})
-							}
-							</tbody>
-						</table>
-					)}
-				</div>
-				
-				<Pagination
-					totalItems={groups?.pagination?.total_items}
-					itemsPerPage={10}
-					onPageChange={handlePageChange}
-				/>
+				{hasPermission("group_t") && (
+					<>
+						<div className="overflow-x-auto w-full">
+							{loading ? <Loader/> : (
+								<table className="table w-full">
+									<thead>
+									<tr>
+										<th>Id</th>
+										<th>Name</th>
+										<th>Teacher</th>
+										<th>Children count</th>
+										<th className="text-center">Action</th>
+									</tr>
+									</thead>
+									<tbody>
+									{
+										groups?.data?.map((item) => {
+											return (
+												<tr key={item?.id}>
+													<td>{item?.id}</td>
+													<td>{item?.name}</td>
+													<td>{item?.teachers?.map(teacher => teacher?.full_name).join(', ')}</td>
+													<td>{item?.children_count}</td>
+													<td className="flex gap-1 justify-center">
+														<button
+															className="btn btn-square btn-error text-white"
+															onClick={() => deleteCurrentGroup(item?.id)}
+															disabled={!hasPermission("group_d")}
+														>
+															<TrashIcon className="w-5"/>
+														</button>
+														<button
+															className="btn btn-square btn-warning text-white"
+															onClick={() => openAddNewGroupModal(item?.id)}
+															disabled={!hasPermission("group_e")}
+														>
+															<PencilIcon className="w-5"/>
+														</button>
+														<button
+															className="btn btn-square btn-success text-white"
+															onClick={() => openAddNewGroupModal(item?.id)}
+															disabled={!hasPermission("group_e")}
+														>
+															<ChevronRightIcon className="w-5"/>
+														</button>
+													</td>
+												</tr>
+											)
+										})
+									}
+									</tbody>
+								</table>
+							)}
+						</div>
+						
+						<Pagination
+							totalItems={groups?.pagination?.total_items}
+							itemsPerPage={10}
+							onPageChange={handlePageChange}
+						/>
+					</>
+				)}
 			</TitleCard>
 		</>
 	);

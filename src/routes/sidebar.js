@@ -20,6 +20,7 @@ const routes = [
 		path: '/app/dashboard',
 		icon: <Squares2X2Icon className={iconClasses}/>,
 		name: 'Dashboard',
+		permission: "dashboard"
 	},
 	{
 		path: '/app/leads', // url
@@ -30,12 +31,13 @@ const routes = [
 		path: '/app/users',
 		icon: <UserGroupIcon className={iconClasses}/>,
 		name: "Users",
-		permission: "user_page"
+		permission: "users"
 	},
 	{
 		path: '/app/calendar', // url
 		icon: <CalendarDaysIcon className={iconClasses}/>, // icon component
-		name: 'Plan of yearly', // name that appear in Sidebar
+		name: 'Plan of yearly',
+		permission: "plan_of_year"
 	},
 	
 	// {
@@ -55,32 +57,33 @@ const routes = [
 		path: '/app/groups',
 		icon: <UsersIcon className={submenuIconClasses}/>,
 		name: 'Groups',
+		permission: "groups"
 	},
 	
 	{
 		path: '/app/roles', //no url needed as this has submenu
 		icon: <Cog6ToothIcon className={`${iconClasses} inline`}/>, // icon component
 		name: 'Roles',
-		permission: "role"
+		permission: "roles"
 	},
 	
 	{
 		path: '/app/smm', //no url needed as this has submenu
 		icon: <ChatBubbleBottomCenterTextIcon className={`${iconClasses} inline`}/>, // icon component
 		name: 'SMM Post',
-		// permission: "role"
+		permission: "smm_post"
 	},
 	{
 		path: '/app/child', //no url needed as this has submenu
 		icon: <StarIcon className={`${iconClasses} inline`}/>, // icon component
 		name: 'Child',
-		// permission: "role"
+		permission: "child"
 	},
 	{
 		path: '/app/check-kids', //no url needed as this has submenu
 		icon: <DocumentCheckIcon className={`${iconClasses} inline`}/>, // icon component
 		name: 'Check kids',
-		// permission: "role"
+		permission: "check_kids"
 	},
 	
 	// {
