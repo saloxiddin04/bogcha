@@ -11,6 +11,7 @@ import AddGroupModal from "../features/groups/components/AddGroupModal";
 import {deleteGroup} from "../features/groups/groupsSlice";
 import AddPostModal from "../features/smmPost/components/AddPostModal";
 import {deletePost} from "../features/smmPost/smmPostSlice";
+import {deleteEduPlanList} from "../features/calendar/calendarSlice";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -29,6 +30,9 @@ function ModalLayout() {
 			return payload;
 		}),
 		DELETE_POST: (params) => dispatch(deletePost(params)).then(({payload}) => {
+			return payload;
+		}),
+		DELETE_PLAN: (params) => dispatch(deleteEduPlanList(params)).then(({payload}) => {
 			return payload;
 		}),
 	};
