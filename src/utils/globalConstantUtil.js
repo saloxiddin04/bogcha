@@ -8,6 +8,7 @@ module.exports = Object.freeze({
         ROLE_ADD_NEW: "ROLE_ADD_NEW",
         GROUP_ADD_NEW: "GROUP_ADD_NEW",
         POST_ADD_NEW: "POST_ADD_NEW",
+        EDU_ADD_NEW: "EDU_ADD_NEW",
         DEFAULT : "",
     },
 

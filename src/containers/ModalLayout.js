@@ -12,6 +12,7 @@ import {deleteGroup} from "../features/groups/groupsSlice";
 import AddPostModal from "../features/smmPost/components/AddPostModal";
 import {deletePost} from "../features/smmPost/smmPostSlice";
 import {deleteEduPlanList} from "../features/calendar/calendarSlice";
+import AddEduModal from "../features/calendar/components/AddEduModal";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -56,6 +57,7 @@ function ModalLayout() {
 							[MODAL_BODY_TYPES.ROLE_ADD_NEW]: <AddNewRoleModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.GROUP_ADD_NEW]: <AddGroupModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.POST_ADD_NEW]: <AddPostModal closeModal={close} extraObject={extraObject} />,
+							[MODAL_BODY_TYPES.EDU_ADD_NEW]: <AddEduModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close} remove={remove} />,
 							[MODAL_BODY_TYPES.DEFAULT]: <div></div>
 						}[bodyType]

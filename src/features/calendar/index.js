@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import CalendarView from '../../components/CalendarView'
 import moment from 'moment'
 import {CALENDAR_INITIAL_EVENTS} from '../../utils/dummyData'
@@ -6,15 +6,13 @@ import {useDispatch, useSelector} from 'react-redux'
 import {openRightDrawer} from '../common/rightDrawerSlice'
 import {MODAL_BODY_TYPES, RIGHT_DRAWER_TYPES} from '../../utils/globalConstantUtil'
 import {showNotification} from '../common/headerSlice'
-import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import Pagination from "../../components/Pagination";
 import TitleCard from "../../components/Cards/TitleCard";
 import {useNavigate} from "react-router-dom";
 import {getEduPlanList} from "./calendarSlice";
 import {openModal} from "../common/modalSlice";
 import {hasPermission} from "../../auth/jwtService";
-import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import {PencilIcon} from "@heroicons/react/20/solid";
+import {PencilIcon, TrashIcon, ChevronRightIcon, XCircleIcon} from "@heroicons/react/20/solid";
 import InputText from "../../components/Input/InputText";
 
 
@@ -24,20 +22,42 @@ const TopSideButtons = () => {
 	
 	const dispatch = useDispatch()
 	
+	const [search, setSearch] = useState("")
+	const timeoutId = useRef()
+	
 	const openAddNewPlanModal = () => {
-		dispatch(openModal({title: "Add New Plan", bodyType: MODAL_BODY_TYPES.POST_ADD_NEW}))
+		dispatch(openModal({title: "Add New Plan", bodyType: MODAL_BODY_TYPES.EDU_ADD_NEW}))
+	}
+	
+	const searchPlan = (value) => {
+		setSearch(value)
+		clearTimeout(timeoutId.current)
+		timeoutId.current = setTimeout(() => {
+			dispatch(getEduPlanList({search: value}))
+		}, 500)
 	}
 	
 	return (
-		<div className="float-right flex items-end gap-2">
+		<div className="flex justify-between items-end gap-2 w-full">
 			{hasPermission("plan_of_year") && (
-				<InputText
-					type="text"
-					// defaultValue={postObj.title ?? ""}
-					updateType="title"
-					labelTitle="Search"
-					// updateFormValue={updateFormValue}
-				/>
+				<div className="w-2/5 flex gap-2 items-end">
+					<InputText
+						type="text"
+						defaultValue={search ?? ""}
+						updateType="search"
+						labelTitle="Search"
+						updateFormValue={({value}) => searchPlan(value)}
+					/>
+					<button
+						className="btn px-6 btn-sm normal-case btn-error"
+						onClick={() => {
+							setSearch("")
+							dispatch(getEduPlanList())
+						}}
+					>
+						<XCircleIcon className="w-5" />
+					</button>
+				</div>
 			)}
 			{hasPermission("plan_of_year") && (
 				<button
@@ -93,6 +113,18 @@ function Calendar() {
 		}));
 	};
 	
+	const openAddNewPlanModal = (id) => {
+		dispatch(openModal({
+			title: "Edit Group",
+			bodyType: MODAL_BODY_TYPES.POST_ADD_NEW,
+			extraObject: {
+				notification: 'Successfully edited!',
+				id,
+				is_edit: true
+			}
+		}))
+	}
+	
 	return (
 		<>
 			{/*<CalendarView */}
@@ -101,7 +133,7 @@ function Calendar() {
 			{/*     openDayDetail={openDayDetail}*/}
 			{/*/>*/}
 			
-			<TitleCard title="Current Plan of yearly" topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
+			<TitleCard topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
 				<div className="overflow-x-auto w-full">
 					<table className="table w-full">
 						<thead>
@@ -130,7 +162,7 @@ function Calendar() {
 									</button>
 									<button
 										className="btn btn-square btn-warning text-white"
-										// onClick={() => openAddNewPostModal(item?.id)}
+										onClick={() => openAddNewPlanModal(item?.id)}
 										disabled={!hasPermission("plan_of_year")}
 									>
 										<PencilIcon className="w-5"/>

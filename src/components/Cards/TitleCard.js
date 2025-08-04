@@ -11,7 +11,7 @@ function TitleCard({title, children, topMargin, TopSideButtons}) {
 				
 				{/* Top side button, show only if present */}
 				{
-					TopSideButtons && <div className="inline-block float-right">{TopSideButtons}</div>
+					TopSideButtons && <>{TopSideButtons}</>
 				}
 			</Subtitle>
 			

@@ -1,5 +1,6 @@
 import {useDispatch} from 'react-redux'
 import {showNotification} from '../headerSlice'
+import {useState} from "react";
 
 function ConfirmationModalBody({extraObject, closeModal, remove}) {
 	
@@ -7,16 +8,25 @@ function ConfirmationModalBody({extraObject, closeModal, remove}) {
 	
 	const {message, notification} = extraObject
 	
+	const [loading, setLoading] = useState(false)
 	
 	const proceedWithYes = async () => {
-		await remove().then((res) => {
-			if (res?.status === 204) {
-				dispatch(showNotification({notification, status: 1}))
-			} else {
-				dispatch(showNotification({notification, status: 0}))
-			}
-		})
-		closeModal()
+		try {
+			setLoading(true)
+			await remove().then((res) => {
+				if (res?.status === 204) {
+					dispatch(showNotification({notification, status: 1}))
+					setLoading(false)
+				} else {
+					dispatch(showNotification({notification, status: 0}))
+					setLoading(false)
+				}
+			})
+			closeModal()
+		} catch (e) {
+			setLoading(false)
+			return dispatch(showNotification({notification, status: 0}))
+		}
 	}
 	
 	return (
@@ -27,7 +37,13 @@ function ConfirmationModalBody({extraObject, closeModal, remove}) {
 			
 			<div className="modal-action mt-12">
 				<button className="btn btn-outline" onClick={() => closeModal()}>Cancel</button>
-				<button className="btn btn-primary w-36" onClick={() => proceedWithYes()}>Yes</button>
+				<button
+					className="btn btn-primary w-36"
+					onClick={() => proceedWithYes()}
+					disabled={loading}
+				>
+					{loading ? "Loading..." : "Yes"}
+				</button>
 			</div>
 		</>
 	)
