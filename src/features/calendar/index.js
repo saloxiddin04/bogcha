@@ -1,11 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
-import CalendarView from '../../components/CalendarView'
-import moment from 'moment'
-import {CALENDAR_INITIAL_EVENTS} from '../../utils/dummyData'
 import {useDispatch, useSelector} from 'react-redux'
-import {openRightDrawer} from '../common/rightDrawerSlice'
-import {MODAL_BODY_TYPES, RIGHT_DRAWER_TYPES} from '../../utils/globalConstantUtil'
-import {showNotification} from '../common/headerSlice'
+import {MODAL_BODY_TYPES} from '../../utils/globalConstantUtil'
 import Pagination from "../../components/Pagination";
 import TitleCard from "../../components/Cards/TitleCard";
 import {useNavigate} from "react-router-dom";
@@ -14,9 +9,6 @@ import {openModal} from "../common/modalSlice";
 import {hasPermission} from "../../auth/jwtService";
 import {PencilIcon, TrashIcon, ChevronRightIcon, XCircleIcon} from "@heroicons/react/20/solid";
 import InputText from "../../components/Input/InputText";
-
-
-// const INITIAL_EVENTS = CALENDAR_INITIAL_EVENTS
 
 const TopSideButtons = () => {
 	
@@ -78,20 +70,6 @@ function Calendar() {
 	
 	const {eduPlanList} = useSelector((state) => state.eduPlan)
 	
-	// const [events, setEvents] = useState(INITIAL_EVENTS)
-	//
-	// const addNewEvent = (date) => {
-	//     let randomEvent = INITIAL_EVENTS[Math.floor(Math.random() * 10)]
-	//     let newEventObj = {title : randomEvent.title, theme : randomEvent.theme, startTime : moment(date).startOf('day'), endTime : moment(date).endOf('day')}
-	//     setEvents([...events, newEventObj])
-	//     dispatch(showNotification({message : "New Event Added!", status : 1}))
-	// }
-	//
-	// // Open all events of current day in sidebar
-	// const openDayDetail = ({filteredEvents, title}) => {
-	//     dispatch(openRightDrawer({header : title, bodyType : RIGHT_DRAWER_TYPES.CALENDAR_EVENTS, extraObject : {filteredEvents}}))
-	// }
-	
 	useEffect(() => {
 		dispatch(getEduPlanList())
 	}, [dispatch])
@@ -127,12 +105,6 @@ function Calendar() {
 	
 	return (
 		<>
-			{/*<CalendarView */}
-			{/*     calendarEvents={events}*/}
-			{/*     addNewEvent={addNewEvent}*/}
-			{/*     openDayDetail={openDayDetail}*/}
-			{/*/>*/}
-			
 			<TitleCard topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
 				<div className="overflow-x-auto w-full">
 					<table className="table w-full">
@@ -169,7 +141,7 @@ function Calendar() {
 									</button>
 									<button
 										className="btn btn-square btn-success text-white"
-										// onClick={() => openAddNewPostModal(item?.id)}
+										onClick={() => navigate(`${item?.id}`)}
 										disabled={!hasPermission("plan_of_year")}
 									>
 										<ChevronRightIcon className="w-5"/>

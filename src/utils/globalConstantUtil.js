@@ -9,6 +9,7 @@ module.exports = Object.freeze({
         GROUP_ADD_NEW: "GROUP_ADD_NEW",
         POST_ADD_NEW: "POST_ADD_NEW",
         EDU_ADD_NEW: "EDU_ADD_NEW",
+        EDU_PLAN_ADD_NEW: "EDU_PLAN_ADD_NEW",
         DEFAULT : "",
     },
 

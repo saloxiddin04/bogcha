@@ -4,7 +4,8 @@ import instance from "../../plugins/axios";
 const initialState = {
 	loading: false,
 	eduPlanList: null,
-	eduPlanDetail: null
+	eduPlanDetail: null,
+	calendarList: null
 }
 
 export const getEduPlanList = createAsyncThunk(
@@ -51,6 +52,32 @@ export const updateEduPlanList = createAsyncThunk(
 		try {
 			const response = await instance.patch(`/edu_plan/${params?.id}`, params?.data)
 			await thunkAPI.dispatch(getEduPlanList())
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message);
+		}
+	}
+)
+
+// ------------ calendarList ----------- //
+export const getCalendarList = createAsyncThunk(
+	"edu/getCalendarList",
+	async (id, thunkAPI) => {
+		try {
+			const response = await instance.get(`/edu_plan/plan_get/${id}/plan_list/?page=1&page_size=10000`)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message);
+		}
+	}
+)
+
+export const createCalendarList = createAsyncThunk(
+	"edu/createCalendarList",
+	async (data, thunkAPI) => {
+		try {
+			const response = await instance.post(`/edu_plan/plan/`, data)
+			thunkAPI.dispatch(getCalendarList(data?.edu_plan))
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message);
@@ -110,6 +137,33 @@ const eduPlanSlice = createSlice({
 			.addCase(updateEduPlanList.rejected, (state) => {
 				state.loading = false
 			})
+		
+		// getCalendarList
+		builder
+			.addCase(getCalendarList.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getCalendarList.fulfilled, (state, {payload}) => {
+				state.calendarList = payload
+				state.loading = false
+			})
+			.addCase(getCalendarList.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// createCalendarList
+		builder
+			.addCase(createCalendarList.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(createCalendarList.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(createCalendarList.rejected, (state) => {
+				state.loading = false
+			})
+		
+		
 	}
 })
 

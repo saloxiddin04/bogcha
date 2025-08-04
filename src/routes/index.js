@@ -9,7 +9,6 @@ const Blank = lazy(() => import('../pages/protected/Blank'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
 const Leads = lazy(() => import('../pages/protected/Leads'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
-const Calendar = lazy(() => import('../pages/protected/Calendar'))
 const Team = lazy(() => import('../pages/protected/Team'))
 const Transactions = lazy(() => import('../pages/protected/Transactions'))
 const Bills = lazy(() => import('../pages/protected/Bills'))
@@ -26,6 +25,10 @@ const ChildrenDetail = lazy(() => import("../features/childrenPage/components/ch
 
 const CheckKids = lazy(() => import("../pages/protected/CheckKids"))
 const CheckKidsDetail = lazy(() => import("../features/checkKids/components/checkKidsDetail"))
+
+// calendar
+const Calendar = lazy(() => import('../pages/protected/Calendar'))
+const CalendarDetail = lazy(() => import('../features/calendar/components/EduCalendar'))
 
 const routes = [
   {
@@ -89,10 +92,17 @@ const routes = [
     path: '/settings-team',
     component: Team,
   },
+  
+  // ------- calendar ------ //
   {
     path: '/calendar',
     component: Calendar,
   },
+  {
+    path: '/calendar/:id',
+    component: CalendarDetail,
+  },
+  
   {
     path: '/transactions',
     component: Transactions,

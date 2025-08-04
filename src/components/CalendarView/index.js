@@ -3,10 +3,18 @@ import ChevronLeftIcon from "@heroicons/react/24/solid/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import moment from "moment";
 import {CALENDAR_EVENT_STYLE} from "./util";
+import {openModal} from "../../features/common/modalSlice";
+import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
+import {useDispatch} from "react-redux";
+import {useParams} from "react-router-dom";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
 
-function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
+function CalendarView({calendarEvents, openDayDetail}) {
+	
+	const dispatch = useDispatch()
+	
+	const {id} = useParams()
 	
 	const today = moment().startOf('day')
 	const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
@@ -32,8 +40,8 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
 	const allDaysInMonth = () => {
 		let start = moment(firstDayOfMonth).startOf('week')
 		let end = moment(moment(firstDayOfMonth).endOf('month')).endOf('week')
-		var days = [];
-		var day = start;
+		let days = [];
+		let day = start;
 		while (day <= end) {
 			days.push(day.toDate());
 			day = day.clone().add(1, 'd');
@@ -54,7 +62,7 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
 	}
 	
 	const openAllEventsDetail = (date, theme) => {
-		if (theme != "MORE") return 1
+		if (theme !== "MORE") return 1
 		let filteredEvents = events.filter((e) => {
 			return moment(date).isSame(moment(e.startTime), 'day')
 		}).map((e) => {
@@ -68,7 +76,7 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
 	}
 	
 	const isDifferentMonth = (date) => {
-		return moment(date).month() != moment(firstDayOfMonth).month()
+		return moment(date).month() !== moment(firstDayOfMonth).month()
 	}
 	
 	const getPrevMonth = (event) => {
@@ -89,13 +97,23 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
 		setCurrMonth(moment(firstDayOfNextMonth).format("MMM-yyyy"));
 	};
 	
+	const openAddNewEduPlanModal = () => {
+		dispatch(openModal({
+			title: "Add New Edu Plan",
+			bodyType: MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW,
+			extraObject: {
+				id
+			}
+		}))
+	}
+	
 	return (
 		<>
 			<div className="w-full  bg-base-100 p-4 rounded-lg">
 				<div className="flex items-center justify-between">
 					<div className="flex  justify-normal gap-2 sm:gap-4">
 						<p className="font-semibold text-xl w-48">
-							{moment(firstDayOfMonth).format("MMMM yyyy").toString()}<span className="text-xs ml-2 ">Beta</span>
+							{moment(firstDayOfMonth).format("MMMM yyyy").toString()}
 						</p>
 						
 						<button className="btn  btn-square btn-sm btn-ghost" onClick={getPrevMonth}><ChevronLeftIcon
@@ -112,7 +130,11 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
 						/></button>
 					</div>
 					<div>
-						<button className="btn  btn-sm btn-ghost btn-outline normal-case" onClick={addNewEvent}>Add New Event
+						<button
+							className="btn  btn-sm btn-ghost btn-outline normal-case"
+							onClick={openAddNewEduPlanModal}
+						>
+							Add New Event
 						</button>
 					</div>
 				
@@ -132,11 +154,15 @@ function CalendarView({calendarEvents, addNewEvent, openDayDetail}) {
 				<div className="grid grid-cols-7 mt-1  place-items-center">
 					{allDaysInMonth().map((day, idx) => {
 						return (
-							<div key={idx}
-							     className={colStartClasses[moment(day).day().toString()] + " border border-solid w-full h-28  "}>
+							<div
+								key={idx}
+								className={colStartClasses[moment(day).day().toString()] + " border border-solid w-full h-28  "}
+							>
 								<p
 									className={`flex items-center  justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm cursor-pointer hover:bg-base-300 ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"} ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`}
-									onClick={() => addNewEvent(day)}> {moment(day).format("D")}</p>
+								>
+									{moment(day).format("D")}
+								</p>
 								{
 									getEventsForCurrentDate(day).map((e, k) => {
 										return <p key={k} onClick={() => openAllEventsDetail(day, e.theme)}
