@@ -34,6 +34,7 @@ const EduCalendar = () => {
 	}, [dispatch, id])
 	
 	const openDayDetail = ({filteredEvents, title}) => {
+		console.log(filteredEvents)
 		dispatch(openRightDrawer({
 			header: title,
 			bodyType: RIGHT_DRAWER_TYPES.CALENDAR_EVENTS,

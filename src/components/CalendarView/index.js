@@ -43,7 +43,8 @@ function CalendarView({calendarEvents, openDayDetail}) {
 			title: item?.title,
 			theme: item?.status?.toUpperCase(),
 			startTime: moment(item?.date_time),
-			endTime: moment(new Date()).endOf('day')
+			endTime: moment(new Date()).endOf('day'),
+			id: item?.id
 		}))
 		setEvents(transformed)
 	}, [calendarEvents, dispatch, id])
@@ -73,11 +74,11 @@ function CalendarView({calendarEvents, openDayDetail}) {
 	}
 	
 	const openAllEventsDetail = (date, theme) => {
-		if (theme !== "MORE") return 1
+		// if (theme !== "MORE") return 1
 		let filteredEvents = events.filter((e) => {
 			return moment(date).isSame(moment(e.startTime), 'day')
 		}).map((e) => {
-			return {title: e.title, theme: e.theme}
+			return {title: e.title, theme: e.theme, id: e.id}
 		})
 		openDayDetail({filteredEvents, title: moment(date).format("D MMM YYYY")})
 	}
@@ -177,7 +178,7 @@ function CalendarView({calendarEvents, openDayDetail}) {
 								{
 									getEventsForCurrentDate(day).map((e, k) => {
 										return <p key={k} onClick={() => openAllEventsDetail(day, e.theme)}
-										          className={`text-xs px-2 mt-1 truncate  ${THEME_BG[e.theme] || ""}`}>{e.title}</p>
+										          className={`text-xs px-2 mt-1 truncate cursor-pointer ${THEME_BG[e.theme] || ""}`}>{e.title}</p>
 									})
 								}
 							</div>
