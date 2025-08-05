@@ -130,7 +130,7 @@ export const deleteCalendar = createAsyncThunk(
 	async (params, thunkAPI) => {
 		try {
 			const response = await instance.delete(`/edu_plan/plan/${params?.id}/`)
-			await thunkAPI.dispatch(getCalendarDetail(params?.date_time))
+			await thunkAPI.dispatch(getCalendarDetail({date_time: params?.date}))
 			return response
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)

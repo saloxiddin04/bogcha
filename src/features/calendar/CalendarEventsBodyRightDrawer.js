@@ -29,7 +29,7 @@ function CalendarEventsBodyRightDrawer({date}) {
 				notification: 'Successfully deleted!',
 				actionKey: 'DELETE_PLAN_EDU',
 				payload: id,
-				date
+				date: moment(date).format("DD.MM.YYYY")
 			}
 		}));
 	};
