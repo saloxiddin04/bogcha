@@ -5,7 +5,7 @@ import moment from "moment";
 import {CALENDAR_EVENT_STYLE} from "./util";
 import {openModal} from "../../features/common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
@@ -15,6 +15,8 @@ function CalendarView({calendarEvents, openDayDetail}) {
 	const dispatch = useDispatch()
 	
 	const {id} = useParams()
+	
+	const {calendarList} = useSelector((state) => state.eduPlan)
 	
 	const today = moment().startOf('day')
 	const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
@@ -36,6 +38,15 @@ function CalendarView({calendarEvents, openDayDetail}) {
 		setEvents(calendarEvents)
 	}, [calendarEvents])
 	
+	useEffect(() => {
+		const transformed = calendarList?.data?.map((item) => ({
+			title: item?.title,
+			theme: item?.status?.toUpperCase(),
+			startTime: moment(item?.date_time),
+			endTime: moment(new Date()).endOf('day')
+		}))
+		setEvents(transformed)
+	}, [calendarEvents, dispatch, id])
 	
 	const allDaysInMonth = () => {
 		let start = moment(firstDayOfMonth).startOf('week')

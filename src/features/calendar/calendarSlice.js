@@ -5,7 +5,10 @@ const initialState = {
 	loading: false,
 	eduPlanList: null,
 	eduPlanDetail: null,
-	calendarList: null
+	calendarList: null,
+	
+	groupsForEdu: null,
+	childrenForEdu: null
 }
 
 export const getEduPlanList = createAsyncThunk(
@@ -77,10 +80,34 @@ export const createCalendarList = createAsyncThunk(
 	async (data, thunkAPI) => {
 		try {
 			const response = await instance.post(`/edu_plan/plan/`, data)
-			thunkAPI.dispatch(getCalendarList(data?.edu_plan))
+			await thunkAPI.dispatch(getCalendarList(data?.edu_plan))
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message);
+		}
+	}
+)
+
+export const getGroupsForEdu = createAsyncThunk(
+	"edu/getGroupsForEdu",
+	async (_, thunkAPI) => {
+		try {
+			const response = await instance.get("/edu_plan/plan_get/plan_groups_list/?page=1&page_size=10000")
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getChildrenForEdu = createAsyncThunk(
+	"edu/getChildrenForEdu",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get("/edu_plan/plan_get/children_list/?page=1&page_size=10000", {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
 		}
 	}
 )
@@ -163,7 +190,25 @@ const eduPlanSlice = createSlice({
 				state.loading = false
 			})
 		
+		// getGroupsForEdu
+		builder
+			.addCase(getGroupsForEdu.fulfilled, (state, {payload}) => {
+				state.groupsForEdu = payload
+				state.loading = false
+			})
+			.addCase(getGroupsForEdu.rejected, (state) => {
+				state.loading = false
+			})
 		
+		// getChildrenForEdu
+		builder
+			.addCase(getChildrenForEdu.fulfilled, (state, {payload}) => {
+				state.childrenForEdu = payload
+				state.loading = false
+			})
+			.addCase(getChildrenForEdu.rejected, (state) => {
+				// state.loading = false
+			})
 	}
 })
 

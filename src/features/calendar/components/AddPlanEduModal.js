@@ -4,12 +4,14 @@ import {getUserData} from "../../../auth/jwtService";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import SelectBox from "../../../components/Input/SelectBox";
+import {createCalendarList, getChildrenForEdu, getGroupsForEdu} from "../calendarSlice";
+import {showNotification} from "../../common/headerSlice";
 
 const AddPlanEduModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
 	const {isOpen} = useSelector((state) => state.modal)
 	
-	const {loading} = useSelector((state) => state.eduPlan)
+	const {loading, groupsForEdu, childrenForEdu} = useSelector((state) => state.eduPlan)
 	
 	const [errorMessage, setErrorMessage] = useState("")
 	
@@ -26,6 +28,10 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 		children: [],
 		status: ""
 	})
+	
+	useEffect(() => {
+		dispatch(getGroupsForEdu())
+	}, [dispatch])
 	
 	useEffect(() => {
 		if (!isOpen) {
@@ -54,6 +60,9 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 			...prev,
 			[updateType]: value
 		}));
+		if (updateType === "groups") {
+			dispatch(getChildrenForEdu({group_ids: JSON.stringify(value)}))
+		}
 	};
 	
 	const statusOptions = [
@@ -61,6 +70,31 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 		{ label: "Skipped", value: "SKIPPED" },
 		{ label: "Done", value: "DONE" },
 	];
+	
+	const savePost = () => {
+		if (postObj.title.trim() === "") return setErrorMessage("Title is required!");
+		if (postObj.date_time.trim() === "") return setErrorMessage("Date time is required!");
+		if (postObj.goals.trim() === "") return setErrorMessage("Goals is required!");
+		if (postObj.activities.trim() === "") return setErrorMessage("Activities is required!");
+		if (!postObj.groups.length) return setErrorMessage("Groups is required!");
+		if (!postObj.children) return setErrorMessage("Children is required!");
+		if (postObj.status.trim() === "") return setErrorMessage("Status is required!");
+		
+		const action = isEditMode ? "" : createCalendarList
+		const params = isEditMode ? {id: extraObject?.id, data: postObj} : {...postObj, date_time: new Date(postObj.date_time).toISOString()}
+		
+		dispatch(action(params)).then(({payload}) => {
+			if (payload?.status_code === 201 || payload?.status_code === 200) {
+				dispatch(showNotification({
+					message: isEditMode ? "Post updated successfully!" : "New Edu Plan added!",
+					status: 1
+				}));
+				closeModal();
+			} else {
+				dispatch(showNotification({status: 0}));
+			}
+		});
+	}
 	
 	return (
 		<div>
@@ -96,37 +130,37 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 			/>
 			
 			<SelectBox
-				// options={
-				// 	children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
-				// }
+				options={
+					groupsForEdu?.data?.map((item) => ({label: item?.name, value: Number(item?.id)}))
+				}
 				labelTitle="Select group"
 				placeholder="Choose group..."
 				containerStyle="w-full"
 				updateType="groups"
 				updateFormValue={updateSelectBoxValue}
 				isMulti={true}
-				// defaultValue={
-				// 	children
-				// 		?.map((teacher) => ({ label: teacher?.full_name, value: Number(teacher?.id) }))
-				// 		?.filter(opt => groupObj?.group_children?.includes(opt.value))
-				// }
+				defaultValue={
+					groupsForEdu?.data
+						?.map((item) => ({ label: item?.name, value: Number(item?.id) }))
+						?.filter(opt => postObj?.groups?.includes(opt.value))
+				}
 			/>
 			
 			<SelectBox
-				// options={
-				// 	children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
-				// }
+				options={
+					childrenForEdu?.data?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
+				}
 				labelTitle="Select children"
 				placeholder="Choose children..."
 				containerStyle="w-full"
 				updateType="children"
 				updateFormValue={updateSelectBoxValue}
 				isMulti={true}
-				// defaultValue={
-				// 	children
-				// 		?.map((teacher) => ({ label: teacher?.full_name, value: Number(teacher?.id) }))
-				// 		?.filter(opt => groupObj?.group_children?.includes(opt.value))
-				// }
+				defaultValue={
+					childrenForEdu?.data
+						?.map((item) => ({ label: item?.full_name, value: Number(item?.id) }))
+						?.filter(opt => postObj?.children?.includes(opt.value))
+				}
 			/>
 			
 			<SelectBox
@@ -145,7 +179,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 				<button className="btn btn-ghost" onClick={() => closeModal()}>Cancel</button>
 				<button
 					className="btn btn-primary px-6"
-					// onClick={() => savePost()}
+					onClick={savePost}
 					disabled={loading}
 				>
 					{loading ? "Loading..." : (isEditMode ? "Update" : "Save")}

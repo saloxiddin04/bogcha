@@ -23,7 +23,7 @@ const EduCalendar = () => {
 				const transformed = payload?.data?.map((item) => ({
 					title: item?.title,
 					theme: item?.status?.toUpperCase(),
-					startTime: moment(item?.start_time),
+					startTime: moment(item?.date_time),
 					endTime: moment(new Date()).endOf('day')
 				}))
 				setEvents(transformed)
