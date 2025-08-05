@@ -33,12 +33,12 @@ const EduCalendar = () => {
 			})
 	}, [dispatch, id])
 	
-	const openDayDetail = ({filteredEvents, title}) => {
-		console.log(filteredEvents)
+	const openDayDetail = ({date, title}) => {
+		console.log(date)
 		dispatch(openRightDrawer({
 			header: title,
 			bodyType: RIGHT_DRAWER_TYPES.CALENDAR_EVENTS,
-			extraObject: {filteredEvents}
+			extraObject: {date}
 		}))
 	}
 	

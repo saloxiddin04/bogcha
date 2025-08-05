@@ -11,7 +11,7 @@ import AddGroupModal from "../features/groups/components/AddGroupModal";
 import {deleteGroup} from "../features/groups/groupsSlice";
 import AddPostModal from "../features/smmPost/components/AddPostModal";
 import {deletePost} from "../features/smmPost/smmPostSlice";
-import {deleteEduPlanList} from "../features/calendar/calendarSlice";
+import {deleteCalendar, deleteEduPlanList} from "../features/calendar/calendarSlice";
 import AddEduModal from "../features/calendar/components/AddEduModal";
 import AddPlanEduModal from "../features/calendar/components/AddPlanEduModal";
 
@@ -35,6 +35,9 @@ function ModalLayout() {
 			return payload;
 		}),
 		DELETE_PLAN: (params) => dispatch(deleteEduPlanList(params)).then(({payload}) => {
+			return payload;
+		}),
+		DELETE_PLAN_EDU: (params) => dispatch(deleteCalendar({id: params, date: extraObject?.date})).then(({payload}) => {
 			return payload;
 		}),
 	};

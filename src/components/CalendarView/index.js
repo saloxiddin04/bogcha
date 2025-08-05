@@ -78,9 +78,9 @@ function CalendarView({calendarEvents, openDayDetail}) {
 		let filteredEvents = events.filter((e) => {
 			return moment(date).isSame(moment(e.startTime), 'day')
 		}).map((e) => {
-			return {title: e.title, theme: e.theme, id: e.id}
+			return {title: e.title, theme: e.theme, id: e.id, date}
 		})
-		openDayDetail({filteredEvents, title: moment(date).format("D MMM YYYY")})
+		openDayDetail({date, title: moment(date).format("D MMM YYYY")})
 	}
 	
 	const isToday = (date) => {

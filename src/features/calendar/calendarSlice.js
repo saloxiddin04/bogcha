@@ -6,6 +6,7 @@ const initialState = {
 	eduPlanList: null,
 	eduPlanDetail: null,
 	calendarList: null,
+	calendarDetail: null,
 	
 	groupsForEdu: null,
 	childrenForEdu: null
@@ -112,6 +113,31 @@ export const getChildrenForEdu = createAsyncThunk(
 	}
 )
 
+export const getCalendarDetail = createAsyncThunk(
+	"edu/getCalendarDetail",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get("/edu_plan/plan_get/plan_detail/?page=1&page_size=10000", {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const deleteCalendar = createAsyncThunk(
+	"edu/deleteCalendar",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.delete(`/edu_plan/plan/${params?.id}/`)
+			await thunkAPI.dispatch(getCalendarDetail(params?.date_time))
+			return response
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 const eduPlanSlice = createSlice({
 	name: "edu",
 	initialState,
@@ -207,7 +233,20 @@ const eduPlanSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getChildrenForEdu.rejected, (state) => {
-				// state.loading = false
+				state.loading = false
+			})
+		
+		// getCalendarDetail
+		builder
+			.addCase(getCalendarDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getCalendarDetail.fulfilled, (state, {payload}) => {
+				state.calendarDetail = payload
+				state.loading = false
+			})
+			.addCase(getCalendarDetail.rejected, (state) => {
+				state.loading = false
 			})
 	}
 })
