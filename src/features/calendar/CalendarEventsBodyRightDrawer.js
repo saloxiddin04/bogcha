@@ -18,8 +18,8 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
 	const {calendarDetail, loading} = useSelector(state => state.eduPlan)
 	
 	useEffect(() => {
-		dispatch(getCalendarDetail({date_time: moment(date).format("DD.MM.YYYY")}))
-	}, [dispatch, date])
+		dispatch(getCalendarDetail({date_time: moment(date).format("DD.MM.YYYY"), id: edu_plan_id}))
+	}, [dispatch, date, edu_plan_id])
 	
 	const deleteCurrentCalendar = (id) => {
 		dispatch(openModal({
@@ -30,6 +30,7 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
 				notification: 'Successfully deleted!',
 				actionKey: 'DELETE_PLAN_EDU',
 				payload: id,
+				edu_plan_id,
 				date: moment(date).format("DD.MM.YYYY")
 			}
 		}));
@@ -37,7 +38,7 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
 	
 	const openAddNewEduPlanModal = (id) => {
 		dispatch(openModal({
-			title: "Add New Edu Plan",
+			title: "Update New Edu Plan",
 			bodyType: MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW,
 			extraObject: {
 				id,

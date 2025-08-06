@@ -4,9 +4,16 @@ import {getUserData} from "../../../auth/jwtService";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import SelectBox from "../../../components/Input/SelectBox";
-import {createCalendarList, getChildrenForEdu, getGroupsForEdu, updateCalendarList} from "../calendarSlice";
+import {
+	createCalendarList,
+	getCalendarEduDetail,
+	getChildrenForEdu,
+	getGroupsForEdu,
+	updateCalendarList
+} from "../calendarSlice";
 import {showNotification} from "../../common/headerSlice";
 import {useParams} from "react-router-dom";
+import moment from "moment";
 
 const AddPlanEduModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
@@ -17,8 +24,6 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 	const [errorMessage, setErrorMessage] = useState("")
 	
 	const isEditMode = Boolean(extraObject?.is_edit);
-	
-	console.log(extraObject)
 	
 	const [postObj, setPostObj] = useState({
 		title: "",
@@ -35,6 +40,27 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 	useEffect(() => {
 		dispatch(getGroupsForEdu())
 	}, [dispatch])
+	
+	useEffect(() => {
+		if (extraObject?.id && isEditMode) {
+			dispatch(getCalendarEduDetail(extraObject?.id)).then(({payload}) => {
+				if (payload) {
+					setPostObj({
+						title: payload?.data?.title ?? "",
+						author: payload?.author?.id ?? getUserData()?.id,
+						edu_plan: Number(extraObject?.edu_plan_id),
+						date_time: moment(payload?.data?.date_time).format("yyyy.MM.dd") ?? "",
+						goals: payload?.data?.goals ?? "",
+						activities: payload?.data?.activities ?? "",
+						groups: payload?.data?.groups?.map((el) => el?.id) ?? [],
+						children: payload?.data?.children ?? [],
+						status: payload?.data?.status ?? ""
+					})
+					dispatch(getChildrenForEdu({group_ids: JSON.stringify(payload?.data?.groups?.map((el) => el?.id))}))
+				}
+			})
+		}
+	}, [dispatch, extraObject, isEditMode])
 	
 	useEffect(() => {
 		if (!isOpen) {

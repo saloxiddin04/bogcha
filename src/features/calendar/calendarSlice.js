@@ -9,7 +9,8 @@ const initialState = {
 	calendarDetail: null,
 	
 	groupsForEdu: null,
-	childrenForEdu: null
+	childrenForEdu: null,
+	eduDetail: null
 }
 
 export const getEduPlanList = createAsyncThunk(
@@ -117,7 +118,19 @@ export const getCalendarDetail = createAsyncThunk(
 	"edu/getCalendarDetail",
 	async (params, thunkAPI) => {
 		try {
-			const response = await instance.get("/edu_plan/plan_get/plan_detail/?page=1&page_size=10000", {params})
+			const response = await instance.get(`/edu_plan/plan_get/${params?.id}/plan_detail/?page=1&page_size=10000`, {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getCalendarEduDetail = createAsyncThunk(
+	"edu/getCalendarEduDetail",
+	async (id, thunkAPI) => {
+		try {
+			const response = await instance.get(`/edu_plan/plan/${id}/`)
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -130,7 +143,8 @@ export const deleteCalendar = createAsyncThunk(
 	async (params, thunkAPI) => {
 		try {
 			const response = await instance.delete(`/edu_plan/plan/${params?.id}/`)
-			await thunkAPI.dispatch(getCalendarDetail({date_time: params?.date}))
+			await thunkAPI.dispatch(getCalendarDetail({date_time: params?.date, id: params?.edu_plan_id}))
+			await thunkAPI.dispatch(getCalendarList(params?.edu_plan_id))
 			return response
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -143,7 +157,7 @@ export const updateCalendarList = createAsyncThunk(
 	async (data, thunkAPI) => {
 		try {
 			const response = await instance.patch(`/edu_plan/plan/${data?.id}/`, data?.data)
-			await thunkAPI.dispatch(getCalendarDetail({date_time: data?.date}))
+			await thunkAPI.dispatch(getCalendarDetail({date_time: data?.date, id: data?.edu_plan}))
 			await thunkAPI.dispatch(getCalendarList(data?.edu_plan))
 			return response.data
 		} catch (e) {
@@ -247,6 +261,19 @@ const eduPlanSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getChildrenForEdu.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getCalendarEduDetail
+		builder
+			.addCase(getCalendarEduDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getCalendarEduDetail.fulfilled, (state, {payload}) => {
+				state.eduDetail = payload
+				state.loading = false
+			})
+			.addCase(getCalendarEduDetail.rejected, (state) => {
 				state.loading = false
 			})
 		

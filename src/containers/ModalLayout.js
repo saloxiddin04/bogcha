@@ -37,7 +37,7 @@ function ModalLayout() {
 		DELETE_PLAN: (params) => dispatch(deleteEduPlanList(params)).then(({payload}) => {
 			return payload;
 		}),
-		DELETE_PLAN_EDU: (params) => dispatch(deleteCalendar({id: params, date: extraObject?.date})).then(({payload}) => {
+		DELETE_PLAN_EDU: (params) => dispatch(deleteCalendar({id: params, date: extraObject?.date, edu_plan_id: extraObject?.edu_plan_id})).then(({payload}) => {
 			return payload;
 		}),
 	};
