@@ -138,6 +138,20 @@ export const deleteCalendar = createAsyncThunk(
 	}
 )
 
+export const updateCalendarList = createAsyncThunk(
+	"edu/updateCalendarList",
+	async (data, thunkAPI) => {
+		try {
+			const response = await instance.patch(`/edu_plan/plan/${data?.id}/`, data?.data)
+			await thunkAPI.dispatch(getCalendarDetail({date_time: data?.date}))
+			await thunkAPI.dispatch(getCalendarList(data?.edu_plan))
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 const eduPlanSlice = createSlice({
 	name: "edu",
 	initialState,
@@ -246,6 +260,18 @@ const eduPlanSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getCalendarDetail.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// updateCalendarList
+		builder
+			.addCase(updateCalendarList.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(updateCalendarList.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(updateCalendarList.rejected, (state) => {
 				state.loading = false
 			})
 	}

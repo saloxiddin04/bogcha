@@ -8,10 +8,11 @@ import {PencilIcon} from "@heroicons/react/20/solid";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import Loader from "../../containers/Loader";
 import {openModal} from "../common/modalSlice";
+import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
 
-function CalendarEventsBodyRightDrawer({date}) {
+function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
 	const dispatch = useDispatch()
 	
 	const {calendarDetail, loading} = useSelector(state => state.eduPlan)
@@ -34,6 +35,19 @@ function CalendarEventsBodyRightDrawer({date}) {
 		}));
 	};
 	
+	const openAddNewEduPlanModal = (id) => {
+		dispatch(openModal({
+			title: "Add New Edu Plan",
+			bodyType: MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW,
+			extraObject: {
+				id,
+				date: moment(date).format("DD.MM.YYYY"),
+				edu_plan_id,
+				is_edit: true
+			}
+		}))
+	}
+	
 	if (loading) return <Loader />
 	
 	return (
@@ -55,7 +69,7 @@ function CalendarEventsBodyRightDrawer({date}) {
 							</button>
 							<button
 								className="btn btn-sm btn-warning text-white"
-								// onClick={() => openAddNewPostModal(item?.id)}
+								onClick={() => openAddNewEduPlanModal(e?.id)}
 								// disabled={!hasPermission("smm_edit")}
 							>
 								<PencilIcon className="w-5"/>

@@ -4,8 +4,9 @@ import {getUserData} from "../../../auth/jwtService";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import SelectBox from "../../../components/Input/SelectBox";
-import {createCalendarList, getChildrenForEdu, getGroupsForEdu} from "../calendarSlice";
+import {createCalendarList, getChildrenForEdu, getGroupsForEdu, updateCalendarList} from "../calendarSlice";
 import {showNotification} from "../../common/headerSlice";
+import {useParams} from "react-router-dom";
 
 const AddPlanEduModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
@@ -17,10 +18,12 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 	
 	const isEditMode = Boolean(extraObject?.is_edit);
 	
+	console.log(extraObject)
+	
 	const [postObj, setPostObj] = useState({
 		title: "",
 		author: getUserData()?.id,
-		edu_plan: extraObject?.id,
+		edu_plan: Number(extraObject?.edu_plan_id),
 		date_time: "",
 		goals: "",
 		activities: "",
@@ -38,7 +41,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 			setPostObj({
 				title: "",
 				author: getUserData()?.id,
-				edu_plan: extraObject?.id,
+				edu_plan: Number(extraObject?.edu_plan_id),
 				date_time: "",
 				goals: "",
 				activities: "",
@@ -66,9 +69,9 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 	};
 	
 	const statusOptions = [
-		{ label: "In progress", value: "IN_PROGRESS" },
-		{ label: "Skipped", value: "SKIPPED" },
-		{ label: "Done", value: "DONE" },
+		{label: "In progress", value: "IN_PROGRESS"},
+		{label: "Skipped", value: "SKIPPED"},
+		{label: "Done", value: "DONE"},
 	];
 	
 	const savePost = () => {
@@ -80,13 +83,20 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 		if (!postObj.children) return setErrorMessage("Children is required!");
 		if (postObj.status.trim() === "") return setErrorMessage("Status is required!");
 		
-		const action = isEditMode ? "" : createCalendarList
-		const params = isEditMode ? {id: extraObject?.id, data: postObj} : {...postObj, date_time: new Date(postObj.date_time).toISOString()}
+		const action = isEditMode ? updateCalendarList : createCalendarList
+		const params = isEditMode ?
+			{
+				id: extraObject?.id,
+				data: postObj,
+				date: extraObject?.date,
+				edu_plan: Number(extraObject?.edu_plan_id)
+			} :
+			{...postObj, date_time: new Date(postObj.date_time).toISOString()}
 		
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {
 				dispatch(showNotification({
-					message: isEditMode ? "Post updated successfully!" : "New Edu Plan added!",
+					message: isEditMode ? "Plan updated successfully!" : "New Edu Plan added!",
 					status: 1
 				}));
 				closeModal();
@@ -141,7 +151,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 				isMulti={true}
 				defaultValue={
 					groupsForEdu?.data
-						?.map((item) => ({ label: item?.name, value: Number(item?.id) }))
+						?.map((item) => ({label: item?.name, value: Number(item?.id)}))
 						?.filter(opt => postObj?.groups?.includes(opt.value))
 				}
 			/>
@@ -158,7 +168,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 				isMulti={true}
 				defaultValue={
 					childrenForEdu?.data
-						?.map((item) => ({ label: item?.full_name, value: Number(item?.id) }))
+						?.map((item) => ({label: item?.full_name, value: Number(item?.id)}))
 						?.filter(opt => postObj?.children?.includes(opt.value))
 				}
 			/>

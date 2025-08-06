@@ -114,7 +114,7 @@ function CalendarView({calendarEvents, openDayDetail}) {
 			title: "Add New Edu Plan",
 			bodyType: MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW,
 			extraObject: {
-				id
+				edu_plan_id: id
 			}
 		}))
 	}
