@@ -67,9 +67,11 @@ export const updateEduPlanList = createAsyncThunk(
 // ------------ calendarList ----------- //
 export const getCalendarList = createAsyncThunk(
 	"edu/getCalendarList",
-	async (id, thunkAPI) => {
+	async ({ id, year, month }, thunkAPI) => {
 		try {
-			const response = await instance.get(`/edu_plan/plan_get/${id}/plan_list/?page=1&page_size=10000`)
+			const response = await instance.get(`/edu_plan/plan_get/${id}/plan_list/?page=1&page_size=10000`, {
+				params: { year, month, page: 1, page_size: 10000 },
+			})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message);
@@ -82,7 +84,7 @@ export const createCalendarList = createAsyncThunk(
 	async (data, thunkAPI) => {
 		try {
 			const response = await instance.post(`/edu_plan/plan/`, data)
-			await thunkAPI.dispatch(getCalendarList(data?.edu_plan))
+			await thunkAPI.dispatch(getCalendarList({id: data?.edu_plan}))
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message);
@@ -144,7 +146,7 @@ export const deleteCalendar = createAsyncThunk(
 		try {
 			const response = await instance.delete(`/edu_plan/plan/${params?.id}/`)
 			await thunkAPI.dispatch(getCalendarDetail({date_time: params?.date, id: params?.edu_plan_id}))
-			await thunkAPI.dispatch(getCalendarList(params?.edu_plan_id))
+			await thunkAPI.dispatch(getCalendarList({id: params?.edu_plan_id}))
 			return response
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -158,7 +160,7 @@ export const updateCalendarList = createAsyncThunk(
 		try {
 			const response = await instance.patch(`/edu_plan/plan/${data?.id}/`, data?.data)
 			await thunkAPI.dispatch(getCalendarDetail({date_time: data?.date, id: data?.edu_plan}))
-			await thunkAPI.dispatch(getCalendarList(data?.edu_plan))
+			await thunkAPI.dispatch(getCalendarList({id: data?.edu_plan}))
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)

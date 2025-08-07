@@ -12,7 +12,7 @@ import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
 
-function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
+function CalendarEventsBodyRightDrawer({date, edu_plan_id, reloadCalendar}) {
 	const dispatch = useDispatch()
 	
 	const {calendarDetail, loading} = useSelector(state => state.eduPlan)
@@ -31,7 +31,8 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
 				actionKey: 'DELETE_PLAN_EDU',
 				payload: id,
 				edu_plan_id,
-				date: moment(date).format("DD.MM.YYYY")
+				date: moment(date).format("DD.MM.YYYY"),
+				reloadCalendar
 			}
 		}));
 	};
@@ -44,7 +45,8 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id}) {
 				id,
 				date: moment(date).format("DD.MM.YYYY"),
 				edu_plan_id,
-				is_edit: true
+				is_edit: true,
+				reloadCalendar
 			}
 		}))
 	}

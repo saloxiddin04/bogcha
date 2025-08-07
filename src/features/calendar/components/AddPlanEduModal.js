@@ -12,7 +12,6 @@ import {
 	updateCalendarList
 } from "../calendarSlice";
 import {showNotification} from "../../common/headerSlice";
-import {useParams} from "react-router-dom";
 import moment from "moment";
 
 const AddPlanEduModal = ({closeModal, extraObject}) => {
@@ -49,11 +48,12 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 						title: payload?.data?.title ?? "",
 						author: payload?.author?.id ?? getUserData()?.id,
 						edu_plan: Number(extraObject?.edu_plan_id),
-						date_time: moment(payload?.data?.date_time).format("yyyy.MM.dd") ?? "",
+						date_time: moment(payload?.data?.date_time).format("YYYY-MM-DD") ?? "",
+						// date_time: payload?.data?.date_time ?? "",
 						goals: payload?.data?.goals ?? "",
 						activities: payload?.data?.activities ?? "",
 						groups: payload?.data?.groups?.map((el) => el?.id) ?? [],
-						children: payload?.data?.children ?? [],
+						children: payload?.data?.children?.map((el) => el?.id) ?? [],
 						status: payload?.data?.status ?? ""
 					})
 					dispatch(getChildrenForEdu({group_ids: JSON.stringify(payload?.data?.groups?.map((el) => el?.id))}))
@@ -121,6 +121,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 		
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {
+				extraObject?.reloadCalendar?.()
 				dispatch(showNotification({
 					message: isEditMode ? "Plan updated successfully!" : "New Edu Plan added!",
 					status: 1

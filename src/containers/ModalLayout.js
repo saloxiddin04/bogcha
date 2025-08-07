@@ -38,6 +38,7 @@ function ModalLayout() {
 			return payload;
 		}),
 		DELETE_PLAN_EDU: (params) => dispatch(deleteCalendar({id: params, date: extraObject?.date, edu_plan_id: extraObject?.edu_plan_id})).then(({payload}) => {
+			extraObject?.reloadCalendar?.()
 			return payload;
 		}),
 	};
