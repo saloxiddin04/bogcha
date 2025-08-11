@@ -22,11 +22,11 @@ const routes = [
 		name: 'Dashboard',
 		permission: "dashboard"
 	},
-	{
-		path: '/app/leads', // url
-		icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
-		name: 'Leads', // name that appear in Sidebar
-	},
+	// {
+	// 	path: '/app/leads', // url
+	// 	icon: <InboxArrowDownIcon className={iconClasses}/>, // icon component
+	// 	name: 'Leads', // name that appear in Sidebar
+	// },
 	{
 		path: '/app/users',
 		icon: <UserGroupIcon className={iconClasses}/>,

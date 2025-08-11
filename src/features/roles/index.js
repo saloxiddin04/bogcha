@@ -93,25 +93,25 @@ const Roles = () => {
 											<td>{item?.is_active ? "Active" : "No active"}</td>
 											<td className="flex gap-1 justify-center">
 												<button
-													className="btn btn-square btn-error text-white"
+													className="btn btn-sm btn-error text-white"
 													onClick={() => deleteCurrentRole(item?.id)}
 													disabled={!hasPermission("role_del")}
 												>
-													<TrashIcon className="w-5"/>
+													<TrashIcon className="w-6"/>
 												</button>
 												<button
-													className="btn btn-square btn-warning text-white"
+													className="btn btn-sm btn-warning text-white"
 													onClick={() => openAddNewRoleModal(item?.id)}
 													disabled={!hasPermission("role_edit")}
 												>
-													<PencilIcon className="w-5"/>
+													<PencilIcon className="w-6"/>
 												</button>
 												<button
-													className="btn btn-square btn-success text-white"
+													className="btn btn-sm btn-success text-white"
 													onClick={() => navigate(`${item?.id}`)}
 													disabled={!hasPermission("role_det")}
 												>
-													<ChevronRightIcon className="w-5"/>
+													<ChevronRightIcon className="w-6"/>
 												</button>
 											</td>
 										</tr>

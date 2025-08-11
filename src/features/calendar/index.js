@@ -32,7 +32,7 @@ const TopSideButtons = () => {
 	return (
 		<div className="flex justify-between items-end gap-2 w-full">
 			{hasPermission("plan_of_year") && (
-				<div className="w-2/5 flex gap-2 items-end">
+				<div className="w-1/3 flex gap-2 items-end">
 					<InputText
 						type="text"
 						defaultValue={search ?? ""}
@@ -47,7 +47,7 @@ const TopSideButtons = () => {
 							dispatch(getEduPlanList())
 						}}
 					>
-						<XCircleIcon className="w-5" />
+						<XCircleIcon className="w-6"/>
 					</button>
 				</div>
 			)}
@@ -93,8 +93,8 @@ function Calendar() {
 	
 	const openAddNewPlanModal = (id) => {
 		dispatch(openModal({
-			title: "Edit Group",
-			bodyType: MODAL_BODY_TYPES.POST_ADD_NEW,
+			title: "Edit Plan",
+			bodyType: MODAL_BODY_TYPES.EDU_ADD_NEW,
 			extraObject: {
 				notification: 'Successfully edited!',
 				id,
@@ -105,7 +105,7 @@ function Calendar() {
 	
 	return (
 		<>
-			<TitleCard topMargin="mt-2" TopSideButtons={<TopSideButtons />}>
+			<TitleCard topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				<div className="overflow-x-auto w-full">
 					<table className="table w-full">
 						<thead>
@@ -126,25 +126,25 @@ function Calendar() {
 								<td>{item?.author?.full_name}</td>
 								<td className="flex gap-1 justify-center">
 									<button
-										className="btn btn-square btn-error text-white"
+										className="btn btn-sm btn-error text-white"
 										onClick={() => deleteCurrentPlan(item?.id)}
 										disabled={!hasPermission("plan_of_year")}
 									>
-										<TrashIcon className="w-5"/>
+										<TrashIcon className="w-6"/>
 									</button>
 									<button
-										className="btn btn-square btn-warning text-white"
+										className="btn btn-sm btn-warning text-white"
 										onClick={() => openAddNewPlanModal(item?.id)}
 										disabled={!hasPermission("plan_of_year")}
 									>
-										<PencilIcon className="w-5"/>
+										<PencilIcon className="w-6"/>
 									</button>
 									<button
-										className="btn btn-square btn-success text-white"
+										className="btn btn-sm btn-success text-white"
 										onClick={() => navigate(`${item?.id}`)}
 										disabled={!hasPermission("plan_of_year")}
 									>
-										<ChevronRightIcon className="w-5"/>
+										<ChevronRightIcon className="w-6"/>
 									</button>
 								</td>
 							</tr>

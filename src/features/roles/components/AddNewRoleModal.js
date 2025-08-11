@@ -9,7 +9,7 @@ import Loader from "../../../containers/Loader";
 
 function AddNewRoleModal({closeModal, extraObject}) {
 	const dispatch = useDispatch()
-	const {loading, role} = useSelector(state => state.roles)
+	const {loading} = useSelector(state => state.roles)
 	
 	const [errorMessage, setErrorMessage] = useState("")
 	const [roleObj, setRoleObj] = useState({

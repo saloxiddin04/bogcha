@@ -95,25 +95,25 @@ const Groups = () => {
 													<td>{item?.children_count}</td>
 													<td className="flex gap-1 justify-center">
 														<button
-															className="btn btn-square btn-error text-white"
+															className="btn btn-sm btn-error text-white"
 															onClick={() => deleteCurrentGroup(item?.id)}
 															disabled={!hasPermission("group_d")}
 														>
-															<TrashIcon className="w-5"/>
+															<TrashIcon className="w-6"/>
 														</button>
 														<button
-															className="btn btn-square btn-warning text-white"
+															className="btn btn-sm btn-warning text-white"
 															onClick={() => openAddNewGroupModal(item?.id)}
 															disabled={!hasPermission("group_e")}
 														>
-															<PencilIcon className="w-5"/>
+															<PencilIcon className="w-6"/>
 														</button>
 														<button
-															className="btn btn-square btn-success text-white"
+															className="btn btn-sm btn-success text-white"
 															onClick={() => openAddNewGroupModal(item?.id)}
 															disabled={!hasPermission("group_e")}
 														>
-															<ChevronRightIcon className="w-5"/>
+															<ChevronRightIcon className="w-6"/>
 														</button>
 													</td>
 												</tr>

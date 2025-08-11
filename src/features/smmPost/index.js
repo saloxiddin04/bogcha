@@ -122,21 +122,21 @@ const SmmPost = () => {
 										<PaperAirplaneIcon className="w-5"/>
 									</button>
 									<button
-										className="btn btn-square btn-error text-white"
+										className="btn btn-sm btn-error text-white"
 										onClick={() => deleteCurrentPost(item?.id)}
 										disabled={!hasPermission("smm_del")}
 									>
 										<TrashIcon className="w-5"/>
 									</button>
 									<button
-										className="btn btn-square btn-warning text-white"
+										className="btn btn-sm btn-warning text-white"
 										onClick={() => openAddNewPostModal(item?.id)}
 										disabled={!hasPermission("smm_edit")}
 									>
 										<PencilIcon className="w-5"/>
 									</button>
 									<button
-										className="btn btn-square btn-success text-white"
+										className="btn btn-sm btn-success text-white"
 										onClick={() => openAddNewPostModal(item?.id)}
 										disabled={!hasPermission("smm_det")}
 									>

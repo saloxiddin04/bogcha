@@ -25,8 +25,7 @@ function LeftSidebar() {
 				
 				<li className="mb-2 font-semibold text-xl">
 					
-					<Link to={'/app/dashboard'}><img className="w-24 object-contain" src="/logo.jpg" alt="Logo"/>Barakalla
-						Kids</Link>
+					<Link to={'/app/dashboard'}><img className="w-24 object-contain" src="/logo.jpg" alt="Logo"/></Link>
 				</li>
 				{
 					routes

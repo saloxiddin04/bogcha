@@ -113,25 +113,25 @@ const Users = () => {
 											<td>{item?.birth_day}</td>
 											<td className="flex gap-1 justify-center">
 												<button
-													className="btn btn-square btn-error text-white"
+													className="btn btn-sm btn-error text-white"
 													onClick={() => deleteCurrentUser(item?.id)}
 													disabled={!hasPermission("user_del")}
 												>
-													<TrashIcon className="w-5"/>
+													<TrashIcon className="w-6"/>
 												</button>
 												<button
-													className="btn btn-square btn-warning text-white"
+													className="btn btn-sm btn-warning text-white"
 													onClick={() => openAddNewUserModal(item?.id)}
 													disabled={!hasPermission("user_edit")}
 												>
-													<PencilIcon className="w-5"/>
+													<PencilIcon className="w-6"/>
 												</button>
 												<button
-													className="btn btn-square btn-success text-white"
+													className="btn btn-sm btn-success text-white"
 													onClick={() => openAddNewUserModal(item?.id)}
 													disabled={!hasPermission("user_det")}
 												>
-													<ChevronRightIcon className="w-5"/>
+													<ChevronRightIcon className="w-6"/>
 												</button>
 											</td>
 										</tr>

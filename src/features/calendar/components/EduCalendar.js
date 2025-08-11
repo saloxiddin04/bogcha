@@ -5,7 +5,6 @@ import {MODAL_BODY_TYPES, RIGHT_DRAWER_TYPES} from "../../../utils/globalConstan
 import {useDispatch, useSelector} from "react-redux";
 import {getCalendarList} from "../calendarSlice";
 import {useParams} from "react-router-dom";
-import Loader from "../../../containers/Loader";
 import {openModal} from "../../common/modalSlice";
 import ChevronLeftIcon from "@heroicons/react/24/solid/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
@@ -16,8 +15,6 @@ const THEME_BG = CALENDAR_EVENT_STYLE
 
 const EduCalendar = () => {
 	const dispatch = useDispatch()
-	
-	const {loading} = useSelector((state) => state.eduPlan)
 	
 	const {id} = useParams()
 	
@@ -137,7 +134,7 @@ const EduCalendar = () => {
 		}))
 	}
 	
-	if (loading) return <Loader/>
+	// if (loading) return <Loader/>
 	
 	return (
 		<div>

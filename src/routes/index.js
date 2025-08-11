@@ -39,10 +39,10 @@ const routes = [
     path: '/welcome', // the url
     component: Welcome, // view rendered
   },
-  {
-    path: '/leads',
-    component: Leads,
-  },
+  // {
+  //   path: '/leads',
+  //   component: Leads,
+  // },
   {
     path: "/users",
     component: Users
