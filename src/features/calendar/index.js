@@ -31,7 +31,7 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="flex justify-between items-end gap-2 w-full">
-			{hasPermission("plan_of_year") && (
+			{hasPermission("plan_s") && (
 				<div className="w-1/3 flex gap-2 items-end">
 					<InputText
 						type="text"
@@ -51,7 +51,7 @@ const TopSideButtons = () => {
 					</button>
 				</div>
 			)}
-			{hasPermission("plan_of_year") && (
+			{hasPermission("plan_a") && (
 				<button
 					className="btn px-6 btn-sm normal-case btn-primary"
 					onClick={() => openAddNewPlanModal()}
@@ -106,58 +106,62 @@ function Calendar() {
 	return (
 		<>
 			<TitleCard topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
-				<div className="overflow-x-auto w-full">
-					<table className="table w-full">
-						<thead>
-						<tr className="text-center">
-							<th>ID</th>
-							<th>Title</th>
-							<th>Description</th>
-							<th>Author</th>
-							<th>Actions</th>
-						</tr>
-						</thead>
-						<tbody>
-						{eduPlanList?.data?.map((item) => (
-							<tr className="text-center" key={item?.id}>
-								<td>{item?.id}</td>
-								<td>{item?.title}</td>
-								<td>{item?.description}</td>
-								<td>{item?.author?.full_name}</td>
-								<td className="flex gap-1 justify-center">
-									<button
-										className="btn btn-sm btn-error text-white"
-										onClick={() => deleteCurrentPlan(item?.id)}
-										disabled={!hasPermission("plan_of_year")}
-									>
-										<TrashIcon className="w-6"/>
-									</button>
-									<button
-										className="btn btn-sm btn-warning text-white"
-										onClick={() => openAddNewPlanModal(item?.id)}
-										disabled={!hasPermission("plan_of_year")}
-									>
-										<PencilIcon className="w-6"/>
-									</button>
-									<button
-										className="btn btn-sm btn-success text-white"
-										onClick={() => navigate(`${item?.id}`)}
-										disabled={!hasPermission("plan_of_year")}
-									>
-										<ChevronRightIcon className="w-6"/>
-									</button>
-								</td>
-							</tr>
-						))}
-						</tbody>
-					</table>
-				</div>
-				
-				<Pagination
-					totalItems={eduPlanList?.pagination?.total_items}
-					itemsPerPage={10}
-					onPageChange={handlePageChange}
-				/>
+				{hasPermission("plan_t") && (
+					<>
+						<div className="overflow-x-auto w-full">
+							<table className="table w-full">
+								<thead>
+								<tr className="text-center">
+									<th>ID</th>
+									<th>Title</th>
+									<th>Description</th>
+									<th>Author</th>
+									<th>Actions</th>
+								</tr>
+								</thead>
+								<tbody>
+								{eduPlanList?.data?.map((item) => (
+									<tr className="text-center" key={item?.id}>
+										<td>{item?.id}</td>
+										<td>{item?.title}</td>
+										<td>{item?.description}</td>
+										<td>{item?.author?.full_name}</td>
+										<td className="flex gap-1 justify-center">
+											<button
+												className="btn btn-sm btn-error text-white"
+												onClick={() => deleteCurrentPlan(item?.id)}
+												disabled={!hasPermission("plan_d_del")}
+											>
+												<TrashIcon className="w-6"/>
+											</button>
+											<button
+												className="btn btn-sm btn-warning text-white"
+												onClick={() => openAddNewPlanModal(item?.id)}
+												disabled={!hasPermission("plan_d_e")}
+											>
+												<PencilIcon className="w-6"/>
+											</button>
+											<button
+												className="btn btn-sm btn-success text-white"
+												onClick={() => navigate(`${item?.id}`)}
+												disabled={!hasPermission("plan_d_det")}
+											>
+												<ChevronRightIcon className="w-6"/>
+											</button>
+										</td>
+									</tr>
+								))}
+								</tbody>
+							</table>
+						</div>
+						
+						<Pagination
+							totalItems={eduPlanList?.pagination?.total_items}
+							itemsPerPage={10}
+							onPageChange={handlePageChange}
+						/>
+					</>
+				)}
 			</TitleCard>
 		</>
 	)
