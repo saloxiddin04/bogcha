@@ -38,6 +38,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 	
 	useEffect(() => {
 		dispatch(getGroupsForEdu())
+		dispatch(getChildrenForEdu())
 	}, [dispatch])
 	
 	useEffect(() => {
@@ -48,7 +49,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 						title: payload?.data?.title ?? "",
 						author: payload?.author?.id ?? getUserData()?.id,
 						edu_plan: Number(extraObject?.edu_plan_id),
-						date_time: moment(payload?.data?.date_time).format("YYYY-MM-DD") ?? "",
+						date_time: moment(payload?.data?.date_time).format("YYYY-MM-DDTHH:mm") ?? "",
 						// date_time: payload?.data?.date_time ?? "",
 						goals: payload?.data?.goals ?? "",
 						activities: payload?.data?.activities ?? "",
@@ -103,8 +104,8 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 	const savePost = () => {
 		if (postObj.title.trim() === "") return setErrorMessage("Title is required!");
 		if (postObj.date_time.trim() === "") return setErrorMessage("Date time is required!");
-		if (postObj.goals.trim() === "") return setErrorMessage("Goals is required!");
-		if (postObj.activities.trim() === "") return setErrorMessage("Activities is required!");
+		// if (postObj.goals.trim() === "") return setErrorMessage("Goals is required!");
+		// if (postObj.activities.trim() === "") return setErrorMessage("Activities is required!");
 		if (!postObj.groups.length) return setErrorMessage("Groups is required!");
 		if (!postObj.children) return setErrorMessage("Children is required!");
 		if (postObj.status.trim() === "") return setErrorMessage("Status is required!");
@@ -144,7 +145,7 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 			/>
 			
 			<InputText
-				type="date"
+				type="datetime-local"
 				defaultValue={postObj.date_time ?? ""}
 				updateType="date_time"
 				labelTitle="Date time"
@@ -164,6 +165,17 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 				updateType="activities"
 				labelTitle="Activities"
 				updateFormValue={updateFormValue}
+			/>
+			
+			<SelectBox
+				options={statusOptions}
+				labelTitle="Select status"
+				placeholder="Choose status..."
+				containerStyle="w-full"
+				updateType="status"
+				updateFormValue={updateSelectBoxValue}
+				isMulti={false}
+				defaultValue={statusOptions.find(option => option.value === postObj.status) || "IN_PROGRESS"}
 			/>
 			
 			<SelectBox
@@ -198,17 +210,6 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 						?.map((item) => ({label: item?.full_name, value: Number(item?.id)}))
 						?.filter(opt => postObj?.children?.includes(opt.value))
 				}
-			/>
-			
-			<SelectBox
-				options={statusOptions}
-				labelTitle="Select status"
-				placeholder="Choose status..."
-				containerStyle="w-full"
-				updateType="status"
-				updateFormValue={updateSelectBoxValue}
-				isMulti={false}
-				defaultValue={statusOptions.find(option => option.value === postObj.status) || ""}
 			/>
 			
 			<ErrorText styleClass="mt-16">{errorMessage}</ErrorText>

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {getUserData} from "../../../auth/jwtService";
 import {showNotification} from "../../common/headerSlice";
-import {createEduPlanList, updateEduPlanList} from "../calendarSlice";
+import {createEduPlanList, getEduPlanDetail, updateEduPlanList} from "../calendarSlice";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 
@@ -21,6 +21,21 @@ const AddEduModal = ({closeModal, extraObject}) => {
 		description: "",
 		author: getUserData()?.id,
 	})
+	
+	useEffect(() => {
+		if (isEditMode && extraObject?.id) {
+			dispatch(getEduPlanDetail({id: extraObject?.id})).then(({payload}) => {
+				console.log(payload)
+				if (payload?.data) {
+					setPostObj({
+						title: payload?.data?.title,
+						description: payload?.data?.description,
+						author: getUserData()?.id,
+					})
+				}
+			})
+		}
+	}, [extraObject, dispatch, isEditMode])
 	
 	useEffect(() => {
 		if (!isOpen) {

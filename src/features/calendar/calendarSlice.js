@@ -25,6 +25,18 @@ export const getEduPlanList = createAsyncThunk(
 	}
 )
 
+export const getEduPlanDetail = createAsyncThunk(
+	"edu/getEduPlanDetail",
+	async ({id}, thunkAPI) => {
+		try {
+			const response = await instance.get(`/edu_plan/${id}/`)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 export const deleteEduPlanList = createAsyncThunk(
 	"edu/deleteEduPlanList",
 	async (id, thunkAPI) => {
@@ -182,6 +194,19 @@ const eduPlanSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getEduPlanList.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getEduPlanDetail
+		builder
+			.addCase(getEduPlanDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getEduPlanDetail.fulfilled, (state, {payload}) => {
+				state.eduPlanDetail = payload
+				state.loading = false
+			})
+			.addCase(getEduPlanDetail.rejected, (state) => {
 				state.loading = false
 			})
 		

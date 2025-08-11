@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import moment from "moment/moment";
 import {openRightDrawer} from "../../common/rightDrawerSlice";
 import {MODAL_BODY_TYPES, RIGHT_DRAWER_TYPES} from "../../../utils/globalConstantUtil";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {getCalendarList} from "../calendarSlice";
 import {useParams} from "react-router-dom";
 import {openModal} from "../../common/modalSlice";
@@ -113,7 +113,7 @@ const EduCalendar = () => {
 	
 	const openAddNewEduPlanModal = () => {
 		dispatch(openModal({
-			title: "Add New Edu Plan",
+			title: "Add New Event",
 			bodyType: MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW,
 			extraObject: {
 				edu_plan_id: id,
