@@ -4,8 +4,7 @@ import React, {useEffect} from "react";
 import {getCalendarDetail} from "./calendarSlice";
 import moment from "moment";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import {PencilIcon} from "@heroicons/react/20/solid";
-import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
+import {PencilIcon, ClipboardDocumentCheckIcon} from "@heroicons/react/20/solid";
 import Loader from "../../containers/Loader";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
@@ -51,6 +50,16 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id, reloadCalendar}) {
 		}))
 	}
 	
+	const openCheckChildrenModal = plan_id => {
+		dispatch(openModal({
+			title: "Check Children",
+			bodyType: MODAL_BODY_TYPES.CHECK_CHILDREN_MODAL,
+			extraObject: {
+				plan_id,
+			}
+		}))
+	}
+	
 	if (loading) return <Loader />
 	
 	return (
@@ -79,10 +88,10 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id, reloadCalendar}) {
 							</button>
 							<button
 								className="btn btn-sm btn-success text-white"
-								// onClick={() => openAddNewPostModal(item?.id)}
+								onClick={() => openCheckChildrenModal(e?.id)}
 								// disabled={!hasPermission("smm_det")}
 							>
-								<ChevronRightIcon className="w-5"/>
+								<ClipboardDocumentCheckIcon className="w-5"/>
 							</button>
 						</div>
 					</div>

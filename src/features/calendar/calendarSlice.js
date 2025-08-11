@@ -10,7 +10,9 @@ const initialState = {
 	
 	groupsForEdu: null,
 	childrenForEdu: null,
-	eduDetail: null
+	eduDetail: null,
+	
+	checkChildrenList: null
 }
 
 export const getEduPlanList = createAsyncThunk(
@@ -180,6 +182,30 @@ export const updateCalendarList = createAsyncThunk(
 	}
 )
 
+export const getCheckChildrenList = createAsyncThunk(
+	"edu/getCheckChildrenList",
+	async ({plan_id}, thunkAPI) => {
+		try {
+			const response = await instance.get(`/edu_plan/plan_get/${plan_id}/assessment_children_list/?page=1&page_size=10000`)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const patchCheckChildrenList = createAsyncThunk(
+	"edu/patchCheckChildrenList",
+	async ({data}, thunkAPI) => {
+		try {
+			const response = await instance.patch(`/edu_plan/plan_get/assessment_children_patch/`, data)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 const eduPlanSlice = createSlice({
 	name: "edu",
 	initialState,
@@ -326,6 +352,28 @@ const eduPlanSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(updateCalendarList.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getCheckChildrenList
+		builder
+			.addCase(getCheckChildrenList.fulfilled, (state, {payload}) => {
+				state.checkChildrenList = payload
+				state.loading = false
+			})
+			.addCase(getCheckChildrenList.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// patchCheckChildrenList
+		builder
+			.addCase(patchCheckChildrenList.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(patchCheckChildrenList.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(patchCheckChildrenList.rejected, (state) => {
 				state.loading = false
 			})
 	}

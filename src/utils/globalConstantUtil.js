@@ -10,6 +10,7 @@ module.exports = Object.freeze({
         POST_ADD_NEW: "POST_ADD_NEW",
         EDU_ADD_NEW: "EDU_ADD_NEW",
         EDU_PLAN_ADD_NEW: "EDU_PLAN_ADD_NEW",
+        CHECK_CHILDREN_MODAL: "CHECK_CHILDREN_MODAL",
         DEFAULT : "",
     },
 
