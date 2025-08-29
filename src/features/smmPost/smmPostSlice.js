@@ -13,7 +13,7 @@ export const getAllPosts = createAsyncThunk(
 	"posts/getAllPosts",
 	async (params, thunkAPI) => {
 		try {
-			const response = await instance.get("/post/", params)
+			const response = await instance.get("/post/", {params})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)

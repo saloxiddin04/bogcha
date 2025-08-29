@@ -42,7 +42,7 @@ const SmmPost = () => {
 	}, [dispatch])
 	
 	const handlePageChange = (page) => {
-		dispatch(getAllPosts({page_size: 1, page}))
+		dispatch(getAllPosts({page_size: 10, page}))
 	};
 	
 	const deleteCurrentPost = (id) => {
