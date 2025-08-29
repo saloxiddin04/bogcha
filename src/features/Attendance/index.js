@@ -77,6 +77,31 @@ const Attendance = () => {
 		dispatch(getAttendanceList({page_size: 10, page}))
 	}
 	
+	const openAddNewAttendanceModal = (id) => {
+		dispatch(openModal({
+			title: "Update New Attendance",
+			bodyType: MODAL_BODY_TYPES.ADD_ATTENDANCE_MODAL,
+			extraObject: {
+				is_edit: true,
+				id,
+				notification: 'Successfully edited!',
+			}
+		}))
+	}
+	
+	const deleteCurrentAttendance = (id) => {
+		dispatch(openModal({
+			title: 'Confirmation',
+			bodyType: 'CONFIRMATION',
+			extraObject: {
+				message: 'Are you sure you want to delete this attendance list?',
+				notification: 'Successfully deleted!',
+				actionKey: 'DELETE_ATTENDANCE',
+				payload: id
+			}
+		}));
+	};
+	
 	return (
 		<div>
 			<TitleCard title="Current Attendance" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
@@ -104,14 +129,14 @@ const Attendance = () => {
 									<td className="flex gap-1 justify-center">
 										<button
 											className="btn btn-sm btn-error text-white"
-											// onClick={() => deleteCurrentPlan(item?.id)}
+											onClick={() => deleteCurrentAttendance(item?.id)}
 											disabled={!hasPermission("plan_d_del")}
 										>
 											<TrashIcon className="w-6"/>
 										</button>
 										<button
 											className="btn btn-sm btn-warning text-white"
-											// onClick={() => openAddNewPlanModal(item?.id)}
+											onClick={() => openAddNewAttendanceModal(item?.id)}
 											disabled={!hasPermission("plan_d_e")}
 										>
 											<PencilIcon className="w-6"/>

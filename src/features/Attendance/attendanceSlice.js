@@ -22,6 +22,18 @@ export const getAttendanceList = createAsyncThunk(
 	}
 )
 
+export const getAttendanceDetail = createAsyncThunk(
+	"attendance/getAttendanceDetail",
+	async ({id}, thunkAPI) => {
+		try {
+			const response = await instance.get(`/attendance/${id}/`)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 export const getGroupForAttendance = createAsyncThunk(
 	"attendance/getGroupForAttendance",
 	async (_, thunkAPI) => {
@@ -36,9 +48,9 @@ export const getGroupForAttendance = createAsyncThunk(
 
 export const getChildrenForAttendance = createAsyncThunk(
 	"attendance/getChildrenForAttendance",
-	async ({group_ids}, thunkAPI) => {
+	async ({group_ids, person_type}, thunkAPI) => {
 		try {
-			const response = await instance.get('/attendance/check/attendance_children_list/?page=1&page_size=10000', {params: {group_ids}})
+			const response = await instance.get('/attendance/check/attendance_children_list/?page=1&page_size=10000', {params: {group_ids, person_type}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -72,6 +84,19 @@ export const updateAttendance = createAsyncThunk(
 	}
 )
 
+export const deleteAttendance = createAsyncThunk(
+	"attendance/deleteAttendance",
+	async ({id}, thunkAPI) => {
+		try {
+			const response = await instance.delete(`/attendance/${id}/`)
+			await thunkAPI.dispatch(getAttendanceList({page: 1, page_size: 10}))
+			return response
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 const attendanceSlice = createSlice({
 	name: "attendanceSlice",
 	initialState,
@@ -85,6 +110,19 @@ const attendanceSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getAttendanceList.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getAttendanceDetail
+		builder
+			.addCase(getAttendanceDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getAttendanceDetail.fulfilled, (state, {payload}) => {
+				state.attendanceDetail = payload
+				state.loading = false
+			})
+			.addCase(getAttendanceDetail.rejected, (state) => {
 				state.loading = false
 			})
 		
@@ -135,6 +173,18 @@ const attendanceSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(updateAttendance.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// deleteAttendance
+		builder
+			.addCase(deleteAttendance.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(deleteAttendance.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(deleteAttendance.rejected, (state) => {
 				state.loading = false
 			})
 	}

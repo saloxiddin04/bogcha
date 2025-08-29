@@ -3,9 +3,15 @@ import {useDispatch, useSelector} from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
-import {createCalendarList, updateCalendarList} from "../../calendar/calendarSlice";
 import {showNotification} from "../../common/headerSlice";
-import {createAttendance, getChildrenForAttendance, getGroupForAttendance, updateAttendance} from "../attendanceSlice";
+import {
+	createAttendance,
+	getAttendanceDetail,
+	getChildrenForAttendance,
+	getGroupForAttendance,
+	updateAttendance
+} from "../attendanceSlice";
+import {getUserData} from "../../../auth/jwtService";
 
 const AddAttendanceModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
@@ -28,9 +34,37 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 		if (postObj.person_type && postObj.person_type === "CHILDREN") {
 			dispatch(getGroupForAttendance());
 		} else if (postObj.person_type !== "CHILDREN") {
-			dispatch(getChildrenForAttendance({}));
+			dispatch(getChildrenForAttendance({group_ids: null}));
 		}
 	}, [dispatch, postObj.person_type]);
+	
+	useEffect(() => {
+		if (extraObject?.id && isEditMode) {
+			dispatch(getAttendanceDetail({id: extraObject?.id})).then(({payload}) => {
+				if (payload) {
+					setPostObj({
+						title: payload?.data?.title ?? "",
+						person_type: payload?.data?.person_type ?? "",
+						group: payload?.data?.group?.id ?? "",
+						users: payload?.data?.users?.map((el) => el?.id) ?? [],
+					})
+					dispatch(getChildrenForAttendance({group_ids: JSON.stringify(payload?.data?.group?.id)}))
+				}
+			})
+		}
+	}, [dispatch, extraObject, isEditMode])
+	
+	useEffect(() => {
+		if (!isOpen) {
+			setPostObj({
+				title: "",
+				person_type: "",
+				group: "",
+				users: []
+			});
+			setErrorMessage("");
+		}
+	}, [isOpen, extraObject]);
 	
 	const updateFormValue = ({updateType, value}) => {
 		setErrorMessage("")
@@ -121,7 +155,7 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 			
 			<SelectBox
 				options={
-					attendanceChildren?.data?.map((item) => ({label: item?.name, value: Number(item?.id)}))
+					attendanceChildren?.data?.map((item) => ({label: item?.full_name, value: Number(item?.id)}))
 				}
 				labelTitle="Select users"
 				placeholder="Choose users..."
@@ -131,7 +165,7 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 				isMulti={true}
 				defaultValue={
 					attendanceChildren?.data
-						?.map((item) => ({label: item?.name, value: Number(item?.id)}))
+						?.map((item) => ({label: item?.full_name, value: Number(item?.id)}))
 						?.filter(opt => postObj?.users?.includes(opt.value))
 				}
 			/>

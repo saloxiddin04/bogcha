@@ -16,6 +16,7 @@ import AddEduModal from "../features/calendar/components/AddEduModal";
 import AddPlanEduModal from "../features/calendar/components/AddPlanEduModal";
 import EduCheckChildren from "../features/calendar/components/EduCheckChildren";
 import AddAttendanceModal from "../features/Attendance/components/AddAttendanceModal";
+import {deleteAttendance} from "../features/Attendance/attendanceSlice";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -41,6 +42,9 @@ function ModalLayout() {
 		}),
 		DELETE_PLAN_EDU: (params) => dispatch(deleteCalendar({id: params, date: extraObject?.date, edu_plan_id: extraObject?.edu_plan_id})).then(({payload}) => {
 			extraObject?.reloadCalendar?.()
+			return payload;
+		}),
+		DELETE_ATTENDANCE: (params) => dispatch(deleteAttendance({id: params})).then(({payload}) => {
 			return payload;
 		}),
 	};
