@@ -11,6 +11,7 @@ module.exports = Object.freeze({
         EDU_ADD_NEW: "EDU_ADD_NEW",
         EDU_PLAN_ADD_NEW: "EDU_PLAN_ADD_NEW",
         CHECK_CHILDREN_MODAL: "CHECK_CHILDREN_MODAL",
+        ADD_ATTENDANCE_MODAL: "ADD_ATTENDANCE_MODAL",
         DEFAULT : "",
     },
 

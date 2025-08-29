@@ -9,6 +9,7 @@ import permissionsSlice from "../features/permissions/permissionsSlice";
 import groupsSlice from "../features/groups/groupsSlice";
 import smmPostSlice from "../features/smmPost/smmPostSlice";
 import eduPlanSlice from "../features/calendar/calendarSlice";
+import attendanceSlice from "../features/Attendance/attendanceSlice";
 
 const combinedReducer = {
   header : headerSlice,
@@ -20,7 +21,8 @@ const combinedReducer = {
   permissions: permissionsSlice,
   groups: groupsSlice,
   posts: smmPostSlice,
-  eduPlan: eduPlanSlice
+  eduPlan: eduPlanSlice,
+  attendance: attendanceSlice
 }
 
 export default configureStore({

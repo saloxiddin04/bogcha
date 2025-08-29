@@ -15,6 +15,7 @@ import {deleteCalendar, deleteEduPlanList} from "../features/calendar/calendarSl
 import AddEduModal from "../features/calendar/components/AddEduModal";
 import AddPlanEduModal from "../features/calendar/components/AddPlanEduModal";
 import EduCheckChildren from "../features/calendar/components/EduCheckChildren";
+import AddAttendanceModal from "../features/Attendance/components/AddAttendanceModal";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -66,6 +67,7 @@ function ModalLayout() {
 							[MODAL_BODY_TYPES.EDU_ADD_NEW]: <AddEduModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW]: <AddPlanEduModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CHECK_CHILDREN_MODAL]: <EduCheckChildren closeModal={close} extraObject={extraObject} />,
+							[MODAL_BODY_TYPES.ADD_ATTENDANCE_MODAL]: <AddAttendanceModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close} remove={remove} />,
 							[MODAL_BODY_TYPES.DEFAULT]: <div></div>
 						}[bodyType]

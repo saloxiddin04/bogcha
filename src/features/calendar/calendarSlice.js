@@ -69,7 +69,7 @@ export const updateEduPlanList = createAsyncThunk(
 	"edu/updateEduPlanList",
 	async (params, thunkAPI) => {
 		try {
-			const response = await instance.patch(`/edu_plan/${params?.id}`, params?.data)
+			const response = await instance.patch(`/edu_plan/${params?.id}/`, params?.data)
 			await thunkAPI.dispatch(getEduPlanList())
 			return response.data
 		} catch (e) {

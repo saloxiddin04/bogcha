@@ -30,6 +30,9 @@ const CheckKidsDetail = lazy(() => import("../features/checkKids/components/chec
 const Calendar = lazy(() => import('../pages/protected/Calendar'))
 const CalendarDetail = lazy(() => import('../features/calendar/components/EduCalendar'))
 
+// attendance
+const Attendance = lazy(() => import("../pages/protected/Attendance"))
+
 const routes = [
   {
     path: '/dashboard', // the url
@@ -101,6 +104,12 @@ const routes = [
   {
     path: '/calendar/:id',
     component: CalendarDetail,
+  },
+  
+  // ------- Attendance --------- //
+  {
+    path: "/attendance",
+    component: Attendance
   },
   
   {
