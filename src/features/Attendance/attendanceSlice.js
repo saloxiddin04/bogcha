@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import instance from "../../plugins/axios";
+import moment from "moment";
 
 const initialState = {
 	attendanceList: null,
@@ -9,6 +10,7 @@ const initialState = {
 	attendanceChildren: null,
 	
 	attendance: null,
+	attendanceModalDetail: null,
 	loading: false
 }
 
@@ -106,6 +108,44 @@ export const getAttendance = createAsyncThunk(
 		try {
 			const response = await instance.get('/attendance/check/', {params: {attendance_id, date}})
 			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getAttendanceModalDetail = createAsyncThunk(
+	"attendance/getAttendanceModalDetail",
+	async ({id}, thunkAPI) => {
+		try {
+			const response = await instance.get(`/attendance/check/${id}/`)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const updateAttendanceModalDetail = createAsyncThunk(
+	"attendance/updateAttendanceModalDetail",
+	async ({id, data}, thunkAPI) => {
+		try {
+			const response = await instance.patch(`/attendance/check/${id}/`, data)
+			thunkAPI.dispatch(getAttendance({attendance_id: response?.data?.data?.attendance_group, date: moment(response?.data?.data?.date_time).format("YYYY-MM-DD")}))
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const deleteAttendanceModalDetail = createAsyncThunk(
+	"attendance/updateAttendanceModalDetail",
+	async ({id}, thunkAPI) => {
+		try {
+			const response = await instance.delete(`/attendance/check/${id}/`)
+			thunkAPI.dispatch(getAttendance({attendance_id: id}))
+			return response
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
 		}
@@ -213,6 +253,31 @@ const attendanceSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getAttendance.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getAttendanceModalDetail
+		builder
+			.addCase(getAttendanceModalDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getAttendanceModalDetail.fulfilled, (state, {payload}) => {
+				state.attendanceModalDetail = payload
+				state.loading = false
+			})
+			.addCase(getAttendanceModalDetail.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// deleteAttendanceModalDetail
+		builder
+			.addCase(deleteAttendanceModalDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(deleteAttendanceModalDetail.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(deleteAttendanceModalDetail.rejected, (state) => {
 				state.loading = false
 			})
 	}

@@ -11,15 +11,16 @@ import {
 	ChevronRightIcon,
 	ChevronLeftIcon
 } from "@heroicons/react/20/solid";
+import {openModal} from "../../common/modalSlice";
+import {MODAL_BODY_TYPES} from "../../../utils/globalConstantUtil";
 
 const AttendanceDetail = () => {
 	const dispatch = useDispatch();
 	const {id} = useParams()
-	const {state} = useLocation()
 	
 	const tableRef = useRef(null);
 	
-	const {loading, attendance} = useSelector((state) => state.attendance);
+	const {attendance} = useSelector((state) => state.attendance);
 	
 	const [currentDate, setCurrentDate] = useState(new Date());
 	
@@ -94,6 +95,24 @@ const AttendanceDetail = () => {
 		});
 	};
 	
+	const openAddNewAttendanceModal = ({ user, date, status, id }) => {
+		dispatch(openModal({
+		  title: "Update New Attendance",
+		  bodyType: MODAL_BODY_TYPES.ADD_ATTENDANCE_DETAIL_MODAL,
+		  extraObject: {
+		    is_edit: !!status,
+		    id: user.id,
+		    full_name: user.full_name,
+		    roles: user.roles,
+		    status,
+		    date,
+		    notification: 'Successfully edited!',
+			  attendance_id: id
+		  }
+		}))
+	};
+	
+	
 	return (
 		<div className="card">
 			<div className="p-4">
@@ -154,65 +173,6 @@ const AttendanceDetail = () => {
 						</tr>
 						</thead>
 						<tbody>
-						{/*{attendance?.data?.map((user) => (*/}
-						{/*	<tr key={user.id}>*/}
-						{/*		<td className="text-xs border border-gray-300 px-4 py-2 sticky left-0 bg-white z-10 text-black">*/}
-						{/*			{user?.full_name}*/}
-						{/*		</td>*/}
-						{/*		{daysArray.map((day, index) => {*/}
-						{/*			const date = moment(currentDate)*/}
-						{/*				.date(day)*/}
-						{/*				.format("YYYY-MM-DD");*/}
-						{/*			const existAttendance = user?.date_times?.find(*/}
-						{/*				(a) => moment(a.date).format("YYYY-MM-DD") === date*/}
-						{/*			);*/}
-						{/*			*/}
-						{/*			const role = getUserData()?.role;*/}
-						{/*			const isTeacher = role === "teacher";*/}
-						{/*			const isAdmin = role === "admin";*/}
-						{/*			const isEditable =*/}
-						{/*				isAdmin ||*/}
-						{/*				(isTeacher && moment(currentDate).date(day).isSame(moment(), "day"));*/}
-						{/*			*/}
-						{/*			const isCurrentDate = moment().isSame(moment(currentDate).date(day), "day");*/}
-						{/*			*/}
-						{/*			return (*/}
-						{/*				<td*/}
-						{/*					key={day}*/}
-						{/*					className={`border border-gray-300 px-4 py-2 text-xs ${!isEditable ? '' : ''} ${isCurrentDate ? 'border-2 border-x-blue-500' : ''}`}*/}
-						{/*				>*/}
-						{/*					<button></button>*/}
-						{/*					<button></button>*/}
-						{/*					/!*<select*!/*/}
-						{/*					/!*	value={existAttendance?.status || ""}*!/*/}
-						{/*					/!*	// onChange={(e) =>*!/*/}
-						{/*					/!*	// 	handleChange(*!/*/}
-						{/*					/!*	// 		e,*!/*/}
-						{/*					/!*	// 		existAttendance,*!/*/}
-						{/*					/!*	// 		user?.id,*!/*/}
-						{/*					/!*	// 		date,*!/*/}
-						{/*					/!*	// 		existAttendance?.id*!/*/}
-						{/*					/!*	// 	)*!/*/}
-						{/*					/!*	// }*!/*/}
-						{/*					/!*	disabled={!isEditable}*!/*/}
-						{/*					/!*	className={`focus:outline-none disabled:opacity-25 p-2 border border-gray-300 rounded ${*!/*/}
-						{/*					/!*		existAttendance?.status*!/*/}
-						{/*					/!*			? existAttendance?.status === "WONT"*!/*/}
-						{/*					/!*				? "bg-green-500 text-white"*!/*/}
-						{/*					/!*				: "bg-red-500 text-white"*!/*/}
-						{/*					/!*			: ""*!/*/}
-						{/*					/!*	}`}*!/*/}
-						{/*					/!*>*!/*/}
-						{/*					/!*	<option value="">--</option>*!/*/}
-						{/*					/!*	<option value="was">Was</option>*!/*/}
-						{/*					/!*	<option value="not">Not</option>*!/*/}
-						{/*					/!*</select>*!/*/}
-						{/*				</td>*/}
-						{/*			);*/}
-						{/*		})}*/}
-						{/*	</tr>*/}
-						{/*))}*/}
-						
 						{attendance?.data?.map((user) => (
 							<tr key={user.id}>
 								{/* Foydalanuvchi ismi */}
@@ -253,24 +213,64 @@ const AttendanceDetail = () => {
 											<div className="flex items-center justify-center gap-2">
 												{/* Kelgan vaqt */}
 												{comeTime ? (
-													<span className="px-2 py-1 rounded bg-green-500 text-white text-xs">
-						                {moment(comeTime.date_time).format("HH:mm")}
-						              </span>
+													<span
+														className="px-2 py-1 rounded bg-green-500 text-white text-xs cursor-pointer"
+														onClick={() =>
+															openAddNewAttendanceModal({
+																user,
+																date: comeTime.date_time,
+																status: comeTime.status,
+																id: comeTime.id
+															})
+														}
+													>
+												    {moment(comeTime.date_time).format("HH:mm")}
+												  </span>
 												) : (
-													<span className="px-2 py-1 rounded border border-gray-300 text-xs whitespace-nowrap">
-						                ------
-						              </span>
+													<span
+														className="px-2 py-1 rounded border border-gray-300 text-xs whitespace-nowrap cursor-pointer"
+														onClick={() =>
+															openAddNewAttendanceModal({
+																user,
+																date,
+																status: null,
+																id: null
+															})
+														}
+													>
+												    ------
+												  </span>
 												)}
 												
 												{/* Ketgan vaqt */}
 												{wontTime ? (
-													<span className="px-2 py-1 rounded bg-red-500 text-white text-xs">
-						                {moment(wontTime.date_time).format("HH:mm")}
-						              </span>
+													<span
+														className="px-2 py-1 rounded bg-red-500 text-white text-xs cursor-pointer"
+														onClick={() =>
+															openAddNewAttendanceModal({
+																user,
+																date: wontTime.date_time,
+																status: wontTime.status,
+																id: wontTime.id
+															})
+														}
+													>
+												    {moment(wontTime.date_time).format("HH:mm")}
+												  </span>
 												) : (
-													<span className="px-2 py-1 rounded border border-gray-300 text-xs whitespace-nowrap">
-						                -----
-						              </span>
+													<span
+														className="px-2 py-1 rounded border border-gray-300 text-xs whitespace-nowrap cursor-pointer"
+														onClick={() =>
+															openAddNewAttendanceModal({
+																user,
+																date,
+																status: null, // agar ketmagan bo‘lsa default status
+																id: null
+															})
+														}
+													>
+												    -----
+												  </span>
 												)}
 											</div>
 										</td>

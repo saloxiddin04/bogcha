@@ -16,7 +16,8 @@ import AddEduModal from "../features/calendar/components/AddEduModal";
 import AddPlanEduModal from "../features/calendar/components/AddPlanEduModal";
 import EduCheckChildren from "../features/calendar/components/EduCheckChildren";
 import AddAttendanceModal from "../features/Attendance/components/AddAttendanceModal";
-import {deleteAttendance} from "../features/Attendance/attendanceSlice";
+import {deleteAttendance, deleteAttendanceModalDetail} from "../features/Attendance/attendanceSlice";
+import AttendanceDetailModal from "../features/Attendance/components/AttendanceDetailModal";
 
 function ModalLayout() {
 	const { isOpen, bodyType, size, extraObject, title } = useSelector(state => state.modal);
@@ -47,6 +48,9 @@ function ModalLayout() {
 		DELETE_ATTENDANCE: (params) => dispatch(deleteAttendance({id: params})).then(({payload}) => {
 			return payload;
 		}),
+		DELETE_ATTENDANCE_DETAIL: (params) => dispatch(deleteAttendanceModalDetail({id: params})).then(({payload}) => {
+			return payload;
+		}),
 	};
 	
 	const remove = () => {
@@ -72,6 +76,7 @@ function ModalLayout() {
 							[MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW]: <AddPlanEduModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CHECK_CHILDREN_MODAL]: <EduCheckChildren closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.ADD_ATTENDANCE_MODAL]: <AddAttendanceModal closeModal={close} extraObject={extraObject} />,
+							[MODAL_BODY_TYPES.ADD_ATTENDANCE_DETAIL_MODAL]: <AttendanceDetailModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close} remove={remove} />,
 							[MODAL_BODY_TYPES.DEFAULT]: <div></div>
 						}[bodyType]

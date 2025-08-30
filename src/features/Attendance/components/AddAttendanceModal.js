@@ -11,7 +11,6 @@ import {
 	getGroupForAttendance,
 	updateAttendance
 } from "../attendanceSlice";
-import {getUserData} from "../../../auth/jwtService";
 
 const AddAttendanceModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
