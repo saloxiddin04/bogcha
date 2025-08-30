@@ -5,7 +5,12 @@ import moment from "moment";
 import {getAttendance} from "../attendanceSlice";
 import {setPageTitle} from "../../common/headerSlice";
 import {getUserData} from "../../../auth/jwtService";
-import {ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronRightIcon, ChevronLeftIcon} from "@heroicons/react/20/solid";
+import {
+	ChevronDoubleLeftIcon,
+	ChevronDoubleRightIcon,
+	ChevronRightIcon,
+	ChevronLeftIcon
+} from "@heroicons/react/20/solid";
 
 const AttendanceDetail = () => {
 	const dispatch = useDispatch();
@@ -14,7 +19,7 @@ const AttendanceDetail = () => {
 	
 	const tableRef = useRef(null);
 	
-	const { loading, attendance } = useSelector((state) => state.attendance);
+	const {loading, attendance} = useSelector((state) => state.attendance);
 	
 	const [currentDate, setCurrentDate] = useState(new Date());
 	
@@ -26,10 +31,10 @@ const AttendanceDetail = () => {
 		0
 	).getDate();
 	
-	const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+	const daysArray = Array.from({length: daysInMonth}, (_, i) => i + 1);
 	
 	useEffect(() => {
-		dispatch(setPageTitle({ title : "Attendance"}))
+		dispatch(setPageTitle({title: "Attendance"}))
 	}, [dispatch])
 	
 	useEffect(() => {
@@ -149,18 +154,82 @@ const AttendanceDetail = () => {
 						</tr>
 						</thead>
 						<tbody>
+						{/*{attendance?.data?.map((user) => (*/}
+						{/*	<tr key={user.id}>*/}
+						{/*		<td className="text-xs border border-gray-300 px-4 py-2 sticky left-0 bg-white z-10 text-black">*/}
+						{/*			{user?.full_name}*/}
+						{/*		</td>*/}
+						{/*		{daysArray.map((day, index) => {*/}
+						{/*			const date = moment(currentDate)*/}
+						{/*				.date(day)*/}
+						{/*				.format("YYYY-MM-DD");*/}
+						{/*			const existAttendance = user?.date_times?.find(*/}
+						{/*				(a) => moment(a.date).format("YYYY-MM-DD") === date*/}
+						{/*			);*/}
+						{/*			*/}
+						{/*			const role = getUserData()?.role;*/}
+						{/*			const isTeacher = role === "teacher";*/}
+						{/*			const isAdmin = role === "admin";*/}
+						{/*			const isEditable =*/}
+						{/*				isAdmin ||*/}
+						{/*				(isTeacher && moment(currentDate).date(day).isSame(moment(), "day"));*/}
+						{/*			*/}
+						{/*			const isCurrentDate = moment().isSame(moment(currentDate).date(day), "day");*/}
+						{/*			*/}
+						{/*			return (*/}
+						{/*				<td*/}
+						{/*					key={day}*/}
+						{/*					className={`border border-gray-300 px-4 py-2 text-xs ${!isEditable ? '' : ''} ${isCurrentDate ? 'border-2 border-x-blue-500' : ''}`}*/}
+						{/*				>*/}
+						{/*					<button></button>*/}
+						{/*					<button></button>*/}
+						{/*					/!*<select*!/*/}
+						{/*					/!*	value={existAttendance?.status || ""}*!/*/}
+						{/*					/!*	// onChange={(e) =>*!/*/}
+						{/*					/!*	// 	handleChange(*!/*/}
+						{/*					/!*	// 		e,*!/*/}
+						{/*					/!*	// 		existAttendance,*!/*/}
+						{/*					/!*	// 		user?.id,*!/*/}
+						{/*					/!*	// 		date,*!/*/}
+						{/*					/!*	// 		existAttendance?.id*!/*/}
+						{/*					/!*	// 	)*!/*/}
+						{/*					/!*	// }*!/*/}
+						{/*					/!*	disabled={!isEditable}*!/*/}
+						{/*					/!*	className={`focus:outline-none disabled:opacity-25 p-2 border border-gray-300 rounded ${*!/*/}
+						{/*					/!*		existAttendance?.status*!/*/}
+						{/*					/!*			? existAttendance?.status === "WONT"*!/*/}
+						{/*					/!*				? "bg-green-500 text-white"*!/*/}
+						{/*					/!*				: "bg-red-500 text-white"*!/*/}
+						{/*					/!*			: ""*!/*/}
+						{/*					/!*	}`}*!/*/}
+						{/*					/!*>*!/*/}
+						{/*					/!*	<option value="">--</option>*!/*/}
+						{/*					/!*	<option value="was">Was</option>*!/*/}
+						{/*					/!*	<option value="not">Not</option>*!/*/}
+						{/*					/!*</select>*!/*/}
+						{/*				</td>*/}
+						{/*			);*/}
+						{/*		})}*/}
+						{/*	</tr>*/}
+						{/*))}*/}
+						
 						{attendance?.data?.map((user) => (
 							<tr key={user.id}>
-								<td className="text-xs border border-gray-300 px-4 py-2 sticky left-0 bg-white z-10">
-									{user.name}
+								{/* Foydalanuvchi ismi */}
+								<td className="text-xs border border-gray-300 px-4 py-2 sticky left-0 bg-white z-10 text-black">
+									{user?.full_name}
 								</td>
-								{daysArray.map((day, index) => {
-									const date = moment(currentDate)
-										.date(day)
-										.format("YYYY-MM-DD");
-									const existAttendance = user.attendance.find(
-										(a) => moment(a.date).format("YYYY-MM-DD") === date
+								
+								{daysArray.map((day) => {
+									const date = moment(currentDate).date(day).format("YYYY-MM-DD");
+									
+									// Shu kunga tegishli yozuvlarni olish
+									const dayAttendances = user?.date_times?.filter(
+										(a) => moment(a.date_time).format("YYYY-MM-DD") === date
 									);
+									
+									const comeTime = dayAttendances?.find((a) => a.status === "COME");
+									const wontTime = dayAttendances?.find((a) => a.status === "WONT");
 									
 									const role = getUserData()?.role;
 									const isTeacher = role === "teacher";
@@ -169,37 +238,41 @@ const AttendanceDetail = () => {
 										isAdmin ||
 										(isTeacher && moment(currentDate).date(day).isSame(moment(), "day"));
 									
-									const isCurrentDate = moment().isSame(moment(currentDate).date(day), "day");
+									const isCurrentDate = moment().isSame(
+										moment(currentDate).date(day),
+										"day"
+									);
 									
 									return (
 										<td
 											key={day}
-											className={`border border-gray-300 px-4 py-2 text-xs ${!isEditable ? 'bg-gray-100' : ''} ${isCurrentDate ? 'border-2 border-x-blue-500' : ''}`}
+											className={`border border-gray-300 px-4 py-2 text-xs text-center ${
+												isCurrentDate ? "border-2 border-x-blue-500" : ""
+											}`}
 										>
-											<select
-												value={existAttendance?.status || ""}
-												// onChange={(e) =>
-												// 	handleChange(
-												// 		e,
-												// 		existAttendance,
-												// 		user?.id,
-												// 		date,
-												// 		existAttendance?.id
-												// 	)
-												// }
-												disabled={!isEditable}
-												className={`focus:outline-none disabled:opacity-25 p-2 border border-gray-300 rounded ${
-													existAttendance?.status
-														? existAttendance?.status === "was"
-															? "bg-green-500 text-white"
-															: "bg-red-500 text-white"
-														: ""
-												}`}
-											>
-												<option value="">--</option>
-												<option value="was">Was</option>
-												<option value="not">Not</option>
-											</select>
+											<div className="flex items-center justify-center gap-2">
+												{/* Kelgan vaqt */}
+												{comeTime ? (
+													<span className="px-2 py-1 rounded bg-green-500 text-white text-xs">
+						                {moment(comeTime.date_time).format("HH:mm")}
+						              </span>
+												) : (
+													<span className="px-2 py-1 rounded border border-gray-300 text-xs whitespace-nowrap">
+						                ------
+						              </span>
+												)}
+												
+												{/* Ketgan vaqt */}
+												{wontTime ? (
+													<span className="px-2 py-1 rounded bg-red-500 text-white text-xs">
+						                {moment(wontTime.date_time).format("HH:mm")}
+						              </span>
+												) : (
+													<span className="px-2 py-1 rounded border border-gray-300 text-xs whitespace-nowrap">
+						                -----
+						              </span>
+												)}
+											</div>
 										</td>
 									);
 								})}
