@@ -7,6 +7,8 @@ const initialState = {
 	
 	attendanceGroup: null,
 	attendanceChildren: null,
+	
+	attendance: null,
 	loading: false
 }
 
@@ -91,6 +93,19 @@ export const deleteAttendance = createAsyncThunk(
 			const response = await instance.delete(`/attendance/${id}/`)
 			await thunkAPI.dispatch(getAttendanceList({page: 1, page_size: 10}))
 			return response
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+// -------- attendance detail ui --------- //
+export const getAttendance = createAsyncThunk(
+	"attendance/getAttendance",
+	async ({attendance_id, date}, thunkAPI) => {
+		try {
+			const response = await instance.get('/attendance/check/', {params: {attendance_id, date}})
+			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
 		}
@@ -185,6 +200,19 @@ const attendanceSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(deleteAttendance.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getAttendance
+		builder
+			.addCase(getAttendance.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getAttendance.fulfilled, (state, {payload}) => {
+				state.attendance = payload
+				state.loading = false
+			})
+			.addCase(getAttendance.rejected, (state) => {
 				state.loading = false
 			})
 	}

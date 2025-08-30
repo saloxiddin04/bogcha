@@ -32,6 +32,7 @@ const CalendarDetail = lazy(() => import('../features/calendar/components/EduCal
 
 // attendance
 const Attendance = lazy(() => import("../pages/protected/Attendance"))
+const AttendanceDetail = lazy(() => import("../features/Attendance/components/AttendanceDetail"))
 
 const routes = [
   {
@@ -110,6 +111,10 @@ const routes = [
   {
     path: "/attendance",
     component: Attendance
+  },
+  {
+    path: "/attendance/:id",
+    component: AttendanceDetail
   },
   
   {
