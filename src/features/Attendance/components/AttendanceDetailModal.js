@@ -47,8 +47,6 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 		}
 	}, [isOpen, extraObject]);
 	
-	console.log(extraObject)
-	
 	useEffect(() => {
 		if (!extraObject?.status) {
 			setPostObj({
