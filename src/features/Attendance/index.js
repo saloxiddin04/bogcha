@@ -31,7 +31,7 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="flex justify-between items-end gap-2 w-full">
-			{hasPermission("plan_s") && (
+			{/*{hasPermission("plan_s") && (*/}
 				<div className="w-1/3 flex gap-2 items-end">
 					<InputText
 						type="text"
@@ -50,15 +50,15 @@ const TopSideButtons = () => {
 						<XCircleIcon className="w-6"/>
 					</button>
 				</div>
-			)}
-			{hasPermission("plan_a") && (
+			{/*)}*/}
+			{/*{hasPermission("plan_a") && (*/}
 				<button
 					className="btn px-6 btn-sm normal-case btn-primary"
 					onClick={() => openAddNewLeadModal()}
 				>
 					Add New Attendance
 				</button>
-			)}
+			{/*)}*/}
 		</div>
 	)
 }
@@ -130,21 +130,21 @@ const Attendance = () => {
 										<button
 											className="btn btn-sm btn-error text-white"
 											onClick={() => deleteCurrentAttendance(item?.id)}
-											disabled={!hasPermission("plan_d_del")}
+											// disabled={!hasPermission("plan_d_del")}
 										>
 											<TrashIcon className="w-6"/>
 										</button>
 										<button
 											className="btn btn-sm btn-warning text-white"
 											onClick={() => openAddNewAttendanceModal(item?.id)}
-											disabled={!hasPermission("plan_d_e")}
+											// disabled={!hasPermission("plan_d_e")}
 										>
 											<PencilIcon className="w-6"/>
 										</button>
 										<button
 											className="btn btn-sm btn-success text-white"
 											onClick={() => navigate(`${item?.id}`)}
-											disabled={!hasPermission("plan_d_det")}
+											// disabled={!hasPermission("plan_d_det")}
 										>
 											<ChevronRightIcon className="w-6"/>
 										</button>

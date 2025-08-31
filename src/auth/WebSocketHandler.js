@@ -15,7 +15,7 @@ const WebSocketHandler = () => {
 		
 		// ws.current = new WebSocket(`ws://0.0.0.0:8048/ws/?token=${token}`);
 		// ws.current = new WebSocket(`ws://192.168.31.21:8048/ws/?token=${token}`);
-		ws.current = new WebSocket(`ws://8aac109249db.ngrok-free.app/ws/?token=${token}`);
+		ws.current = new WebSocket(`ws://05e01aebd2d4.ngrok-free.app/ws/?token=${token}`);
 		// ws.current = new WebSocket(`ws://95.46.96.185:2990/ws/?token=${token}`);
 		
 		ws.current.onopen = () => {

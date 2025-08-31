@@ -126,6 +126,19 @@ export const getAttendanceModalDetail = createAsyncThunk(
 	}
 )
 
+export const createAttendanceModalDetail = createAsyncThunk(
+	"attendance/createAttendanceModalDetail",
+	async ({data}, thunkAPI) => {
+		try {
+			const response = await instance.post(`/attendance/check/`, data)
+			thunkAPI.dispatch(getAttendance({attendance_id: response?.data?.data?.attendance_group, date: moment(response?.data?.data?.date_time).format("YYYY-MM-DD")}))
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
 export const updateAttendanceModalDetail = createAsyncThunk(
 	"attendance/updateAttendanceModalDetail",
 	async ({id, data}, thunkAPI) => {
@@ -278,6 +291,18 @@ const attendanceSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(deleteAttendanceModalDetail.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// createAttendanceModalDetail
+		builder
+			.addCase(createAttendanceModalDetail.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(createAttendanceModalDetail.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(createAttendanceModalDetail.rejected, (state) => {
 				state.loading = false
 			})
 	}

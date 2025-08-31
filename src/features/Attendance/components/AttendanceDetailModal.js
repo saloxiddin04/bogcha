@@ -4,11 +4,12 @@ import InputText from "../../../components/Input/InputText";
 import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import {getUserData, hasPermission} from "../../../auth/jwtService";
-import {getAttendanceModalDetail, updateAttendanceModalDetail} from "../attendanceSlice";
+import {createAttendanceModalDetail, getAttendanceModalDetail, updateAttendanceModalDetail} from "../attendanceSlice";
 import moment from "moment/moment";
 import {showNotification} from "../../common/headerSlice";
 import {TrashIcon} from "@heroicons/react/20/solid";
 import {openModal} from "../../common/modalSlice";
+import {createCalendarList, updateCalendarList} from "../../calendar/calendarSlice";
 
 const AttendanceDetailModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
@@ -97,7 +98,15 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 		if (postObj.date_time.trim() === "") return setErrorMessage("Date time is required!");
 		if (!postObj.roles.length) return setErrorMessage("Roles is required!");
 		
-		dispatch(updateAttendanceModalDetail({id: extraObject?.attendance_id, data: postObj})).then(({payload}) => {
+		const action = isEditMode ? updateAttendanceModalDetail : createAttendanceModalDetail
+		const params = isEditMode ?
+			{
+				id: extraObject?.attendance_id,
+				data: postObj,
+			} :
+			{data: {...postObj, front: true}}
+		
+		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {
 				dispatch(showNotification({
 					message: isEditMode ? "Attendance updated successfully!" : "New Attendance added!",

@@ -2,7 +2,7 @@ import {getAccessToken, getRefreshToken, logout} from "../auth/jwtService.js";
 import axios from "axios";
 
 const instance = axios.create({
-	baseURL: "https://8aac109249db.ngrok-free.app/api/v1", //ngrok
+	baseURL: "https://05e01aebd2d4.ngrok-free.app/api/v1", //ngrok
 	// baseURL: "http://95.46.96.185/api/v1", //local_server
 	// baseURL: "http://0.0.0.0:8048/api/v1", //local_server
 	timeout: 20000,
