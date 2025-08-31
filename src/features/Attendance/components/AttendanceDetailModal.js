@@ -101,7 +101,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				id: extraObject?.attendance_id,
 				data: postObj,
 			} :
-			{data: {...postObj, front: true}}
+			{data: {...postObj, front: true, date_time: new Date(postObj.date_time).toISOString()}}
 		
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {

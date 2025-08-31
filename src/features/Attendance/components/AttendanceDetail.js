@@ -189,7 +189,7 @@ const AttendanceDetail = () => {
 									);
 									
 									const comeTime = dayAttendances?.find((a) => a.status === "COME");
-									const wontTime = dayAttendances?.find((a) => a.status === "WONT");
+									const wontTime = dayAttendances?.find((a) => a.status === "WENT");
 									
 									const role = getUserData()?.role;
 									const isTeacher = role === "teacher";
