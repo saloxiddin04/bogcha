@@ -109,7 +109,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {
 				dispatch(showNotification({
-					message: isEditMode ? "Attendance updated successfully!" : "New Attendance added!",
+					message: isEditMode ? "Attendance detail updated successfully!" : "New Attendance added!",
 					status: 1
 				}));
 				closeModal();
