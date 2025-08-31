@@ -9,7 +9,6 @@ import moment from "moment/moment";
 import {showNotification} from "../../common/headerSlice";
 import {TrashIcon} from "@heroicons/react/20/solid";
 import {openModal} from "../../common/modalSlice";
-import {createCalendarList, updateCalendarList} from "../../calendar/calendarSlice";
 
 const AttendanceDetailModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
