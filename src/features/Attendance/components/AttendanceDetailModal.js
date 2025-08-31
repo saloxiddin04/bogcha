@@ -52,7 +52,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 			setPostObj({
 				name: extraObject?.full_name ?? "",
 				roles: extraObject?.roles ?? [],
-				status: "WONT",
+				status: "WENT",
 				date_time: moment(extraObject?.date).format("YYYY-MM-DDTHH:mm") ?? "",
 				temperature: extraObject?.temperature ?? "",
 				description: extraObject?.description ?? "",
@@ -65,7 +65,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 					setPostObj({
 						name: payload?.data?.user?.full_name ?? "",
 						roles: payload?.data?.roles?.map((el) => el) ?? [],
-						status: payload?.data?.status ?? "WONT",
+						status: payload?.data?.status ?? "WENT",
 						date_time: moment(payload?.data?.date_time).format("YYYY-MM-DDTHH:mm") ?? "",
 						temperature: payload?.data?.temperature ?? "",
 						description: payload?.data?.description ?? "",
@@ -131,7 +131,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 	
 	const statusOptions = [
 		{label: "Come", value: "COME"},
-		{label: "Wont", value: "WONT"},
+		{label: "Went", value: "WENT"},
 	]
 	
 	return (

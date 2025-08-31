@@ -131,7 +131,7 @@ export const createAttendanceModalDetail = createAsyncThunk(
 	async ({data}, thunkAPI) => {
 		try {
 			const response = await instance.post(`/attendance/check/`, data)
-			thunkAPI.dispatch(getAttendance({attendance_id: response?.data?.data?.attendance_group, date: moment(response?.data?.data?.date_time).format("YYYY-MM-DD")}))
+			thunkAPI.dispatch(getAttendance({attendance_id: response?.data?.data?.attendance_group?.id, date: moment(response?.data?.data?.date_time).format("YYYY-MM-DD")}))
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
