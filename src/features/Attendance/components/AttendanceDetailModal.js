@@ -52,7 +52,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 			setPostObj({
 				name: extraObject?.full_name ?? "",
 				roles: extraObject?.roles ?? [],
-				status: "WENT",
+				status: extraObject?.is_come ? "COME" : "WENT",
 				date_time: moment(extraObject?.date).format("YYYY-MM-DDTHH:mm") ?? "",
 				temperature: extraObject?.temperature ?? "",
 				description: extraObject?.description ?? "",

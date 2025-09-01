@@ -95,7 +95,7 @@ const AttendanceDetail = () => {
 		});
 	};
 	
-	const openAddNewAttendanceModal = ({ user, date, status, id }) => {
+	const openAddNewAttendanceModal = ({ user, date, status, id, is_come }) => {
 		dispatch(openModal({
 		  title: "Update New Attendance",
 		  bodyType: MODAL_BODY_TYPES.ADD_ATTENDANCE_DETAIL_MODAL,
@@ -107,7 +107,8 @@ const AttendanceDetail = () => {
 		    status,
 		    date,
 		    notification: 'Successfully edited!',
-			  attendance_id: id
+			  attendance_id: id,
+			  is_come
 		  }
 		}))
 	};
@@ -219,8 +220,9 @@ const AttendanceDetail = () => {
 															openAddNewAttendanceModal({
 																user,
 																date: comeTime.date_time,
-																status: comeTime.status,
-																id: comeTime.id
+																status: "COME",
+																id: comeTime.id,
+																is_come: true
 															})
 														}
 													>
@@ -234,7 +236,8 @@ const AttendanceDetail = () => {
 																user,
 																date,
 																status: null,
-																id: null
+																id: null,
+																is_come: true
 															})
 														}
 													>
