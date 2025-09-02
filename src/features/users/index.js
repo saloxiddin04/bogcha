@@ -94,7 +94,7 @@ const Users = () => {
 								</thead>
 								
 								<tbody>
-								{users?.results?.map((item, index) => {
+								{users?.results?.map((item) => {
 									return (
 										<tr key={item?.id} className="text-center">
 											<td>

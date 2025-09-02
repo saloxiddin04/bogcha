@@ -1,6 +1,6 @@
 // All components mapping with path for internal routes
 
-import { lazy } from 'react'
+import {lazy} from 'react'
 
 const Dashboard = lazy(() => import('../pages/protected/Dashboard'))
 const Welcome = lazy(() => import('../pages/protected/Welcome'))
@@ -34,117 +34,131 @@ const CalendarDetail = lazy(() => import('../features/calendar/components/EduCal
 const Attendance = lazy(() => import("../pages/protected/Attendance"))
 const AttendanceDetail = lazy(() => import("../features/Attendance/components/AttendanceDetail"))
 
+// parent
+const Parent = lazy(() => import("../pages/protected/Parent"))
+const ParentDetail = lazy(() => import("../features/Parent/components/ParentDetail"))
+
 const routes = [
-  {
-    path: '/dashboard', // the url
-    component: Dashboard, // view rendered
-  },
-  {
-    path: '/welcome', // the url
-    component: Welcome, // view rendered
-  },
-  // {
-  //   path: '/leads',
-  //   component: Leads,
-  // },
-  {
-    path: "/users",
-    component: Users
-  },
-  {
-    path: "/groups",
-    component: Groups
-  },
-  {
-    path: "/roles",
-    component: Roles
-  },
-  
-  // smm post
-  {
-    path: "/smm",
-    component: SmmPost
-  },
-  
-  // children
-  {
-    path: "/child",
-    component: ChildrenPage
-  },
-  {
-    path: "/child/:id",
-    component: ChildrenDetail
-  },
-  
-  // check kids
-  {
-    path: "/check-kids",
-    component: CheckKids
-  },
-  {
-    path: "/check-kids/:id",
-    component: CheckKidsDetail
-  },
-  
-  // Permissions
-  {
-    path: "/roles/:id",
-    component: Permissions
-  },
-  
-  {
-    path: '/settings-team',
-    component: Team,
-  },
-  
-  // ------- calendar ------ //
-  {
-    path: '/calendar',
-    component: Calendar,
-  },
-  {
-    path: '/calendar/:id',
-    component: CalendarDetail,
-  },
-  
-  // ------- Attendance --------- //
-  {
-    path: "/attendance",
-    component: Attendance
-  },
-  {
-    path: "/attendance/:id",
-    component: AttendanceDetail
-  },
-  
-  {
-    path: '/transactions',
-    component: Transactions,
-  },
-  {
-    path: '/settings-profile',
-    component: ProfileSettings,
-  },
-  {
-    path: '/settings-billing',
-    component: Bills,
-  },
-  {
-    path: '/integration',
-    component: Integration,
-  },
-  {
-    path: '/charts',
-    component: Charts,
-  },
-  {
-    path: '/404',
-    component: Page404,
-  },
-  {
-    path: '/blank',
-    component: Blank,
-  },
+	{
+		path: '/dashboard', // the url
+		component: Dashboard, // view rendered
+	},
+	{
+		path: '/welcome', // the url
+		component: Welcome, // view rendered
+	},
+	// {
+	//   path: '/leads',
+	//   component: Leads,
+	// },
+	{
+		path: "/users",
+		component: Users
+	},
+	{
+		path: "/groups",
+		component: Groups
+	},
+	{
+		path: "/roles",
+		component: Roles
+	},
+	
+	// smm post
+	{
+		path: "/smm",
+		component: SmmPost
+	},
+	
+	// children
+	{
+		path: "/child",
+		component: ChildrenPage
+	},
+	{
+		path: "/child/:id",
+		component: ChildrenDetail
+	},
+	
+	// check kids
+	{
+		path: "/check-kids",
+		component: CheckKids
+	},
+	{
+		path: "/check-kids/:id",
+		component: CheckKidsDetail
+	},
+	
+	// Permissions
+	{
+		path: "/roles/:id",
+		component: Permissions
+	},
+	
+	{
+		path: '/settings-team',
+		component: Team,
+	},
+	
+	// ------- calendar ------ //
+	{
+		path: '/calendar',
+		component: Calendar,
+	},
+	{
+		path: '/calendar/:id',
+		component: CalendarDetail,
+	},
+	
+	// ------- Attendance --------- //
+	{
+		path: "/attendance",
+		component: Attendance
+	},
+	{
+		path: "/attendance/:id",
+		component: AttendanceDetail
+	},
+	
+	// ------- Parent --------- //
+	{
+		path: "/parent",
+    component: Parent
+	},
+	{
+		path: "/parent/:id",
+    component: ParentDetail
+	},
+	
+	{
+		path: '/transactions',
+		component: Transactions,
+	},
+	{
+		path: '/settings-profile',
+		component: ProfileSettings,
+	},
+	{
+		path: '/settings-billing',
+		component: Bills,
+	},
+	{
+		path: '/integration',
+		component: Integration,
+	},
+	{
+		path: '/charts',
+		component: Charts,
+	},
+	{
+		path: '/404',
+		component: Page404,
+	},
+	{
+		path: '/blank',
+		component: Blank,
+	},
 ]
 
 export default routes

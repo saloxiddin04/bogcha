@@ -141,6 +141,13 @@ const routes = [
 	  //   },
 	  // ]
 	},
+	
+	{
+		path: '/app/parent',
+		icon: <UsersIcon className={submenuIconClasses}/>,
+		name: 'Parent',
+		permission: "groups"
+	},
 ]
 
 export default routes
