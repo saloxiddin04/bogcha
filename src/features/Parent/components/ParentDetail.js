@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {setPageTitle} from "../../common/headerSlice";
 import {
-	getChildAttendanceCome,
+	getChildAttendanceCome, getChildAttendanceData,
 	getChildAttendanceWent,
 	getChildDetail,
 	getChildGrades,
@@ -22,6 +22,7 @@ import {
 	Tooltip
 } from "chart.js";
 import moment from "moment";
+import Loader from "../../../containers/Loader";
 
 ChartJS.register(
 	CategoryScale,
@@ -44,7 +45,8 @@ const ParentDetail = () => {
 		temperature,
 		grades,
 		attendanceWent,
-		attendanceCome
+		attendanceCome,
+		attendanceData
 	} = useSelector((state) => state.parent)
 	
 	useEffect(() => {
@@ -53,6 +55,7 @@ const ParentDetail = () => {
 		dispatch(getChildAttendanceWent({id}))
 		dispatch(getChildTemperature({id}))
 		dispatch(getChildGrades({id}))
+		dispatch(getChildAttendanceData({id, page: 1, page_size: 10}))
 	}, [dispatch, id])
 	
 	useEffect(() => {
@@ -81,7 +84,7 @@ const ParentDetail = () => {
 				data: temperature?.data?.map((item) => item?.come_temperature),
 				borderColor: "rgb(53, 162, 235)",
 				backgroundColor: "rgba(53, 162, 235, 0.5)",
-				fill: false,
+				fill: true,
 				tension: 0.3,
 			},
 			{
@@ -89,7 +92,7 @@ const ParentDetail = () => {
 				data: temperature?.data?.map((item) => item?.went_temperature),
 				borderColor: "rgb(255, 99, 132)",
 				backgroundColor: "rgba(255, 99, 132, 0.5)",
-				fill: false,
+				fill: true,
 				tension: 0.3,
 			},
 			{
@@ -168,84 +171,88 @@ const ParentDetail = () => {
 	return (
 		<div>
 			<TitleCard title={"Child temperature"}>
-				<Line data={dataTemperature} options={options}/>
+				{loading ? <Loader /> : <Line data={dataTemperature} options={options}/>}
 			</TitleCard>
 			<TitleCard title={"Child grades"}>
-				<Line data={dataGrades} options={options}/>
+				{loading ? <Loader /> : <Line data={dataGrades} options={options}/>}
 			</TitleCard>
 			<TitleCard title={"Child come attendance"}>
-				<Line
-					data={dataComeAttendance}
-					options={{
-						responsive: true,
-						plugins: {
-							legend: { position: "top" },
-							tooltip: {
-								callbacks: {
-									label: function (context) {
-										const value = context.raw; // bu daqiqalar
-										const hours = Math.floor(value / 60);
-										const minutes = value % 60;
-										const time = `${hours.toString().padStart(2, "0")}:${minutes
-											.toString()
-											.padStart(2, "0")}`;
-										return `${context.dataset.label}: ${time}`;
+				{loading ? <Loader /> :
+					<Line
+						data={dataComeAttendance}
+						options={{
+							responsive: true,
+							plugins: {
+								legend: { position: "top" },
+								tooltip: {
+									callbacks: {
+										label: function (context) {
+											const value = context.raw; // bu daqiqalar
+											const hours = Math.floor(value / 60);
+											const minutes = value % 60;
+											const time = `${hours.toString().padStart(2, "0")}:${minutes
+												.toString()
+												.padStart(2, "0")}`;
+											return `${context.dataset.label}: ${time}`;
+										},
 									},
 								},
 							},
-						},
-						scales: {
-							y: {
-								ticks: {
-									callback: (value) => {
-										const hours = Math.floor(value / 60);
-										const minutes = value % 60;
-										return `${hours.toString().padStart(2, "0")}:${minutes
-											.toString()
-											.padStart(2, "0")}`;
+							scales: {
+								y: {
+									ticks: {
+										callback: (value) => {
+											const hours = Math.floor(value / 60);
+											const minutes = value % 60;
+											return `${hours.toString().padStart(2, "0")}:${minutes
+												.toString()
+												.padStart(2, "0")}`;
+										},
 									},
 								},
 							},
-						},
-					}}
-				/>
+						}}
+					/>
+				}
 			</TitleCard>
 			<TitleCard title={"Child went attendance"}>
-				<Line
-					data={dataWentAttendance}
-					options={{
-						responsive: true,
-						plugins: {
-							legend: { position: "top" },
-							tooltip: {
-								callbacks: {
-									label: function (context) {
-										const value = context.raw;
-										const hours = Math.floor(value / 60);
-										const minutes = value % 60;
-										const time = `${hours.toString().padStart(2, "0")}:${minutes
-											.toString()
-											.padStart(2, "0")}`;
-										return `${context.dataset.label}: ${time}`;
+				{loading ? <Loader /> :
+					<Line
+						data={dataWentAttendance}
+						options={{
+							responsive: true,
+							plugins: {
+								legend: { position: "top" },
+								tooltip: {
+									callbacks: {
+										label: function (context) {
+											const value = context.raw;
+											const hours = Math.floor(value / 60);
+											const minutes = value % 60;
+											const time = `${hours.toString().padStart(2, "0")}:${minutes
+												.toString()
+												.padStart(2, "0")}`;
+											return `${context.dataset.label}: ${time}`;
+										},
 									},
 								},
 							},
-						},
-						scales: {
-							y: {
-								ticks: {
-									callback: (value) => {
-										const hours = Math.floor(value / 60);
-										const minutes = value % 60;
-										return `${hours.toString().padStart(2, "0")}:${minutes
-											.toString()
-											.padStart(2, "0")}`;
+							scales: {
+								y: {
+									ticks: {
+										callback: (value) => {
+											const hours = Math.floor(value / 60);
+											const minutes = value % 60;
+											return `${hours.toString().padStart(2, "0")}:${minutes
+												.toString()
+												.padStart(2, "0")}`;
+										},
 									},
 								},
 							},
-						},
-					}}
-				/>
+						}}
+					/>
+				}
 			</TitleCard>
 		</div>
 	);

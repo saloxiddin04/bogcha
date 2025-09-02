@@ -6,6 +6,7 @@ const initialState = {
 	childDetail: null,
 	attendanceCome: null,
 	attendanceWent: null,
+	attendanceData: null,
 	temperature: null,
 	grades: null,
 	loading: false
@@ -52,6 +53,18 @@ export const getChildAttendanceWent = createAsyncThunk(
 	async ({id}, thunkAPI) => {
 		try {
 			const response = await instance.get(`/result/parent/${id}/children_attendance_went/`)
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getChildAttendanceData = createAsyncThunk(
+	"parent/getChildAttendanceData",
+	async ({page, page_size, id}, thunkAPI) => {
+		try {
+			const response = await instance.get(`/result/parent/${id}/children_attendance_data/`, {params: {page, page_size}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -136,6 +149,19 @@ const ParentSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getChildAttendanceWent.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getChildAttendanceData
+		builder
+			.addCase(getChildAttendanceData.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getChildAttendanceData.fulfilled, (state, {payload}) => {
+				state.attendanceData = payload
+				state.loading = false
+			})
+			.addCase(getChildAttendanceData.rejected, (state) => {
 				state.loading = false
 			})
 		
