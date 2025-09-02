@@ -21,6 +21,7 @@ import {
 	Title,
 	Tooltip
 } from "chart.js";
+import moment from "moment";
 
 ChartJS.register(
 	CategoryScale,
@@ -37,7 +38,14 @@ const ParentDetail = () => {
 	const dispatch = useDispatch()
 	const {id} = useParams()
 	
-	const {loading, childDetail, temperature} = useSelector((state) => state.parent)
+	const {
+		loading,
+		childDetail,
+		temperature,
+		grades,
+		attendanceWent,
+		attendanceCome
+	} = useSelector((state) => state.parent)
 	
 	useEffect(() => {
 		dispatch(getChildDetail({id}))
@@ -50,6 +58,11 @@ const ParentDetail = () => {
 	useEffect(() => {
 		dispatch(setPageTitle({title: "Parent"}))
 	}, [dispatch])
+	
+	const toMinutes = (timeString) => {
+		const m = moment(timeString, "HH:mm");
+		return m.hours() * 60 + m.minutes();
+	};
 	
 	const options = {
 		responsive: true,
@@ -96,10 +109,143 @@ const ParentDetail = () => {
 		],
 	};
 	
+	const dataGrades = {
+		labels: grades?.data?.map((item) => moment(item?.created_date).format("YYYY-MM-DD")),
+		datasets: [
+			{
+				label: "Grades",
+				data: grades?.data?.map((item) => item?.score),
+				borderColor: "rgb(53, 162, 235)",
+				backgroundColor: "rgba(53, 162, 235, 0.5)",
+				fill: true,
+				tension: 0.3,
+			},
+		]
+	}
+	
+	const dataComeAttendance = {
+		labels: attendanceCome?.data?.map((item) => item?.day),
+		datasets: [
+			{
+				label: "Kelgan vaqt",
+				data: attendanceCome?.data?.map((item) => toMinutes(moment(item?.come).format("HH-mm"))),
+				borderColor: "rgb(53, 162, 235)",
+				backgroundColor: "rgba(53, 162, 235, 0.5)",
+				fill: false,
+				tension: 0.3,
+			},
+			{
+				label: "Default vaqt",
+				data: attendanceCome?.data?.map(() => toMinutes(attendanceCome?.default?.come)),
+				borderColor: "rgba(255, 99, 132, 1)",
+				borderDash: [5, 5],
+				pointRadius: 0,
+			},
+		],
+	};
+	
+	const dataWentAttendance = {
+		labels: attendanceWent?.data?.map((item) => item?.day),
+		datasets: [
+			{
+				label: "Ketgan vaqt",
+				data: attendanceWent?.data?.map((item) => toMinutes(moment(item?.went).format("HH-mm"))),
+				borderColor: "rgb(53, 162, 235)",
+				backgroundColor: "rgba(53, 162, 235, 0.5)",
+				fill: false,
+				tension: 0.3,
+			},
+			{
+				label: "Default vaqt",
+				data: attendanceWent?.data?.map(() => toMinutes(attendanceWent?.default?.went)),
+				borderColor: "rgba(255, 99, 132, 1)",
+				borderDash: [5, 5],
+				pointRadius: 0,
+			},
+		],
+	};
+	
 	return (
 		<div>
 			<TitleCard title={"Child temperature"}>
 				<Line data={dataTemperature} options={options}/>
+			</TitleCard>
+			<TitleCard title={"Child grades"}>
+				<Line data={dataGrades} options={options}/>
+			</TitleCard>
+			<TitleCard title={"Child come attendance"}>
+				<Line
+					data={dataComeAttendance}
+					options={{
+						responsive: true,
+						plugins: {
+							legend: { position: "top" },
+							tooltip: {
+								callbacks: {
+									label: function (context) {
+										const value = context.raw; // bu daqiqalar
+										const hours = Math.floor(value / 60);
+										const minutes = value % 60;
+										const time = `${hours.toString().padStart(2, "0")}:${minutes
+											.toString()
+											.padStart(2, "0")}`;
+										return `${context.dataset.label}: ${time}`;
+									},
+								},
+							},
+						},
+						scales: {
+							y: {
+								ticks: {
+									callback: (value) => {
+										const hours = Math.floor(value / 60);
+										const minutes = value % 60;
+										return `${hours.toString().padStart(2, "0")}:${minutes
+											.toString()
+											.padStart(2, "0")}`;
+									},
+								},
+							},
+						},
+					}}
+				/>
+			</TitleCard>
+			<TitleCard title={"Child went attendance"}>
+				<Line
+					data={dataWentAttendance}
+					options={{
+						responsive: true,
+						plugins: {
+							legend: { position: "top" },
+							tooltip: {
+								callbacks: {
+									label: function (context) {
+										const value = context.raw;
+										const hours = Math.floor(value / 60);
+										const minutes = value % 60;
+										const time = `${hours.toString().padStart(2, "0")}:${minutes
+											.toString()
+											.padStart(2, "0")}`;
+										return `${context.dataset.label}: ${time}`;
+									},
+								},
+							},
+						},
+						scales: {
+							y: {
+								ticks: {
+									callback: (value) => {
+										const hours = Math.floor(value / 60);
+										const minutes = value % 60;
+										return `${hours.toString().padStart(2, "0")}:${minutes
+											.toString()
+											.padStart(2, "0")}`;
+									},
+								},
+							},
+						},
+					}}
+				/>
 			</TitleCard>
 		</div>
 	);
