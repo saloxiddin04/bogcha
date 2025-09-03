@@ -1,32 +1,47 @@
-import DashboardStats from './components/DashboardStats'
+import React, {useEffect, useState} from 'react'
 import AmountStats from './components/AmountStats'
 import PageStats from './components/PageStats'
 
-import UserGroupIcon from '@heroicons/react/24/outline/UserGroupIcon'
-import UsersIcon from '@heroicons/react/24/outline/UsersIcon'
-import CircleStackIcon from '@heroicons/react/24/outline/CircleStackIcon'
-import CreditCardIcon from '@heroicons/react/24/outline/CreditCardIcon'
+import {UserGroupIcon, UsersIcon, StarIcon, AcademicCapIcon, BellSlashIcon} from '@heroicons/react/24/outline'
 import UserChannels from './components/UserChannels'
 import LineChart from './components/LineChart'
 import BarChart from './components/BarChart'
 import DashboardTopBar from './components/DashboardTopBar'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {showNotification} from '../common/headerSlice'
 import DoughnutChart from './components/DoughnutChart'
-import {useState} from 'react'
-
-const statsData = [
-	{title: "New Users", value: "34.7k", icon: <UserGroupIcon className="w-8 h-8"/>, description: "↗︎ 2300 (22%)"},
-	{title: "Total Sales", value: "$34,545", icon: <CreditCardIcon className="w-8 h-8"/>, description: "Current month"},
-	{title: "Pending Leads", value: "450", icon: <CircleStackIcon className="w-8 h-8"/>, description: "50 in hot leads"},
-	{title: "Active Users", value: "5.6k", icon: <UsersIcon className="w-8 h-8"/>, description: "↙ 300 (18%)"},
-]
+import {
+	getPlanStatusStatistics,
+	getUsersAttendance,
+	getUsersCount,
+	getUsersScore,
+	getUsersTemperature,
+	getUsersTopByAttendance
+} from "./dashboardSlice";
 
 
 function Dashboard() {
 	
 	const dispatch = useDispatch()
 	
+	const {
+		loading,
+		usersCount,
+		attendanceData,
+		usersScore,
+		usersTemperature,
+		topUsersByAttendance,
+		planStatus
+	} = useSelector((state) => state.dashboard)
+	
+	useEffect(() => {
+		dispatch(getUsersCount())
+		dispatch(getUsersAttendance())
+		dispatch(getUsersScore())
+		dispatch(getUsersTemperature())
+		dispatch(getUsersTopByAttendance())
+		dispatch(getPlanStatusStatistics())
+	}, [dispatch])
 	
 	const updateDashboardPeriod = (newRange) => {
 		// Dashboard range changed, write code to refresh your values
@@ -39,14 +54,56 @@ function Dashboard() {
 			<DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/>
 			
 			{/** ---------------------- Different stats content 1 ------------------------- */}
-			<div className="grid lg:grid-cols-4 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
-				{
-					statsData.map((d, k) => {
-						return (
-							<DashboardStats key={k} {...d} colorIndex={k}/>
-						)
-					})
-				}
+			<div className="grid lg:grid-cols-6 mt-2 md:grid-cols-2 grid-cols-1 gap-2">
+				<div className="stats shadow">
+					<div className="stat">
+						<div className={`stat-figure dark:text-slate-300`}><UserGroupIcon className="w-8 h-8"/></div>
+						<div className="stat-title dark:text-slate-300">All users</div>
+						<div className={`stat-value dark:text-slate-300`}>{usersCount?.data?.all_users}</div>
+					</div>
+				</div>
+				<div className="stats shadow">
+					<div className="stat">
+						<div className={`stat-figure dark:text-slate-300`}><UsersIcon className="w-8 h-8"/></div>
+						<div className="stat-title dark:text-slate-300">Employee</div>
+						<div className={`stat-value dark:text-slate-300`}>{usersCount?.data?.employee}</div>
+					</div>
+				</div>
+				<div className="stats shadow">
+					<div className="stat">
+						<div className={`stat-figure dark:text-slate-300`}><UsersIcon className="w-8 h-8"/></div>
+						<div className="stat-title dark:text-slate-300">Family members</div>
+						<div className={`stat-value dark:text-slate-300`}>{usersCount?.data?.family_member}</div>
+					</div>
+				</div>
+				<div className="stats shadow">
+					<div className="stat">
+						<div className={`stat-figure dark:text-slate-300`}><StarIcon className="w-8 h-8"/></div>
+						<div className="stat-title dark:text-slate-300">Children</div>
+						<div className={`stat-value dark:text-slate-300`}>{usersCount?.data?.children}</div>
+					</div>
+				</div>
+				<div className="stats shadow">
+					<div className="stat">
+						<div className={`stat-figure dark:text-slate-300`}><AcademicCapIcon className="w-8 h-8"/></div>
+						<div className="stat-title dark:text-slate-300">Teacher</div>
+						<div className={`stat-value dark:text-slate-300`}>{usersCount?.data?.teacher}</div>
+					</div>
+				</div>
+				<div className="stats shadow">
+					<div className="stat">
+						<div className={`stat-figure dark:text-slate-300`}><BellSlashIcon className="w-8 h-8"/></div>
+						<div className="stat-title dark:text-slate-300">No active user</div>
+						<div className={`stat-value dark:text-slate-300`}>{usersCount?.data?.no_active}</div>
+					</div>
+				</div>
+				{/*{*/}
+				{/*	statsData.map((d, k) => {*/}
+				{/*		return (*/}
+				{/*			<DashboardStats key={k} {...d} colorIndex={k}/>*/}
+				{/*		)*/}
+				{/*	})*/}
+				{/*}*/}
 			</div>
 			
 			

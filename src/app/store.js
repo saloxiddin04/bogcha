@@ -11,8 +11,10 @@ import smmPostSlice from "../features/smmPost/smmPostSlice";
 import eduPlanSlice from "../features/calendar/calendarSlice";
 import attendanceSlice from "../features/Attendance/attendanceSlice";
 import ParentSlice from "../features/Parent/ParentSlice";
+import dashboardSlice from "../features/dashboard/dashboardSlice";
 
 const combinedReducer = {
+  dashboard: dashboardSlice,
   header : headerSlice,
   rightDrawer : rightDrawerSlice,
   modal : modalSlice,
