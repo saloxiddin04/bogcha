@@ -1,7 +1,6 @@
 import {themeChange} from 'theme-change'
 import React, {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import BellIcon from '@heroicons/react/24/outline/BellIcon'
 import Bars3Icon from '@heroicons/react/24/outline/Bars3Icon'
 import MoonIcon from '@heroicons/react/24/outline/MoonIcon'
 import SunIcon from '@heroicons/react/24/outline/SunIcon'
@@ -9,14 +8,12 @@ import {openRightDrawer} from '../features/common/rightDrawerSlice';
 import {RIGHT_DRAWER_TYPES} from '../utils/globalConstantUtil'
 
 import {Link} from 'react-router-dom'
-import UserIcon from "@heroicons/react/24/outline/UserIcon";
-import {UserCircleIcon} from "@heroicons/react/20/solid";
 import {getRefreshToken, getUserData, logout} from "../auth/jwtService";
 
 function Header() {
 	
 	const dispatch = useDispatch()
-	const {noOfNotifications, pageTitle} = useSelector(state => state.header)
+	const {pageTitle} = useSelector(state => state.header)
 	const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme"))
 	
 	useEffect(() => {
@@ -30,12 +27,6 @@ function Header() {
 		}
 		// 👆 false parameter is required for react project
 	}, [])
-	
-	
-	// Opening right sidebar for notification
-	const openNotification = () => {
-		dispatch(openRightDrawer({header: "Notifications", bodyType: RIGHT_DRAWER_TYPES.NOTIFICATION}))
-	}
 	
 	
 	function logoutUser() {
