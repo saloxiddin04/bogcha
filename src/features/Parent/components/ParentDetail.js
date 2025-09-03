@@ -235,90 +235,100 @@ const ParentDetail = () => {
 					</div>
 				}
 			</TitleCard>
-			<TitleCard title={"Child temperature"}>
-				{loading ? <Loader/> : <Line data={dataTemperature} options={options}/>}
-			</TitleCard>
-			<TitleCard title={"Child grades"}>
-				{loading ? <Loader/> : <Line data={dataGrades} options={options}/>}
-			</TitleCard>
-			<TitleCard title={"Child come attendance"}>
-				{loading ? <Loader/> :
-					<Line
-						data={dataComeAttendance}
-						options={{
-							responsive: true,
-							plugins: {
-								legend: {position: "top"},
-								tooltip: {
-									callbacks: {
-										label: function (context) {
-											const value = context.raw; // bu daqiqalar
-											const hours = Math.floor(value / 60);
-											const minutes = value % 60;
-											const time = `${hours.toString().padStart(2, "0")}:${minutes
-												.toString()
-												.padStart(2, "0")}`;
-											return `${context.dataset.label}: ${time}`;
+			<div className="flex flex-wrap justify-between gap-2">
+				<div className="lg:w-[49%] w-full">
+					<TitleCard title={"Child temperature"}>
+						{loading ? <Loader/> : <Line data={dataTemperature} options={options}/>}
+					</TitleCard>
+				</div>
+				<div className="lg:w-[49%] w-full">
+					<TitleCard title={"Child grades"}>
+						{loading ? <Loader/> : <Line data={dataGrades} options={options}/>}
+					</TitleCard>
+				</div>
+				<div className="lg:w-[49%] w-full">
+					<TitleCard title={"Child come attendance"}>
+						{loading ? <Loader/> :
+							<Line
+								data={dataComeAttendance}
+								options={{
+									responsive: true,
+									plugins: {
+										legend: {position: "top"},
+										tooltip: {
+											callbacks: {
+												label: function (context) {
+													const value = context.raw; // bu daqiqalar
+													const hours = Math.floor(value / 60);
+													const minutes = value % 60;
+													const time = `${hours.toString().padStart(2, "0")}:${minutes
+														.toString()
+														.padStart(2, "0")}`;
+													return `${context.dataset.label}: ${time}`;
+												},
+											},
 										},
 									},
-								},
-							},
-							scales: {
-								y: {
-									ticks: {
-										callback: (value) => {
-											const hours = Math.floor(value / 60);
-											const minutes = value % 60;
-											return `${hours.toString().padStart(2, "0")}:${minutes
-												.toString()
-												.padStart(2, "0")}`;
+									scales: {
+										y: {
+											ticks: {
+												callback: (value) => {
+													const hours = Math.floor(value / 60);
+													const minutes = value % 60;
+													return `${hours.toString().padStart(2, "0")}:${minutes
+														.toString()
+														.padStart(2, "0")}`;
+												},
+											},
 										},
 									},
-								},
-							},
-						}}
-					/>
-				}
-			</TitleCard>
-			<TitleCard title={"Child went attendance"}>
-				{loading ? <Loader/> :
-					<Line
-						data={dataWentAttendance}
-						options={{
-							responsive: true,
-							plugins: {
-								legend: {position: "top"},
-								tooltip: {
-									callbacks: {
-										label: function (context) {
-											const value = context.raw;
-											const hours = Math.floor(value / 60);
-											const minutes = value % 60;
-											const time = `${hours.toString().padStart(2, "0")}:${minutes
-												.toString()
-												.padStart(2, "0")}`;
-											return `${context.dataset.label}: ${time}`;
+								}}
+							/>
+						}
+					</TitleCard>
+				</div>
+				<div className="lg:w-[49%] w-full">
+					<TitleCard title={"Child went attendance"}>
+						{loading ? <Loader/> :
+							<Line
+								data={dataWentAttendance}
+								options={{
+									responsive: true,
+									plugins: {
+										legend: {position: "top"},
+										tooltip: {
+											callbacks: {
+												label: function (context) {
+													const value = context.raw;
+													const hours = Math.floor(value / 60);
+													const minutes = value % 60;
+													const time = `${hours.toString().padStart(2, "0")}:${minutes
+														.toString()
+														.padStart(2, "0")}`;
+													return `${context.dataset.label}: ${time}`;
+												},
+											},
 										},
 									},
-								},
-							},
-							scales: {
-								y: {
-									ticks: {
-										callback: (value) => {
-											const hours = Math.floor(value / 60);
-											const minutes = value % 60;
-											return `${hours.toString().padStart(2, "0")}:${minutes
-												.toString()
-												.padStart(2, "0")}`;
+									scales: {
+										y: {
+											ticks: {
+												callback: (value) => {
+													const hours = Math.floor(value / 60);
+													const minutes = value % 60;
+													return `${hours.toString().padStart(2, "0")}:${minutes
+														.toString()
+														.padStart(2, "0")}`;
+												},
+											},
 										},
 									},
-								},
-							},
-						}}
-					/>
-				}
-			</TitleCard>
+								}}
+							/>
+						}
+					</TitleCard>
+				</div>
+			</div>
 			<TitleCard title={"Child Attendance"}>
 				<>
 					{loading ? <Loader/> :
