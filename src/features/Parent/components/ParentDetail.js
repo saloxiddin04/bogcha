@@ -175,65 +175,76 @@ const ParentDetail = () => {
 	
 	return (
 		<div>
-			<TitleCard title={"Child detail"}>
-				{loading ? <Loader/> :
-					<div className="flex flex-col lg:flex-row gap-6">
-						<div className="w-full lg:w-1/2 flex flex-col items-center rounded-xl p-4">
-							<div className="text-center mb-4">
-								<div className="w-24 h-24 rounded-full overflow-hidden mx-auto">
-									<img
-										className="w-full h-full object-cover"
-										src={childDetail?.data?.profile_picture}
-										alt="profile_picture"
-									/>
+			<TitleCard title={"Child Detail"}>
+				{loading ? (
+					<Loader />
+				) : (
+					<div className="flex flex-col gap-6">
+						{/* Yuqoridagi ikkita katta card */}
+						<div className="flex flex-col lg:flex-row gap-6">
+							{/* Child Information */}
+							<div className="w-full lg:w-1/2 rounded-xl p-4 border">
+								<h1 className="text-lg font-semibold mb-3">Child Information</h1>
+								<div className="text-center mb-4">
+									<div className="w-24 h-24 rounded-full overflow-hidden mx-auto">
+										<img
+											className="w-full h-full object-cover"
+											src={childDetail?.data?.profile_picture}
+											alt="Child Photo"
+										/>
+									</div>
+									<h2 className="text-lg font-semibold mt-2">
+										{childDetail?.data?.first_name + " " + childDetail?.data?.last_name}
+									</h2>
 								</div>
-								<h1 className="text-lg font-semibold mt-2">
-									{childDetail?.data?.first_name + " " + childDetail?.data?.last_name}
-								</h1>
+								
+								<div className="grid grid-cols-2 gap-4 text-center">
+									<div className="bg-gray-100 py-2">
+										<h2 className="text-sm font-medium text-gray-600">Birth day</h2>
+										<span>{childDetail?.data?.birth_day}</span>
+									</div>
+									<div className="bg-gray-100 py-2">
+										<h2 className="text-sm font-medium text-gray-600">Height</h2>
+										<span>{childDetail?.data?.height || "-"}</span>
+									</div>
+									<div className="bg-gray-100 py-2">
+										<h2 className="text-sm font-medium text-gray-600">Weight</h2>
+										<span>{childDetail?.data?.weight || "-"}</span>
+									</div>
+									<div className="bg-gray-100 py-2">
+										<h2 className="text-sm font-medium text-gray-600">Age</h2>
+										<span>{childDetail?.data?.age || "-"}</span>
+									</div>
+								</div>
 							</div>
 							
-							<div className="grid grid-cols-2 gap-4 w-full text-center">
-								<div>
-									<h2 className="text-sm font-medium text-gray-600">Birth day</h2>
-									<span>{childDetail?.data?.birth_day}</span>
-								</div>
-								<div>
-									<h2 className="text-sm font-medium text-gray-600">Height</h2>
-									<span>{childDetail?.data?.height}</span>
-								</div>
-								<div>
-									<h2 className="text-sm font-medium text-gray-600">Weight</h2>
-									<span>{childDetail?.data?.weight}</span>
-								</div>
-							</div>
-						</div>
-						
-						<div className="w-full lg:w-1/2 rounded-xl p-4">
-							<h1 className="text-lg font-semibold mb-3">Family members</h1>
-							<div className="flex flex-col gap-4">
-								{childDetail?.data?.family_member?.map((item, index) => (
-									<div
-										key={index}
-										className="rounded-lg p-3"
-									>
-										<div className="mb-2">
-											<h2 className="text-sm font-medium text-gray-600">Full name</h2>
-											<span>{item?.full_name}</span>
+							{/* Family members */}
+							<div className="w-full lg:w-1/2 rounded-xl p-4 border">
+								<h1 className="text-lg font-semibold mb-3">Family members</h1>
+								<div className="flex flex-col gap-4">
+									{childDetail?.data?.family_member?.map((item, index) => (
+										<div key={index} className="rounded-lg p-3 border">
+											<div className="mb-1">
+												<h2 className="text-sm font-medium text-gray-600">Full name</h2>
+												<span>{item?.full_name}</span>
+											</div>
+											<div className="mb-1">
+												<h2 className="text-sm font-medium text-gray-600">Phone number</h2>
+												<span>{item?.phone_number}</span>
+											</div>
+											<div>
+												<h2 className="text-sm font-medium text-gray-600">Role</h2>
+												<span className="px-2 py-1 rounded bg-gray-100 text-black text-sm">
+                          {item?.roles?.join(", ")}
+                        </span>
+											</div>
 										</div>
-										<div className="mb-2">
-											<h2 className="text-sm font-medium text-gray-600">Phone number</h2>
-											<span>{item?.phone_number}</span>
-										</div>
-										<div>
-											<h2 className="text-sm font-medium text-gray-600">Role</h2>
-											<span>{item?.roles?.join(", ")}</span>
-										</div>
-									</div>
-								))}
+									))}
+								</div>
 							</div>
 						</div>
 					</div>
-				}
+				)}
 			</TitleCard>
 			<div className="flex flex-wrap justify-between gap-2">
 				<div className="lg:w-[49%] w-full">
