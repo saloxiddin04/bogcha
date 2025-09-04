@@ -1,13 +1,9 @@
 import React, {useEffect} from 'react'
 
 import {UserGroupIcon, UsersIcon, StarIcon, AcademicCapIcon, BellSlashIcon} from '@heroicons/react/24/outline'
-import UserChannels from './components/UserChannels'
-import LineChart from './components/LineChart'
-import BarChart from './components/BarChart'
 import DashboardTopBar from './components/DashboardTopBar'
 import {useDispatch, useSelector} from 'react-redux'
 import {showNotification} from '../common/headerSlice'
-import DoughnutChart from './components/DoughnutChart'
 import {
 	getPlanStatusStatistics,
 	getUsersAttendance,
@@ -24,11 +20,13 @@ import {
 	LineElement,
 	PointElement,
 	Title,
-	Tooltip
+	Tooltip,
+	BarElement
 } from "chart.js";
 import {Bar, Line} from "react-chartjs-2";
 import TitleCard from "../../components/Cards/TitleCard";
 import moment from "moment";
+import Loader from "../../containers/Loader";
 
 ChartJS.register(
 	CategoryScale,
@@ -38,7 +36,8 @@ ChartJS.register(
 	Title,
 	Tooltip,
 	Filler,
-	Legend
+	Legend,
+	BarElement
 );
 
 
@@ -295,25 +294,25 @@ function Dashboard() {
 			
 			<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Attendance data"}>
-					<Line data={dataAttendanceData} options={options}/>
+					{loading ? <Loader /> : <Line data={dataAttendanceData} options={options}/>}
 				</TitleCard>
 				<TitleCard title={"Users score"}>
-					<Line data={dataUsersScore} options={options}/>
+					{loading ? <Loader /> : <Line data={dataUsersScore} options={options}/>}
 				</TitleCard>
 			</div>
 			
 			<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Users temperature"}>
-					<Line data={dataUsersTemperature} options={options}/>
+					{loading ? <Loader /> : <Line data={dataUsersTemperature} options={options}/>}
 				</TitleCard>
 				<TitleCard title={"Top Users By Attendance"}>
-					<Bar data={dataTopUsersByAttendance} options={optionsBar}/>
+					{loading ? <Loader/> : <Bar data={dataTopUsersByAttendance} options={optionsBar}/>}
 				</TitleCard>
 			</div>
 			
 			<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Plan year of count"}>
-					<Bar data={dataPlanStatus} options={options}/>
+					{loading ? <Loader/> : <Bar data={dataPlanStatus} options={options}/>}
 				</TitleCard>
 			</div>
 		</>
