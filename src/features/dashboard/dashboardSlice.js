@@ -13,9 +13,9 @@ const initialState = {
 
 export const getUsersCount = createAsyncThunk(
 	"dashboard/getUsersCount",
-	async (_, thunkAPI) => {
+	async ({start_date, end_date}, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/get_user_counts_by_type/")
+			const response = await instance.get("/result/dashboard/get_user_counts_by_type/", {params: {start_date, end_date}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -25,9 +25,9 @@ export const getUsersCount = createAsyncThunk(
 
 export const getUsersAttendance = createAsyncThunk(
 	"dashboard/getUsersAttendance",
-	async (_, thunkAPI) => {
+	async ({start_date, end_date}, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/attendance_chart_data/")
+			const response = await instance.get("/result/dashboard/attendance_chart_data/", {params: {start_date, end_date}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -37,9 +37,9 @@ export const getUsersAttendance = createAsyncThunk(
 
 export const getUsersScore = createAsyncThunk(
 	"dashboard/getUsersScore",
-	async (_, thunkAPI) => {
+	async ({start_date, end_date}, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/user_score_chart_data/")
+			const response = await instance.get("/result/dashboard/user_score_chart_data/", {params: {start_date, end_date}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -49,9 +49,9 @@ export const getUsersScore = createAsyncThunk(
 
 export const getUsersTemperature = createAsyncThunk(
 	"dashboard/getUsersTemperature",
-	async (_, thunkAPI) => {
+	async ({start_date, end_date}, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/user_temperature_chart_data/")
+			const response = await instance.get("/result/dashboard/user_temperature_chart_data/", {params: {start_date, end_date}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -61,9 +61,9 @@ export const getUsersTemperature = createAsyncThunk(
 
 export const getUsersTopByAttendance = createAsyncThunk(
 	"dashboard/getUsersTopByAttendance",
-	async (_, thunkAPI) => {
+	async ({start_date, end_date}, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/top_users_by_attendance/")
+			const response = await instance.get("/result/dashboard/top_users_by_attendance/", {params: {start_date, end_date}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -73,9 +73,9 @@ export const getUsersTopByAttendance = createAsyncThunk(
 
 export const getPlanStatusStatistics = createAsyncThunk(
 	"dashboard/getPlanStatusStatistics",
-	async (_, thunkAPI) => {
+	async ({start_date, end_date}, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/plan_status_statistics/")
+			const response = await instance.get("/result/dashboard/plan_status_statistics/", {params: {start_date, end_date}})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
