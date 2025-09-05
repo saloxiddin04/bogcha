@@ -81,7 +81,7 @@ const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) 
 	};
 	
 	return (
-		<div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-3 mb-3 bg-gray-50 p-3 rounded-lg shadow-sm">
+		<div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-3 mb-3 p-3 rounded-lg shadow-sm">
 			{fields.map((f) => {
 				const cfg = fieldConfigs[f];
 				if (!cfg) return null;
