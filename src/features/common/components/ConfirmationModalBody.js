@@ -14,7 +14,7 @@ function ConfirmationModalBody({extraObject, closeModal, remove}) {
 		try {
 			setLoading(true)
 			await remove().then((res) => {
-				if (res?.status === 204) {
+				if (res?.status === 204 || res?.status === 201) {
 					dispatch(showNotification({notification, status: 1}))
 					setLoading(false)
 				} else {

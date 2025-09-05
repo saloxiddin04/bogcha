@@ -111,9 +111,9 @@ const SmmPost = () => {
 												bodyType: 'CONFIRMATION',
 												extraObject: {
 													message: 'Are you sure you want to send this post?',
-													// notification: 'Successfully deleted!',
-													// actionKey: 'DELETE_POST',
-													// payload: id
+													notification: 'Successfully deleted!',
+													actionKey: 'SEND_POST',
+													payload: item?.id
 												}
 											}));
 										}}

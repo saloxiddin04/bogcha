@@ -71,6 +71,18 @@ export const updatePost = createAsyncThunk(
 	}
 )
 
+export const sendPost = createAsyncThunk(
+	"posts/sendPost",
+	async (params, thunkAPI) => {
+		try {
+			return await instance.post(`/post/filter/send_post_to_telegram/`, {post_id: params?.data})
+			// return response
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
 export const getAllGroupsForPost = createAsyncThunk(
 	"posts/getAllGroupsForPost",
 	async (params, thunkAPI) => {
@@ -157,6 +169,18 @@ const smmPostSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(updatePost.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// updatePost
+		builder
+			.addCase(sendPost.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(sendPost.fulfilled, (state) => {
+				state.loading = false
+			})
+			.addCase(sendPost.rejected, (state) => {
 				state.loading = false
 			})
 		
