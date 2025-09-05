@@ -1,7 +1,5 @@
 import React from 'react';
 import TitleCard from "../../../components/Cards/TitleCard";
-import LineChart from "../../dashboard/components/LineChart";
-import BarChart from "../../dashboard/components/BarChart";
 import {UserCircleIcon} from "@heroicons/react/20/solid";
 import InputText from "../../../components/Input/InputText";
 
@@ -40,10 +38,6 @@ const CheckKidsDetail = () => {
 							// updateFormValue={updateFormValue}
 						/>
 					</div>
-				</div>
-				<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
-					<LineChart/>
-					<BarChart/>
 				</div>
 			</TitleCard>
 		</>

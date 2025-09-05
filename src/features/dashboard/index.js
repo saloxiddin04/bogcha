@@ -1,10 +1,9 @@
 import React, {useEffect} from 'react'
 
 import {UserGroupIcon, UsersIcon, StarIcon, AcademicCapIcon, BellSlashIcon} from '@heroicons/react/24/outline'
-import DashboardTopBar from './components/DashboardTopBar'
 import {useDispatch, useSelector} from 'react-redux'
-import {showNotification} from '../common/headerSlice'
 import {
+	getGroupsForDashboard,
 	getPlanStatusStatistics,
 	getUsersAttendance,
 	getUsersCount,
@@ -27,6 +26,7 @@ import {Bar, Line} from "react-chartjs-2";
 import TitleCard from "../../components/Cards/TitleCard";
 import moment from "moment";
 import Loader from "../../containers/Loader";
+import StatsFilter from "./components/StatsFilter";
 
 ChartJS.register(
 	CategoryScale,
@@ -52,27 +52,21 @@ function Dashboard() {
 		usersScore,
 		usersTemperature,
 		topUsersByAttendance,
-		planStatus
+		planStatus,
+		users,
+		groups,
+		
+		attendanceLoading,
+		scoreLoading,
+		temperatureLoading,
+		planStatusLoading,
 	} = useSelector((state) => state.dashboard)
 	
 	useEffect(() => {
-		dispatch(getUsersCount({}))
-		dispatch(getUsersAttendance({}))
-		dispatch(getUsersScore({}))
-		dispatch(getUsersTemperature({}))
-		dispatch(getUsersTopByAttendance({}))
-		dispatch(getPlanStatusStatistics({}))
+		dispatch(getUsersCount())
+		dispatch(getGroupsForDashboard())
+		dispatch(getUsersTopByAttendance())
 	}, [dispatch])
-	
-	const updateDashboardPeriod = (newRange) => {
-		dispatch(getUsersCount({start_date: newRange.startDate, end_date: newRange.endDate}))
-		dispatch(getUsersAttendance({start_date: newRange.startDate, end_date: newRange.endDate}))
-		dispatch(getUsersScore({start_date: newRange.startDate, end_date: newRange.endDate}))
-		dispatch(getUsersTemperature({start_date: newRange.startDate, end_date: newRange.endDate}))
-		dispatch(getUsersTopByAttendance({start_date: newRange.startDate, end_date: newRange.endDate}))
-		dispatch(getPlanStatusStatistics({start_date: newRange.startDate, end_date: newRange.endDate}))
-		dispatch(showNotification({message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`, status: 1}))
-	}
 	
 	const colors = [
 		"rgb(255, 99, 132)",
@@ -244,7 +238,7 @@ function Dashboard() {
 	
 	return (
 		<>
-			<DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/>
+			{/*<DashboardTopBar updateDashboardPeriod={updateDashboardPeriod}/>*/}
 			
 			<div className="grid lg:grid-cols-4 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
 				<div className="stats shadow">
@@ -291,28 +285,51 @@ function Dashboard() {
 				</div>
 			</div>
 			
-			
-			<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
+			<div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Attendance data"}>
-					{loading ? <Loader /> : <Line data={dataAttendanceData} options={options}/>}
+					<StatsFilter
+						fields={["come_or_went", "start_date", "end_date", "person_type", "group_id", "user"]}
+						onChange={(filters) => dispatch(getUsersAttendance(filters))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+					/>
+					{attendanceLoading ? <Loader /> : <Line data={dataAttendanceData} options={options}/>}
 				</TitleCard>
 				<TitleCard title={"Users score"}>
-					{loading ? <Loader /> : <Line data={dataUsersScore} options={options}/>}
+					<StatsFilter
+						fields={["group_id", "start_date", "end_date", "user"]}
+						onChange={(filters) => dispatch(getUsersScore(filters))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+					/>
+					{scoreLoading ? <Loader /> : <Line data={dataUsersScore} options={options}/>}
 				</TitleCard>
 			</div>
 			
-			<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
+			<div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Users temperature"}>
-					{loading ? <Loader /> : <Line data={dataUsersTemperature} options={options}/>}
+					<StatsFilter
+						fields={["group_id", "start_date", "end_date", "user"]}
+						onChange={(filters) => dispatch(getUsersTemperature(filters))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+					/>
+					{temperatureLoading ? <Loader /> : <Line data={dataUsersTemperature} options={options}/>}
 				</TitleCard>
 				<TitleCard title={"Top Users By Attendance"}>
 					{loading ? <Loader/> : <Bar data={dataTopUsersByAttendance} options={optionsBar}/>}
 				</TitleCard>
 			</div>
 			
-			<div className="grid lg:grid-cols-2 mt-4 grid-cols-1 gap-6">
+			<div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Plan year of count"}>
-					{loading ? <Loader/> : <Bar data={dataPlanStatus} options={options}/>}
+					<StatsFilter
+						fields={["group_id", "date_time", "user"]}
+						onChange={(filters) => dispatch(getPlanStatusStatistics(filters))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+					/>
+					{planStatusLoading ? <Loader/> : <Bar data={dataPlanStatus} options={options}/>}
 				</TitleCard>
 			</div>
 		</>

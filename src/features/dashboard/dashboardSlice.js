@@ -8,14 +8,21 @@ const initialState = {
 	usersScore: null,
 	usersTemperature: null,
 	topUsersByAttendance: null,
-	planStatus: null
+	planStatus: null,
+	groups: null,
+	users: null,
+	
+	attendanceLoading: false,
+	scoreLoading: false,
+	temperatureLoading: false,
+	planStatusLoading: false,
 }
 
 export const getUsersCount = createAsyncThunk(
 	"dashboard/getUsersCount",
-	async ({start_date, end_date}, thunkAPI) => {
+	async (_, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/get_user_counts_by_type/", {params: {start_date, end_date}})
+			const response = await instance.get("/result/dashboard/get_user_counts_by_type/")
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -25,9 +32,9 @@ export const getUsersCount = createAsyncThunk(
 
 export const getUsersAttendance = createAsyncThunk(
 	"dashboard/getUsersAttendance",
-	async ({start_date, end_date}, thunkAPI) => {
+	async (filters, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/attendance_chart_data/", {params: {start_date, end_date}})
+			const response = await instance.get("/result/dashboard/attendance_chart_data/", {params: filters})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -37,9 +44,9 @@ export const getUsersAttendance = createAsyncThunk(
 
 export const getUsersScore = createAsyncThunk(
 	"dashboard/getUsersScore",
-	async ({start_date, end_date}, thunkAPI) => {
+	async (filters, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/user_score_chart_data/", {params: {start_date, end_date}})
+			const response = await instance.get("/result/dashboard/user_score_chart_data/", {params: filters})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -49,9 +56,9 @@ export const getUsersScore = createAsyncThunk(
 
 export const getUsersTemperature = createAsyncThunk(
 	"dashboard/getUsersTemperature",
-	async ({start_date, end_date}, thunkAPI) => {
+	async (filters, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/user_temperature_chart_data/", {params: {start_date, end_date}})
+			const response = await instance.get("/result/dashboard/user_temperature_chart_data/", {params: filters})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -61,9 +68,9 @@ export const getUsersTemperature = createAsyncThunk(
 
 export const getUsersTopByAttendance = createAsyncThunk(
 	"dashboard/getUsersTopByAttendance",
-	async ({start_date, end_date}, thunkAPI) => {
+	async (filters, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/top_users_by_attendance/", {params: {start_date, end_date}})
+			const response = await instance.get("/result/dashboard/top_users_by_attendance/", {params: filters})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -73,9 +80,33 @@ export const getUsersTopByAttendance = createAsyncThunk(
 
 export const getPlanStatusStatistics = createAsyncThunk(
 	"dashboard/getPlanStatusStatistics",
-	async ({start_date, end_date}, thunkAPI) => {
+	async (filters, thunkAPI) => {
 		try {
-			const response = await instance.get("/result/dashboard/plan_status_statistics/", {params: {start_date, end_date}})
+			const response = await instance.get("/result/dashboard/plan_status_statistics/", {params: filters})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getGroupsForDashboard = createAsyncThunk(
+	"dashboard/getGroupsForDashboard",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get('/result/dashboard/group_list/', {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getUsersForDashboard = createAsyncThunk(
+	"dashboard/getUsersForDashboard",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get('/result/dashboard/user_list/', {params})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -103,40 +134,40 @@ const dashboardSlice = createSlice({
 		// getUsersAttendance
 		builder
 			.addCase(getUsersAttendance.pending, (state) => {
-				state.loading = true
+				state.attendanceLoading = true
 			})
 			.addCase(getUsersAttendance.fulfilled, (state, {payload}) => {
 				state.attendanceData = payload
-				state.loading = false
+				state.attendanceLoading = false
 			})
 			.addCase(getUsersAttendance.rejected, (state) => {
-				state.loading = false
+				state.attendanceLoading = false
 			})
 		
 		// getUsersScore
 		builder
 			.addCase(getUsersScore.pending, (state) => {
-				state.loading = true
+				state.scoreLoading = true
 			})
 			.addCase(getUsersScore.fulfilled, (state, {payload}) => {
 				state.usersScore = payload
-				state.loading = false
+				state.scoreLoading = false
 			})
 			.addCase(getUsersScore.rejected, (state) => {
-				state.loading = false
+				state.scoreLoading = false
 			})
 		
 		// getUsersTemperature
 		builder
 			.addCase(getUsersTemperature.pending, (state) => {
-				state.loading = true
+				state.temperatureLoading = true
 			})
 			.addCase(getUsersTemperature.fulfilled, (state, {payload}) => {
 				state.usersTemperature = payload
-				state.loading = false
+				state.temperatureLoading = false
 			})
 			.addCase(getUsersTemperature.rejected, (state) => {
-				state.loading = false
+				state.temperatureLoading = false
 			})
 		
 		// getUsersTopByAttendance
@@ -155,13 +186,39 @@ const dashboardSlice = createSlice({
 		// getPlanStatusStatistics
 		builder
 			.addCase(getPlanStatusStatistics.pending, (state) => {
-				state.loading = true
+				state.planStatusLoading = true
 			})
 			.addCase(getPlanStatusStatistics.fulfilled, (state, {payload}) => {
 				state.planStatus = payload
-				state.loading = false
+				state.planStatusLoading = false
 			})
 			.addCase(getPlanStatusStatistics.rejected, (state) => {
+				state.planStatusLoading = false
+			})
+		
+		// getGroupsForDashboard
+		builder
+			.addCase(getGroupsForDashboard.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getGroupsForDashboard.fulfilled, (state, {payload}) => {
+				state.groups = payload
+				state.loading = false
+			})
+			.addCase(getGroupsForDashboard.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getUsersForDashboard
+		builder
+			.addCase(getUsersForDashboard.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getUsersForDashboard.fulfilled, (state, {payload}) => {
+				state.users = payload
+				state.loading = false
+			})
+			.addCase(getUsersForDashboard.rejected, (state) => {
 				state.loading = false
 			})
 	}
