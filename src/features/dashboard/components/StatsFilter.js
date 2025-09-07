@@ -81,7 +81,7 @@ const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) 
 	};
 	
 	return (
-		<div className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-1 gap-3 mb-3 p-3 rounded-lg shadow-sm">
+		<div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-3 mb-3 p-3 rounded-lg shadow-sm">
 			{fields.map((f) => {
 				const cfg = fieldConfigs[f];
 				if (!cfg) return null;
@@ -111,16 +111,28 @@ const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) 
 				
 				if (cfg.type === "date" || cfg.type === "datetime-local") {
 					return (
-						<InputText
-							key={f}
-							type={cfg.type}
-							defaultValue={filters[f]}
-							updateType={f}
-							labelTitle={cfg.label}
-							updateFormValue={handleChange}
-						/>
+						<div key={f} className="form-control w-full flex items-end gap-2 flex-row">
+							<InputText
+								type={cfg.type}
+								defaultValue={filters[f]}
+								updateType={f}
+								labelTitle={cfg.label}
+								updateFormValue={handleChange}
+							/>
+							<button
+								type="button"
+								onClick={() => {
+									const today = moment().format("YYYY-MM-DD");
+									handleChange({ updateType: f, value: today });
+								}}
+								className="mb-1 px-2 py-1 text-sm text-black bg-gray-200 hover:bg-gray-300 rounded"
+							>
+								✕
+							</button>
+						</div>
 					);
 				}
+				
 				
 				return null;
 			})}

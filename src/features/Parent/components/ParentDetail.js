@@ -85,7 +85,7 @@ const ParentDetail = () => {
 		labels: temperature?.data?.map((item) => item?.day),
 		datasets: [
 			{
-				label: "Come temperaturasi",
+				label: "Come temperature",
 				data: temperature?.data?.map((item) => item?.come_temperature),
 				borderColor: "rgb(53, 162, 235)",
 				backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -93,7 +93,7 @@ const ParentDetail = () => {
 				tension: 0.3,
 			},
 			{
-				label: "Went temperaturasi",
+				label: "Went temperature",
 				data: temperature?.data?.map((item) => item?.went_temperature),
 				borderColor: "rgb(255, 99, 132)",
 				backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -101,14 +101,14 @@ const ParentDetail = () => {
 				tension: 0.3,
 			},
 			{
-				label: "Norma pastki chegara",
+				label: "Normal lower limit",
 				data: temperature?.data?.map(() => Number(temperature?.norm.from)),
 				borderColor: "rgba(75, 192, 192, 1)",
 				borderDash: [5, 5],
 				pointRadius: 0,
 			},
 			{
-				label: "Norma yuqori chegara",
+				label: "Normal upper limit",
 				data: temperature?.data?.map(() => Number(temperature?.norm.to)),
 				borderColor: "rgba(255, 206, 86, 1)",
 				borderDash: [5, 5],
@@ -135,7 +135,7 @@ const ParentDetail = () => {
 		labels: attendanceCome?.data?.map((item) => item?.day),
 		datasets: [
 			{
-				label: "Kelgan vaqt",
+				label: "Come time",
 				data: attendanceCome?.data?.map((item) => toMinutes(moment(item?.come).format("HH-mm"))),
 				borderColor: "rgb(53, 162, 235)",
 				backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -143,7 +143,7 @@ const ParentDetail = () => {
 				tension: 0.3,
 			},
 			{
-				label: "Default vaqt",
+				label: "Default time",
 				data: attendanceCome?.data?.map(() => toMinutes(attendanceCome?.default?.come)),
 				borderColor: "rgba(255, 99, 132, 1)",
 				borderDash: [5, 5],
@@ -156,7 +156,7 @@ const ParentDetail = () => {
 		labels: attendanceWent?.data?.map((item) => item?.day),
 		datasets: [
 			{
-				label: "Ketgan vaqt",
+				label: "Went time",
 				data: attendanceWent?.data?.map((item) => toMinutes(moment(item?.went).format("HH-mm"))),
 				borderColor: "rgb(53, 162, 235)",
 				backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -164,7 +164,7 @@ const ParentDetail = () => {
 				tension: 0.3,
 			},
 			{
-				label: "Default vaqt",
+				label: "Default time",
 				data: attendanceWent?.data?.map(() => toMinutes(attendanceWent?.default?.went)),
 				borderColor: "rgba(255, 99, 132, 1)",
 				borderDash: [5, 5],

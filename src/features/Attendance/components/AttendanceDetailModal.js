@@ -93,7 +93,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 		if (postObj.name.trim() === "") return setErrorMessage("Name is required!");
 		if (postObj.status.trim() === "") return setErrorMessage("Status is required!");
 		if (postObj.date_time.trim() === "") return setErrorMessage("Date time is required!");
-		if (!postObj.roles.length) return setErrorMessage("Roles is required!");
+		// if (!postObj.roles.length) return setErrorMessage("Roles is required!");
 		
 		const action = isEditMode ? updateAttendanceModalDetail : createAttendanceModalDetail
 		const params = isEditMode ?
@@ -167,11 +167,18 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				options={statusOptions}
 				labelTitle="Select status"
 				placeholder="Choose status..."
-				containerStyle={`w-full ${postObj.status ? "pointer-events-none opacity-25" : ""}`}
+				containerStyle={`w-full ${postObj.status ? "pointer-events-none opacity-25" : ""} ${postObj.status === "COME" ? "text-green-500" : "text-red-500"}`}
 				updateType="status"
 				updateFormValue={updateSelectBoxValue}
 				isMulti={false}
 				defaultValue={statusOptions?.find(opt => opt.value === postObj?.status)}
+				styles={{
+					singleValue: (provided) => ({
+						...provided,
+						color: postObj.status === "COME" ? "green" : "red",
+						fontWeight: "900",
+					}),
+				}}
 			/>
 			
 			<InputText
@@ -203,7 +210,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				<button
 					className="btn btn-sm btn-error text-white"
 					onClick={() => deleteCurrentAttendanceDetail()}
-					// disabled={!hasPermission("plan_d_del")}
+					disabled={!isEditMode}
 				>
 					<TrashIcon className="w-6"/>
 				</button>

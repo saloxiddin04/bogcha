@@ -1,5 +1,7 @@
 import {getAccessToken, getRefreshToken, logout} from "../auth/jwtService.js";
 import axios from "axios";
+import store from "../app/store";
+import {showNotification} from "../features/common/headerSlice";
 
 const instance = axios.create({
 	baseURL: "https://4d7caaa959ae.ngrok-free.app/api/v1", //ngrok
@@ -24,6 +26,7 @@ instance.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		console.log("error", error)
 		// toast.error(error?.message)
 		return Promise.reject(error);
 	}
@@ -48,7 +51,7 @@ instance.interceptors.response.use(
 		// } else if (error.response.status === 500) {
 		//   toast.error("Error from server!");
 		// }
-		
+		store.dispatch(showNotification({status: 0, message: error?.response?.data?.message}));
 		return Promise.reject(error);
 	}
 );

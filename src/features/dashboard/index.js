@@ -46,7 +46,6 @@ function Dashboard() {
 	const dispatch = useDispatch()
 	
 	const {
-		loading,
 		usersCount,
 		attendanceData,
 		usersScore,
@@ -55,11 +54,6 @@ function Dashboard() {
 		planStatus,
 		users,
 		groups,
-		
-		attendanceLoading,
-		scoreLoading,
-		temperatureLoading,
-		planStatusLoading,
 	} = useSelector((state) => state.dashboard)
 	
 	useEffect(() => {
@@ -83,6 +77,7 @@ function Dashboard() {
 	
 	const options = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
 				position: 'top',
@@ -93,6 +88,7 @@ function Dashboard() {
 	const optionsBar = {
 		indexAxis: "y",
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
 				position: 'top',
@@ -285,7 +281,7 @@ function Dashboard() {
 				</div>
 			</div>
 			
-			<div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6">
+			<div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6 flex-wrap">
 				<TitleCard title={"Attendance data"}>
 					<StatsFilter
 						fields={["come_or_went", "start_date", "end_date", "person_type", "group_id", "user"]}
@@ -293,7 +289,7 @@ function Dashboard() {
 						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
-					{attendanceLoading ? <Loader /> : <Line data={dataAttendanceData} options={options}/>}
+					<div className="w-full h-72"><Line data={dataAttendanceData} options={options}/></div>
 				</TitleCard>
 				<TitleCard title={"Users score"}>
 					<StatsFilter
@@ -302,7 +298,7 @@ function Dashboard() {
 						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
-					{scoreLoading ? <Loader /> : <Line data={dataUsersScore} options={options}/>}
+					<div className="w-full h-72"><Line data={dataUsersScore} options={options}/></div>
 				</TitleCard>
 			</div>
 			
@@ -314,10 +310,10 @@ function Dashboard() {
 						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
-					{temperatureLoading ? <Loader /> : <Line data={dataUsersTemperature} options={options}/>}
+					<div className="w-full h-72"><Line data={dataUsersTemperature} options={options}/></div>
 				</TitleCard>
 				<TitleCard title={"Top Users By Attendance"}>
-					{loading ? <Loader/> : <Bar data={dataTopUsersByAttendance} options={optionsBar}/>}
+					<div className="w-full h-72"><Bar data={dataTopUsersByAttendance} options={optionsBar}/></div>
 				</TitleCard>
 			</div>
 			
@@ -329,7 +325,7 @@ function Dashboard() {
 						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
-					{planStatusLoading ? <Loader/> : <Bar data={dataPlanStatus} options={options}/>}
+					<div className="w-full h-72"><Bar data={dataPlanStatus} options={options}/></div>
 				</TitleCard>
 			</div>
 		</>

@@ -1,26 +1,56 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import TitleCard from "../../components/Cards/TitleCard";
 import {useDispatch, useSelector} from "react-redux";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
-import {PencilIcon} from "@heroicons/react/20/solid";
+import {PencilIcon, XCircleIcon} from "@heroicons/react/20/solid";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import Pagination from "../../components/Pagination";
 import {getUsers} from "./usersSlice";
 import Loader from "../../containers/Loader";
 import {hasPermission} from "../../auth/jwtService";
+import InputText from "../../components/Input/InputText";
 
 const TopSideButtons = () => {
 	
 	const dispatch = useDispatch()
+	
+	const [search, setSearch] = useState("")
+	const timeoutId = useRef()
+	
+	const searchPlan = (value) => {
+		setSearch(value)
+		clearTimeout(timeoutId.current)
+		timeoutId.current = setTimeout(() => {
+			dispatch(getUsers({search: value}))
+		}, 500)
+	}
 	
 	const openAddNewLeadModal = () => {
 		dispatch(openModal({title: "Add New User", bodyType: MODAL_BODY_TYPES.USER_ADD_NEW}))
 	}
 	
 	return (
-		<div className="inline-block float-right">
+		<div className="flex justify-between items-end gap-2 w-full">
+			<div className="w-1/3 flex gap-2 items-end">
+				<InputText
+					type="text"
+					defaultValue={search ?? ""}
+					updateType="search"
+					labelTitle="Search"
+					updateFormValue={({value}) => searchPlan(value)}
+				/>
+				<button
+					className="btn px-6 btn-sm normal-case btn-error"
+					onClick={() => {
+						setSearch("")
+						dispatch(getUsers())
+					}}
+				>
+					<XCircleIcon className="w-6"/>
+				</button>
+			</div>
 			{hasPermission("user_add") && (
 				<button
 					className="btn px-6 btn-sm normal-case btn-primary"
@@ -73,7 +103,7 @@ const Users = () => {
 	
 	return (
 		<>
-			<TitleCard title="Current Users" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
+			<TitleCard title="" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
 				
 				{hasPermission("user_table") && (
 					<div className="overflow-x-auto w-full">

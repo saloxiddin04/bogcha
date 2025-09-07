@@ -98,15 +98,7 @@ function Header() {
 						</label>
 						<ul tabIndex={0}
 						    className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-							<li className="justify-between">
-								<Link to={'/app/settings-profile'}>
-									Profile Settings
-									<span className="badge">New</span>
-								</Link>
-							</li>
-							<li className=""><Link to={'/app/settings-billing'}>Bill History</Link></li>
-							<div className="divider mt-0 mb-0"></div>
-							<li><a onClick={logoutUser}>Logout</a></li>
+							<li><button onClick={logoutUser}>Logout</button></li>
 						</ul>
 					</div>
 				</div>

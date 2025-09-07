@@ -9,7 +9,8 @@ function SelectBox({
 	                   updateType,
 	                   updateFormValue,
 	                   isMulti = false,
-	                   defaultValue = null
+	                   defaultValue = null,
+	                   styles
                    }) {
 	
 	const [value, setValue] = useState(defaultValue)
@@ -41,6 +42,7 @@ function SelectBox({
 				placeholder={placeholder}
 				value={value}
 				onChange={handleChange}
+				styles={styles}
 			/>
 		</div>
 	);

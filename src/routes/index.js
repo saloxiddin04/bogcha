@@ -7,7 +7,6 @@ const Welcome = lazy(() => import('../pages/protected/Welcome'))
 const Page404 = lazy(() => import('../pages/protected/404'))
 const Blank = lazy(() => import('../pages/protected/Blank'))
 const Charts = lazy(() => import('../pages/protected/Charts'))
-const Leads = lazy(() => import('../pages/protected/Leads'))
 const Integration = lazy(() => import('../pages/protected/Integration'))
 const Team = lazy(() => import('../pages/protected/Team'))
 const Transactions = lazy(() => import('../pages/protected/Transactions'))
@@ -19,12 +18,6 @@ const Roles = lazy(() => import("../pages/protected/Roles"))
 const Permissions = lazy(() => import("../pages/protected/Permissions"))
 
 const SmmPost = lazy(() => import("../pages/protected/SmmPost"))
-
-const ChildrenPage = lazy(() => import("../pages/protected/Children"))
-const ChildrenDetail = lazy(() => import("../features/childrenPage/components/childrenDetail"))
-
-const CheckKids = lazy(() => import("../pages/protected/CheckKids"))
-const CheckKidsDetail = lazy(() => import("../features/checkKids/components/checkKidsDetail"))
 
 // calendar
 const Calendar = lazy(() => import('../pages/protected/Calendar'))
@@ -68,26 +61,6 @@ const routes = [
 	{
 		path: "/smm",
 		component: SmmPost
-	},
-	
-	// children
-	{
-		path: "/child",
-		component: ChildrenPage
-	},
-	{
-		path: "/child/:id",
-		component: ChildrenDetail
-	},
-	
-	// check kids
-	{
-		path: "/check-kids",
-		component: CheckKids
-	},
-	{
-		path: "/check-kids/:id",
-		component: CheckKidsDetail
 	},
 	
 	// Permissions

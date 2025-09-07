@@ -73,18 +73,6 @@ const routes = [
 		name: 'SMM Post',
 		permission: "smm_post"
 	},
-	{
-		path: '/app/child', //no url needed as this has submenu
-		icon: <StarIcon className={`${iconClasses} inline`}/>, // icon component
-		name: 'Child',
-		permission: "child"
-	},
-	{
-		path: '/app/check-kids', //no url needed as this has submenu
-		icon: <DocumentCheckIcon className={`${iconClasses} inline`}/>, // icon component
-		name: 'Check kids',
-		permission: "check_kids"
-	},
 	
 	// {
 	//   path: '', //no url needed as this has submenu

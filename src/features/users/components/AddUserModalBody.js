@@ -10,7 +10,6 @@ import {clearUserDetail, createUser, getUser, updateUser} from "../usersSlice";
 import Loader from "../../../containers/Loader";
 import FileUploadInput from "../../../components/Input/FileUploadInput";
 import {getAllChildren} from "../../groups/groupsSlice";
-import moment from "moment";
 
 const AddUserModalBody = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
@@ -30,7 +29,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		roles: [],
 		birth_day: "",
 		profile_picture: "",
-		status: false,
+		status: true,
 		person_type: "",
 		children: [],
 		height: "",
@@ -45,7 +44,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		roles: [],
 		birth_day: "",
 		profile_picture: "",
-		status: false,
+		status: true,
 		person_type: "",
 		children: [],
 		height: "",
@@ -129,7 +128,12 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		if (userObj.person_type.trim() === "") return setErrorMessage("Person type is required!");
 		if (userObj.person_type === "FAMILY_MEMBER" && userObj.children.length === 0) return setErrorMessage("Children is required!");
 		if (!userObj.profile_picture) return setErrorMessage("Profile picture is required!");
-		if (userObj.phone_number.length === 3) return setErrorMessage("Phone number is required!");
+		if (userObj.phone_number.trim() === "") return setErrorMessage("Phone number is required!");
+		
+		const phoneRegex = /^\+998\d{9}$/;
+		if (!userObj.phone_number || !phoneRegex.test(userObj.phone_number)) {
+			return setErrorMessage("Phone number must be in format +998901234567");
+		}
 		
 		const formattedBirthDay = userObj?.birth_day
 			? userObj?.birth_day?.split("-")?.reverse()?.join(".")
@@ -224,7 +228,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				updateFormValue={updateFormValue}
 			/>
 			<FileUploadInput
-				labelTitle="Fayl yuklang"
+				labelTitle="Profile picture"
 				updateType="profile_picture"
 				updateFormValue={handleUpdate}
 				multiple={false}
@@ -251,7 +255,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 			<SelectBox
 				options={personTypeOptions}
 				labelTitle="Select person type"
-				placeholder="Choose roles..."
+				placeholder="Choose person type..."
 				containerStyle="w-full"
 				updateType="person_type"
 				updateFormValue={updateSelectBoxValue}
@@ -272,21 +276,25 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				/>
 			)}
 			
-			<InputText
-				type="text"
-				defaultValue={userObj.height ?? ""}
-				updateType="height"
-				labelTitle="Height"
-				updateFormValue={updateFormValue}
-			/>
-			
-			<InputText
-				type="text"
-				defaultValue={userObj.weight ?? ""}
-				updateType="weight"
-				labelTitle="Weight"
-				updateFormValue={updateFormValue}
-			/>
+			{userObj.person_type === "CHILDREN" && (
+				<>
+					<InputText
+						type="text"
+						defaultValue={userObj.height ?? ""}
+						updateType="height"
+						labelTitle="Height"
+						updateFormValue={updateFormValue}
+					/>
+					
+					<InputText
+						type="text"
+						defaultValue={userObj.weight ?? ""}
+						updateType="weight"
+						labelTitle="Weight"
+						updateFormValue={updateFormValue}
+					/>
+				</>
+			)}
 			
 			<ErrorText styleClass="mt-16">{errorMessage}</ErrorText>
 			<div className="modal-action">

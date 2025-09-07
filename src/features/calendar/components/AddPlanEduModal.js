@@ -91,7 +91,14 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 			[updateType]: value
 		}));
 		if (updateType === "groups") {
-			dispatch(getChildrenForEdu({group_ids: JSON.stringify(value)}))
+			dispatch(getChildrenForEdu({group_ids: JSON.stringify(value)})).then(({payload}) => {
+				if (payload) {
+					setPostObj(prev => ({
+						...prev,
+						children: payload?.data?.map((el) => el?.id),
+					}))
+				}
+			})
 		}
 	};
 	
