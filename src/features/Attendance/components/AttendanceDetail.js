@@ -16,7 +16,7 @@ import {MODAL_BODY_TYPES} from "../../../utils/globalConstantUtil";
 
 const AttendanceDetail = () => {
 	const dispatch = useDispatch();
-	const {id} = useParams()
+	const {id: attendance_id} = useParams()
 	
 	const tableRef = useRef(null);
 	
@@ -62,14 +62,14 @@ const AttendanceDetail = () => {
 	}, [currentDate]);
 	
 	useEffect(() => {
-		if (id) {
+		if (attendance_id) {
 			const data = {
-				attendance_id: id,
+				attendance_id,
 				date: moment(currentDate).format("YYYY-MM-DD"),
 			};
 			dispatch(getAttendance(data));
 		}
-	}, [dispatch, id, currentDate]);
+	}, [dispatch, attendance_id, currentDate]);
 	
 	// Handle month navigation
 	const handleMonthChange = (direction) => {
@@ -108,7 +108,8 @@ const AttendanceDetail = () => {
 		    date,
 		    notification: 'Successfully edited!',
 			  attendance_id: id,
-			  is_come
+			  is_come,
+			  attendance_group: attendance_id
 		  }
 		}))
 	};

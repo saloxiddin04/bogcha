@@ -72,7 +72,7 @@ const Users = () => {
 	}, [dispatch])
 	
 	const handlePageChange = (page) => {
-		dispatch(getUsers({page_size: 1, page}))
+		dispatch(getUsers({page_size: 10, page}))
 	};
 	
 	const deleteCurrentUser = (userId) => {
@@ -100,6 +100,8 @@ const Users = () => {
 		}))
 	}
 	
+	console.log(users)
+	
 	
 	return (
 		<>
@@ -124,7 +126,7 @@ const Users = () => {
 								</thead>
 								
 								<tbody>
-								{users?.results?.map((item) => {
+								{users?.data?.map((item) => {
 									return (
 										<tr key={item?.id} className="text-center">
 											<td>
@@ -172,7 +174,7 @@ const Users = () => {
 						)}
 						
 						<Pagination
-							totalItems={users?.count}
+							totalItems={users?.pagination?.total_items}
 							itemsPerPage={10}
 							onPageChange={handlePageChange}
 						/>

@@ -99,9 +99,9 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 		const params = isEditMode ?
 			{
 				id: extraObject?.attendance_id,
-				data: postObj,
+				data: {...postObj, attendance_group: Number(extraObject?.attendance_group)},
 			} :
-			{data: {...postObj, front: true, date_time: new Date(postObj.date_time).toISOString()}}
+			{data: {...postObj, front: true, date_time: new Date(postObj.date_time).toISOString(), attendance_group: Number(extraObject?.attendance_group)}}
 		
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {

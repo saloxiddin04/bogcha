@@ -12,7 +12,7 @@ export const getUsers = createAsyncThunk(
 	async (params, thunkAPI) => {
 		try {
 			const response = await instance.get("/users/", {params})
-			return response.data?.data
+			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)
 		}

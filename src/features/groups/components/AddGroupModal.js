@@ -10,6 +10,7 @@ import Loader from "../../../containers/Loader";
 const AddGroupModal = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
 	
+	const {isOpen} = useSelector((state) => state.modal)
 	const {loading, teachers, children} = useSelector((state) => state.groups)
 	
 	const [errorMessage, setErrorMessage] = useState("")
@@ -26,12 +27,23 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 	}, [dispatch])
 	
 	useEffect(() => {
+		if (!isOpen) {
+			setGroupObj({
+				name: "",
+				teachers: [],
+				group_children: []
+			});
+			setErrorMessage("");
+		}
+	}, [isOpen, extraObject]);
+	
+	useEffect(() => {
 		if (extraObject?.is_edit && extraObject?.id) {
 			dispatch(getGroup(extraObject?.id)).then(({payload}) => {
 				if (payload) {
 					setGroupObj({
 						name: payload?.name ?? "",
-						group_children: payload?.group_children?.map((child) => Number(child?.id)) ?? [],
+						group_children: payload?.group_children ?? [],
 						teachers: payload?.teachers?.map((teacher) => Number(teacher?.id)) ?? [],
 					})
 				}
@@ -110,6 +122,9 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 			
 			<SelectBox
 				options={
+				isEditMode ?
+					groupObj?.group_children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
+					:
 					children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
 				}
 				labelTitle="Select children"
@@ -119,9 +134,13 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 				updateFormValue={updateSelectBoxValue}
 				isMulti={true}
 				defaultValue={
-					children
-						?.map((teacher) => ({ label: teacher?.full_name, value: Number(teacher?.id) }))
-						?.filter(opt => groupObj?.group_children?.includes(opt.value))
+				isEditMode ?
+					groupObj?.group_children?.map((el) => ({
+						label: el?.full_name,
+						value: Number(el?.id),
+					}))
+					:
+					children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
 				}
 			/>
 			
