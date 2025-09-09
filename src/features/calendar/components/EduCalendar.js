@@ -3,15 +3,16 @@ import moment from "moment/moment";
 import {openRightDrawer} from "../../common/rightDrawerSlice";
 import {MODAL_BODY_TYPES, RIGHT_DRAWER_TYPES} from "../../../utils/globalConstantUtil";
 import {useDispatch} from "react-redux";
-import {getCalendarList} from "../calendarSlice";
+import {getCalendarList, updateCalendarList} from "../calendarSlice";
 import {useParams} from "react-router-dom";
 import {openModal} from "../../common/modalSlice";
 import ChevronLeftIcon from "@heroicons/react/24/solid/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import {CALENDAR_EVENT_STYLE} from "../../../components/CalendarView/util";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {setPageTitle} from "../../common/headerSlice";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
-
 
 const EduCalendar = () => {
 	const dispatch = useDispatch()
@@ -37,12 +38,17 @@ const EduCalendar = () => {
 	const reloadCalendar = () => setReloadKey(prev => prev + 1);
 	
 	useEffect(() => {
+		dispatch(setPageTitle({ title : "Plan of yearly"}))
+	}, [dispatch])
+	
+	useEffect(() => {
 		const year = moment(firstDayOfMonth).format("YYYY");
 		const month = moment(firstDayOfMonth).format("MM");
 		
 		dispatch(getCalendarList({id, year, month}))
 			.then(({payload}) => {
 				const transformed = payload?.data?.map((item) => ({
+					id: item?.id?.toString(),
 					title: item?.title,
 					theme: item?.status?.toUpperCase(),
 					startTime: moment(item?.date_time),
@@ -134,6 +140,28 @@ const EduCalendar = () => {
 		}))
 	}
 	
+	const handleDragEnd = (result) => {
+		const { destination, source, draggableId } = result;
+		if (!destination) return;
+		if (destination.droppableId === source.droppableId) return;
+		
+		const draggedEvent = events.find(e => e.id?.toString() === draggableId);
+		if (!draggedEvent) return;
+		
+		const newDate = destination.droppableId;
+		
+		dispatch(updateCalendarList({
+			id: draggedEvent.id,
+			edu_plan: id,
+			date: moment(newDate).format("DD.MM.YYYY"),
+			data: {
+				title: draggedEvent.title,
+				date_time: moment(newDate).format("YYYY-MM-DD HH:mm:ss")
+			}
+		})).then(() => reloadCalendar());
+	}
+	
+	
 	// if (loading) return <Loader/>
 	
 	return (
@@ -179,38 +207,92 @@ const EduCalendar = () => {
 					})}
 				</div>
 				
-				
-				<div className="grid grid-cols-7 mt-1  place-items-center">
-					{allDaysInMonth().map((day, idx) => {
-						return (
-							<div
-								key={idx}
-								className={colStartClasses[moment(day).day().toString()] + " border border-solid w-full h-28 cursor-pointer"}
-								onClick={() => openAllEventsDetail(day)}
-							>
-								<p
-									className={`flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm hover:bg-base-300 ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"} ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`}
-								>
-									{moment(day).format("D")}
-								</p>
-								{
-									getEventsForCurrentDate(day).map((e, k) => {
-										return (
-											<p
-												key={k}
-												className={`text-xs px-2 mt-1 truncate ${THEME_BG[e.theme] || ""}`}
+				{/*<div className="grid grid-cols-7 mt-1 place-items-center">*/}
+				<DragDropContext onDragEnd={handleDragEnd}>
+					<div className="grid grid-cols-7 mt-1 place-items-center">
+						{allDaysInMonth().map((day) => (
+							<Droppable key={moment(day).format("YYYY-MM-DD")} droppableId={moment(day).format("YYYY-MM-DD")}>
+								{(provided) => (
+									<div
+										ref={provided.innerRef}
+										{...provided.droppableProps}
+										className={
+											colStartClasses[moment(day).day().toString()] +
+											" border border-solid w-full h-28 cursor-pointer"
+										}
+										onClick={() => openAllEventsDetail(day)}
+									>
+										{/* Sana */}
+										<p
+											className={`flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm hover:bg-base-300
+                ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"}
+                ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`}
+										>
+											{moment(day).format("D")}
+										</p>
+										
+										{/* Eventlar */}
+										{getEventsForCurrentDate(day).map((e, k) => (
+											<Draggable
+												key={e?.id?.toString()}
+												draggableId={e?.id?.toString()}
+												index={k}
 											>
-												{e.title}
-											</p>
-										)
-									})
-								}
-							</div>
-						);
-					})}
-				</div>
-			
-			
+												{(provided) => (
+													<p
+														ref={provided.innerRef}
+														{...provided.draggableProps}
+														{...provided.dragHandleProps}
+														className={`text-xs px-2 mt-1 truncate ${
+															THEME_BG[e.theme] || ""
+														}`}
+													>
+														{e.title}
+													</p>
+												)}
+											</Draggable>
+										))}
+										
+										{provided.placeholder}
+									</div>
+								)}
+							</Droppable>
+						))}
+					</div>
+				</DragDropContext>
+				
+				{/*</div>*/}
+				
+				
+				{/*<div className="grid grid-cols-7 mt-1  place-items-center">*/}
+				{/*	{allDaysInMonth().map((day, idx) => {*/}
+				{/*		return (*/}
+				{/*			<div*/}
+				{/*				key={idx}*/}
+				{/*				className={colStartClasses[moment(day).day().toString()] + " border border-solid w-full h-28 cursor-pointer"}*/}
+				{/*				onClick={() => openAllEventsDetail(day)}*/}
+				{/*			>*/}
+				{/*				<p*/}
+				{/*					className={`flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm hover:bg-base-300 ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"} ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`}*/}
+				{/*				>*/}
+				{/*					{moment(day).format("D")}*/}
+				{/*				</p>*/}
+				{/*				{*/}
+				{/*					getEventsForCurrentDate(day).map((e, k) => {*/}
+				{/*						return (*/}
+				{/*							<p*/}
+				{/*								key={k}*/}
+				{/*								className={`text-xs px-2 mt-1 truncate ${THEME_BG[e.theme] || ""}`}*/}
+				{/*							>*/}
+				{/*								{e.title}*/}
+				{/*							</p>*/}
+				{/*						)*/}
+				{/*					})*/}
+				{/*				}*/}
+				{/*			</div>*/}
+				{/*		);*/}
+				{/*	})}*/}
+				{/*</div>*/}
 			</div>
 		</div>
 	);
