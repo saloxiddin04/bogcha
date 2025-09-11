@@ -3,14 +3,16 @@ import moment from "moment/moment";
 import {openRightDrawer} from "../../common/rightDrawerSlice";
 import {MODAL_BODY_TYPES, RIGHT_DRAWER_TYPES} from "../../../utils/globalConstantUtil";
 import {useDispatch} from "react-redux";
-import {getCalendarList, updateCalendarList} from "../calendarSlice";
+import {createCalendarList, getCalendarList, updateCalendarList} from "../calendarSlice";
 import {useParams} from "react-router-dom";
 import {openModal} from "../../common/modalSlice";
 import ChevronLeftIcon from "@heroicons/react/24/solid/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import {CALENDAR_EVENT_STYLE} from "../../../components/CalendarView/util";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {setPageTitle} from "../../common/headerSlice";
+import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
+import {setPageTitle, showNotification} from "../../common/headerSlice";
+import {getUserData} from "../../../auth/jwtService";
+import Loader from "../../../containers/Loader";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
 
@@ -35,10 +37,15 @@ const EduCalendar = () => {
 	
 	const [reloadKey, setReloadKey] = useState(0);
 	
+	const [copiedEvent, setCopiedEvent] = useState(null);
+	let clickTimer = null;
+	
+	const [loader, setLoader] = useState(null)
+	
 	const reloadCalendar = () => setReloadKey(prev => prev + 1);
 	
 	useEffect(() => {
-		dispatch(setPageTitle({ title : "Plan of yearly"}))
+		dispatch(setPageTitle({title: "Plan of yearly"}))
 	}, [dispatch])
 	
 	useEffect(() => {
@@ -53,6 +60,10 @@ const EduCalendar = () => {
 					theme: item?.status?.toUpperCase(),
 					startTime: moment(item?.date_time),
 					endTime: moment(new Date()).endOf('day'),
+					groups: item?.groups?.map((el) => el?.id),
+					children: item?.children?.map((el) => el?.id),
+					activities: item?.activities,
+					goals: item?.goals,
 				}));
 				setEvents(transformed);
 			})
@@ -141,7 +152,7 @@ const EduCalendar = () => {
 	}
 	
 	const handleDragEnd = (result) => {
-		const { destination, source, draggableId } = result;
+		const {destination, source, draggableId} = result;
 		if (!destination) return;
 		if (destination.droppableId === source.droppableId) return;
 		
@@ -150,6 +161,7 @@ const EduCalendar = () => {
 		
 		const newDate = destination.droppableId;
 		
+		setLoader(newDate)
 		dispatch(updateCalendarList({
 			id: draggedEvent.id,
 			edu_plan: id,
@@ -158,11 +170,52 @@ const EduCalendar = () => {
 				title: draggedEvent.title,
 				date_time: moment(newDate).format("YYYY-MM-DD HH:mm:ss")
 			}
-		})).then(() => reloadCalendar());
+		})).then(() => {
+			reloadCalendar()
+			setLoader(null)
+		});
 	}
 	
+	const handleDayClick = (day) => {
+		if (clickTimer) clearTimeout(clickTimer);
+		clickTimer = setTimeout(() => {
+			openAllEventsDetail(day); // oddiy click
+		}, 250);
+	};
 	
-	// if (loading) return <Loader/>
+	const handleDayDoubleClick = (day) => {
+		if (clickTimer) clearTimeout(clickTimer);
+		if (copiedEvent) {
+			dispatch(createCalendarList({
+				title: copiedEvent.title,
+				date_time: moment(day).toISOString(),
+				edu_plan: Number(id),
+				groups: copiedEvent?.groups,
+				children: copiedEvent?.children,
+				status: copiedEvent?.theme,
+				author: getUserData()?.id,
+				activities: copiedEvent?.activities,
+				goals: copiedEvent?.goals,
+			})).then(({payload}) => {
+				if (payload?.status_code === 201) {
+					reloadCalendar()
+					dispatch(showNotification({
+						message: "Successfully pasted",
+						status: 1
+					}));
+					setCopiedEvent(null);
+				}
+			})
+		}
+	};
+	
+	const handleEventDoubleClick = (event) => {
+		setCopiedEvent(event);
+		dispatch(showNotification({
+			message: `Successfully copied -> ${event?.title}`,
+			status: 1
+		}));
+	};
 	
 	return (
 		<div>
@@ -220,16 +273,25 @@ const EduCalendar = () => {
 											colStartClasses[moment(day).day().toString()] +
 											" border border-solid w-full h-28 cursor-pointer"
 										}
-										onClick={() => openAllEventsDetail(day)}
+										// onClick={() => openAllEventsDetail(day)}
+										// onDoubleClick={() => handleDayDoubleClick(day)}
+										onClick={() => handleDayClick(day)}
+										onDoubleClick={() => handleDayDoubleClick(day)}
 									>
 										{/* Sana */}
 										<p
-											className={`flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm hover:bg-base-300
-                ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"}
-                ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`}
+											className={`
+												flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm hover:bg-base-300
+				                ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"}
+				                ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`
+											}
 										>
 											{moment(day).format("D")}
 										</p>
+										
+										{loader === moment(day).format("YYYY-MM-DD") && (
+											<Loader/>
+										)}
 										
 										{/* Eventlar */}
 										{getEventsForCurrentDate(day).map((e, k) => (
@@ -246,6 +308,7 @@ const EduCalendar = () => {
 														className={`text-xs px-2 mt-1 truncate ${
 															THEME_BG[e.theme] || ""
 														}`}
+														onDoubleClick={() => handleEventDoubleClick(e)}
 													>
 														{e.title}
 													</p>
