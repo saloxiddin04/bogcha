@@ -100,9 +100,6 @@ const Users = () => {
 		}))
 	}
 	
-	console.log(users)
-	
-	
 	return (
 		<>
 			<TitleCard title="" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>

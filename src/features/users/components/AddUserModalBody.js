@@ -64,7 +64,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 						profile_picture: payload?.profile_picture ?? "",
 						status: payload?.is_active ?? false,
 						roles: payload?.roles?.map(role => Number(role.id)) ?? [],
-						children: payload?.children?.map(child => Number(child.id)) ?? [],
+						children: payload?.children ?? [],
 						person_type: payload?.person_type ?? "",
 						height: payload?.height ?? "",
 						weight: payload?.weight ?? "",
@@ -272,7 +272,14 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 					updateType="children"
 					updateFormValue={updateSelectBoxValue}
 					isMulti={true}
-					defaultValue={childrenOptions?.filter(opt => userObj?.children?.includes(opt.value))}
+					defaultValue={
+						isEditMode ?
+							userObj.children?.map((el) => ({
+								label: el?.full_name,
+								value: Number(el?.id),
+							})) :
+							childrenOptions?.filter(opt => userObj?.children?.includes(opt.value))
+					}
 				/>
 			)}
 			
