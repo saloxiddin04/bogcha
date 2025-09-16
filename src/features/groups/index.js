@@ -111,7 +111,7 @@ const Groups = () => {
 														<button
 															className="btn btn-sm btn-success text-white"
 															onClick={() => openAddNewGroupModal(item?.id)}
-															disabled={!hasPermission("group_e")}
+															disabled={!hasPermission("group_det")}
 														>
 															<ChevronRightIcon className="w-6"/>
 														</button>

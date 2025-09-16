@@ -105,7 +105,7 @@ const AttendanceDetail = () => {
 		    full_name: user.full_name,
 		    roles: user.roles,
 		    status,
-		    date,
+		    date: new Date(date),
 		    notification: 'Successfully edited!',
 			  attendance_id: id,
 			  is_come,

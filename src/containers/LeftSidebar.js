@@ -3,9 +3,12 @@ import {NavLink, Link, useLocation} from 'react-router-dom'
 import SidebarSubmenu from './SidebarSubmenu';
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon'
 import {getCookie, hasPermission} from "../auth/jwtService";
+import {useState} from "react";
 
 function LeftSidebar() {
 	const location = useLocation();
+	
+	const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme"))
 	
 	const permissionList = getCookie("permissions")
 	
@@ -25,7 +28,7 @@ function LeftSidebar() {
 				
 				<li className="mb-2 font-semibold text-xl">
 					
-					<Link to={'/app/dashboard'}><img className="w-24 object-contain" src="/logo.jpg" alt="Logo"/></Link>
+					<Link to={'/app/dashboard'}><img className="w-36 object-contain" src="/logo3.png" alt="Logo"/></Link>
 				</li>
 				{
 					routes

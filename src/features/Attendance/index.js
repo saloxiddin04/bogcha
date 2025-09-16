@@ -31,7 +31,7 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="flex justify-between items-end gap-2 w-full">
-			{/*{hasPermission("plan_s") && (*/}
+			{hasPermission("att_s") && (
 				<div className="w-1/3 flex gap-2 items-end">
 					<InputText
 						type="text"
@@ -50,15 +50,15 @@ const TopSideButtons = () => {
 						<XCircleIcon className="w-6"/>
 					</button>
 				</div>
-			{/*)}*/}
-			{/*{hasPermission("plan_a") && (*/}
+			)}
+			{hasPermission("att_add") && (
 				<button
 					className="btn px-6 btn-sm normal-case btn-primary"
 					onClick={() => openAddNewLeadModal()}
 				>
 					Add New Attendance
 				</button>
-			{/*)}*/}
+			)}
 		</div>
 	)
 }
@@ -104,63 +104,65 @@ const Attendance = () => {
 	
 	return (
 		<div>
-			<TitleCard title="Current Attendance" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
-				<>
-					<div className="overflow-x-auto w-full">
-						<table className="table w-full">
-							<thead>
-							<tr className="text-center">
-								<th>ID</th>
-								<th>Title</th>
-								<th>Person type</th>
-								<th>Group</th>
-								<th>Users</th>
-								<th>Actions</th>
-							</tr>
-							</thead>
-							<tbody>
-							{attendanceList?.data?.map((item) => (
-								<tr className="text-center" key={item?.id}>
-									<td>{item?.id}</td>
-									<td>{item?.title}</td>
-									<td>{item?.person_type}</td>
-									<td>{item?.group?.name}</td>
-									<td>{item?.users?.length}</td>
-									<td className="flex gap-1 justify-center">
-										<button
-											className="btn btn-sm btn-error text-white"
-											onClick={() => deleteCurrentAttendance(item?.id)}
-											// disabled={!hasPermission("plan_d_del")}
-										>
-											<TrashIcon className="w-6"/>
-										</button>
-										<button
-											className="btn btn-sm btn-warning text-white"
-											onClick={() => openAddNewAttendanceModal(item?.id)}
-											// disabled={!hasPermission("plan_d_e")}
-										>
-											<PencilIcon className="w-6"/>
-										</button>
-										<button
-											className="btn btn-sm btn-success text-white"
-											onClick={() => navigate(`${item?.id}`)}
-											// disabled={!hasPermission("plan_d_det")}
-										>
-											<ChevronRightIcon className="w-6"/>
-										</button>
-									</td>
+			<TitleCard title="" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
+				{hasPermission("att_t") && (
+					<>
+						<div className="overflow-x-auto w-full">
+							<table className="table w-full">
+								<thead>
+								<tr className="text-center">
+									<th>ID</th>
+									<th>Title</th>
+									<th>Person type</th>
+									<th>Group</th>
+									<th>Users</th>
+									<th>Actions</th>
 								</tr>
-							))}
-							</tbody>
-						</table>
-					</div>
-					
-					<Pagination
-						totalItems={attendanceList?.pagination?.total_items}
-						itemsPerPage={10}
-						onPageChange={handlePageChange}
-					/>
-				</>
+								</thead>
+								<tbody>
+								{attendanceList?.data?.map((item) => (
+									<tr className="text-center" key={item?.id}>
+										<td>{item?.id}</td>
+										<td>{item?.title}</td>
+										<td>{item?.person_type}</td>
+										<td>{item?.group?.name}</td>
+										<td>{item?.users?.length}</td>
+										<td className="flex gap-1 justify-center">
+											<button
+												className="btn btn-sm btn-error text-white"
+												onClick={() => deleteCurrentAttendance(item?.id)}
+												disabled={!hasPermission("att_d_del")}
+											>
+												<TrashIcon className="w-6"/>
+											</button>
+											<button
+												className="btn btn-sm btn-warning text-white"
+												onClick={() => openAddNewAttendanceModal(item?.id)}
+												disabled={!hasPermission("att_d_e")}
+											>
+												<PencilIcon className="w-6"/>
+											</button>
+											<button
+												className="btn btn-sm btn-success text-white"
+												onClick={() => navigate(`${item?.id}`)}
+												disabled={!hasPermission("att_d_det")}
+											>
+												<ChevronRightIcon className="w-6"/>
+											</button>
+										</td>
+									</tr>
+								))}
+								</tbody>
+							</table>
+						</div>
+						
+						<Pagination
+							totalItems={attendanceList?.pagination?.total_items}
+							itemsPerPage={10}
+							onPageChange={handlePageChange}
+						/>
+					</>
+				)}
 			</TitleCard>
 		</div>
 	);

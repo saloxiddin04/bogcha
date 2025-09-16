@@ -11,7 +11,7 @@ import ChevronRightIcon from "@heroicons/react/24/solid/ChevronRightIcon";
 import {CALENDAR_EVENT_STYLE} from "../../../components/CalendarView/util";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import {setPageTitle, showNotification} from "../../common/headerSlice";
-import {getUserData} from "../../../auth/jwtService";
+import {getUserData, hasPermission} from "../../../auth/jwtService";
 import Loader from "../../../containers/Loader";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
@@ -240,12 +240,14 @@ const EduCalendar = () => {
 						/></button>
 					</div>
 					<div>
-						<button
-							className="btn  btn-sm btn-ghost btn-outline normal-case"
-							onClick={openAddNewEduPlanModal}
-						>
-							Add New Event
-						</button>
+						{hasPermission("plan_d_det_add") && (
+							<button
+								className="btn  btn-sm btn-ghost btn-outline normal-case"
+								onClick={openAddNewEduPlanModal}
+							>
+								Add New Event
+							</button>
+						)}
 					</div>
 				
 				</div>
@@ -261,68 +263,70 @@ const EduCalendar = () => {
 				</div>
 				
 				{/*<div className="grid grid-cols-7 mt-1 place-items-center">*/}
-				<DragDropContext onDragEnd={handleDragEnd}>
-					<div className="grid grid-cols-7 mt-1 place-items-center">
-						{allDaysInMonth().map((day) => (
-							<Droppable key={moment(day).format("YYYY-MM-DD")} droppableId={moment(day).format("YYYY-MM-DD")}>
-								{(provided) => (
-									<div
-										ref={provided.innerRef}
-										{...provided.droppableProps}
-										className={
-											colStartClasses[moment(day).day().toString()] +
-											" border border-solid w-full h-28 cursor-pointer"
-										}
-										// onClick={() => openAllEventsDetail(day)}
-										// onDoubleClick={() => handleDayDoubleClick(day)}
-										onClick={() => handleDayClick(day)}
-										onDoubleClick={() => handleDayDoubleClick(day)}
-									>
-										{/* Sana */}
-										<p
-											className={`
+				{hasPermission("copy_a_drag_d") && (
+					<DragDropContext onDragEnd={handleDragEnd}>
+						<div className="grid grid-cols-7 mt-1 place-items-center">
+							{allDaysInMonth().map((day) => (
+								<Droppable key={moment(day).format("YYYY-MM-DD")} droppableId={moment(day).format("YYYY-MM-DD")}>
+									{(provided) => (
+										<div
+											ref={provided.innerRef}
+											{...provided.droppableProps}
+											className={
+												colStartClasses[moment(day).day().toString()] +
+												" border border-solid w-full h-28 cursor-pointer"
+											}
+											// onClick={() => openAllEventsDetail(day)}
+											// onDoubleClick={() => handleDayDoubleClick(day)}
+											onClick={() => handleDayClick(day)}
+											onDoubleClick={() => handleDayDoubleClick(day)}
+										>
+											{/* Sana */}
+											<p
+												className={`
 												flex items-center justify-center h-8 w-8 rounded-full mx-1 mt-1 text-sm hover:bg-base-300
 				                ${isToday(day) && " bg-blue-100 dark:bg-blue-400 dark:hover:bg-base-300 dark:text-white"}
 				                ${isDifferentMonth(day) && " text-slate-400 dark:text-slate-600"}`
-											}
-										>
-											{moment(day).format("D")}
-										</p>
-										
-										{loader === moment(day).format("YYYY-MM-DD") && (
-											<Loader/>
-										)}
-										
-										{/* Eventlar */}
-										{getEventsForCurrentDate(day).map((e, k) => (
-											<Draggable
-												key={e?.id?.toString()}
-												draggableId={e?.id?.toString()}
-												index={k}
+												}
 											>
-												{(provided) => (
-													<p
-														ref={provided.innerRef}
-														{...provided.draggableProps}
-														{...provided.dragHandleProps}
-														className={`text-xs px-2 mt-1 truncate ${
-															THEME_BG[e.theme] || ""
-														}`}
-														onDoubleClick={() => handleEventDoubleClick(e)}
-													>
-														{e.title}
-													</p>
-												)}
-											</Draggable>
-										))}
-										
-										{provided.placeholder}
-									</div>
-								)}
-							</Droppable>
-						))}
-					</div>
-				</DragDropContext>
+												{moment(day).format("D")}
+											</p>
+											
+											{loader === moment(day).format("YYYY-MM-DD") && (
+												<Loader/>
+											)}
+											
+											{/* Eventlar */}
+											{getEventsForCurrentDate(day).map((e, k) => (
+												<Draggable
+													key={e?.id?.toString()}
+													draggableId={e?.id?.toString()}
+													index={k}
+												>
+													{(provided) => (
+														<p
+															ref={provided.innerRef}
+															{...provided.draggableProps}
+															{...provided.dragHandleProps}
+															className={`text-xs px-2 mt-1 truncate ${
+																THEME_BG[e.theme] || ""
+															}`}
+															onDoubleClick={() => handleEventDoubleClick(e)}
+														>
+															{e.title}
+														</p>
+													)}
+												</Draggable>
+											))}
+											
+											{provided.placeholder}
+										</div>
+									)}
+								</Droppable>
+							))}
+						</div>
+					</DragDropContext>
+				)}
 				
 				{/*</div>*/}
 				

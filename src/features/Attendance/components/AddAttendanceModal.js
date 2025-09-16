@@ -20,6 +20,8 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 	
 	const [errorMessage, setErrorMessage] = useState("")
 	
+	const [selectedChildren, setSelectedChildren] = useState([]);
+	
 	const isEditMode = Boolean(extraObject?.is_edit);
 	
 	const [postObj, setPostObj] = useState({
@@ -45,8 +47,14 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 						title: payload?.data?.title ?? "",
 						person_type: payload?.data?.person_type ?? "",
 						group: payload?.data?.group?.id ?? "",
-						users: payload?.data?.users?.map((el) => el?.id) ?? [],
+						users: payload?.data?.users ?? [],
 					})
+					setSelectedChildren(
+						payload?.data?.users?.map((el) => ({
+							label: el?.full_name,
+							value: Number(el?.id),
+						})) ?? []
+					);
 					dispatch(getChildrenForAttendance({group_ids: JSON.stringify(payload?.data?.group?.id), person_type: payload?.data?.person_type}))
 				}
 			})
@@ -163,10 +171,17 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 				updateFormValue={updateSelectBoxValue}
 				isMulti={true}
 				defaultValue={
-					attendanceChildren?.data
+					postObj.users
 						?.map((item) => ({label: item?.full_name, value: Number(item?.id)}))
-						?.filter(opt => postObj?.users?.includes(opt.value))
 				}
+				value={selectedChildren}
+				onChange={(newValue) => {
+					setSelectedChildren(newValue);
+					updateSelectBoxValue({
+						updateType: "users",
+						value: newValue?.map((opt) => opt.value),
+					});
+				}}
 			/>
 			
 			<ErrorText styleClass="mt-16">{errorMessage}</ErrorText>

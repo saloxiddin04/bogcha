@@ -8,6 +8,7 @@ import {PencilIcon, ClipboardDocumentCheckIcon} from "@heroicons/react/20/solid"
 import Loader from "../../containers/Loader";
 import {openModal} from "../common/modalSlice";
 import {MODAL_BODY_TYPES} from "../../utils/globalConstantUtil";
+import {hasPermission} from "../../auth/jwtService";
 
 const THEME_BG = CALENDAR_EVENT_STYLE
 
@@ -75,21 +76,21 @@ function CalendarEventsBodyRightDrawer({date, edu_plan_id, reloadCalendar}) {
 							<button
 								className="btn btn-sm btn-error text-white"
 								onClick={() => deleteCurrentCalendar(e?.id)}
-								// disabled={!hasPermission("smm_del")}
+								disabled={!hasPermission("event_del")}
 							>
 								<TrashIcon className="w-5"/>
 							</button>
 							<button
 								className="btn btn-sm btn-warning text-white"
 								onClick={() => openAddNewEduPlanModal(e?.id)}
-								// disabled={!hasPermission("smm_edit")}
+								disabled={!hasPermission("event_edit")}
 							>
 								<PencilIcon className="w-5"/>
 							</button>
 							<button
 								className="btn btn-sm btn-success text-white"
 								onClick={() => openCheckChildrenModal(e?.id)}
-								// disabled={!hasPermission("smm_det")}
+								disabled={!hasPermission("event_score")}
 							>
 								<ClipboardDocumentCheckIcon className="w-5"/>
 							</button>

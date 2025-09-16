@@ -20,11 +20,30 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 	
 	const isEditMode = Boolean(extraObject?.is_edit);
 	
+	const formatDateWithCurrentTime = (dateString) => {
+		const baseDate = dateString ? new Date(dateString) : new Date(); // faqat sana olish
+		const now = new Date(); // hozirgi vaqt olish
+		
+		const pad = (n) => String(n).padStart(2, "0");
+		
+		return (
+			baseDate.getFullYear() +
+			"-" +
+			pad(baseDate.getMonth() + 1) +
+			"-" +
+			pad(baseDate.getDate()) +
+			"T" +
+			pad(now.getHours()) +
+			":" +
+			pad(now.getMinutes())
+		);
+	};
+	
 	const [postObj, setPostObj] = useState({
 		name: "",
 		roles: [],
 		status: "",
-		date_time: "",
+		date_time: formatDateWithCurrentTime(),
 		temperature: "",
 		description: "",
 		user: "",
@@ -53,7 +72,8 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				name: extraObject?.full_name ?? "",
 				roles: extraObject?.roles ?? [],
 				status: extraObject?.is_come ? "COME" : "WENT",
-				date_time: moment(extraObject?.date).format("YYYY-MM-DDTHH:mm") ?? "",
+				// date_time: moment(extraObject?.date).format("YYYY-MM-DDTHH:mm") ?? "",
+				date_time: formatDateWithCurrentTime(extraObject?.date) ?? "",
 				temperature: extraObject?.temperature ?? "",
 				description: extraObject?.description ?? "",
 				user: extraObject?.id ?? "",
@@ -128,9 +148,6 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 			}
 		}));
 	};
-	
-	console.log(extraObject?.attendance_id)
-	console.log(extraObject)
 	
 	const statusOptions = [
 		{label: "Come", value: "COME"},
@@ -213,7 +230,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				<button
 					className="btn btn-sm btn-error text-white"
 					onClick={() => deleteCurrentAttendanceDetail()}
-					disabled={!isEditMode}
+					disabled={hasPermission("att_d_modal_d") && !isEditMode}
 				>
 					<TrashIcon className="w-6"/>
 				</button>
@@ -222,7 +239,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 					<button
 						className="btn btn-primary px-6"
 						onClick={savePost}
-						disabled={loading}
+						disabled={!hasPermission("att_d_model_s") || loading}
 					>
 						{loading ? "Loading..." : (isEditMode ? "Update" : "Save")}
 					</button>

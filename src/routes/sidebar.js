@@ -110,7 +110,7 @@ const routes = [
 	  path: '/app/attendance', //no url needed as this has submenu
 	  icon: <Cog6ToothIcon className={`${iconClasses} inline` }/>, // icon component
 	  name: 'Attendance', // name that appear in Sidebar
-		permission: "groups"
+		permission: "attendance"
 	  // submenu : [
 	  //   {
 	  //     path: '/app/settings-profile', //url
@@ -134,7 +134,7 @@ const routes = [
 		path: '/app/parent',
 		icon: <UsersIcon className={submenuIconClasses}/>,
 		name: 'Parent',
-		permission: "groups"
+		permission: "parent"
 	},
 ]
 
