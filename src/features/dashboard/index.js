@@ -20,12 +20,11 @@ import {
 	PointElement,
 	Title,
 	Tooltip,
-	BarElement
+	BarElement,
 } from "chart.js";
 import {Bar, Line} from "react-chartjs-2";
 import TitleCard from "../../components/Cards/TitleCard";
 import moment from "moment";
-import Loader from "../../containers/Loader";
 import StatsFilter from "./components/StatsFilter";
 
 ChartJS.register(
@@ -96,10 +95,66 @@ function Dashboard() {
 		},
 	};
 	
-	
 	// --------- attendanceData ---------- //
 	const allDates = attendanceData?.data?.find((d) => d?.all_date_line)?.all_date_line ?? [];
-	const labelsAttendanceData = Array.isArray(allDates) ? allDates.map((date) => moment(date).format("DD.MM.YYYY HH:mm")) : [];
+	// const labelsAttendanceData = Array.isArray(allDates) ? allDates.map((date) => moment(date).format("DD.MM.YYYY")) : [];
+	const uniqueDates = [...new Set(allDates.map(date => date.split('T')[0]))].sort();
+	const labelsAttendanceData = Array.isArray(uniqueDates) ? uniqueDates.map((date) => moment(date).format("DD.MM.YYYY")) : [];
+	
+	// const dataAttendanceData = {
+	// 	labels: labelsAttendanceData,
+	// 	datasets: Array.isArray(attendanceData?.data)
+	// 		? attendanceData?.data
+	// 			.filter((d) => d?.user_data)
+	// 			.map((user, idx) => {
+	// 				const name = user?.user_data?.full_name || "No name";
+	// 				const userDates = user?.user_data?.date_line ?? [];
+	//
+	// 				const color = colors[idx % colors.length];
+	//
+	// 				return {
+	// 					label: name,
+	// 					data: allDates.map((date) => userDates.includes(date) ? 1 : 0),
+	// 					borderColor: color,
+	// 					backgroundColor: color
+	// 				};
+	// 			})
+	// 		: [],
+	// };
+	
+	const allTimes = [];
+	attendanceData?.data?.forEach(item => {
+		if (item?.user_data?.date_line) {
+			item.user_data.date_line.forEach(dateTime => {
+				const time = dateTime.split('T')[1].substring(0, 5); // HH:mm formatida
+				if (!allTimes.includes(time)) {
+					allTimes.push(time);
+				}
+			});
+		}
+	});
+
+// Soatlarni tartiblash (06:00, 06:30, 07:00, ...)
+	allTimes.sort((a, b) => {
+		const [aHours, aMinutes] = a.split(':').map(Number);
+		const [bHours, bMinutes] = b.split(':').map(Number);
+		return (aHours * 60 + aMinutes) - (bHours * 60 + bMinutes);
+	});
+	
+	if (allTimes.length < 8) {
+		const standardTimes = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
+		standardTimes.forEach(time => {
+			if (!allTimes.includes(time)) {
+				allTimes.push(time);
+			}
+		});
+		allTimes.sort((a, b) => {
+			const [aHours, aMinutes] = a.split(':').map(Number);
+			const [bHours, bMinutes] = b.split(':').map(Number);
+			return (aHours * 60 + aMinutes) - (bHours * 60 + bMinutes);
+		});
+	}
+	
 	const dataAttendanceData = {
 		labels: labelsAttendanceData,
 		datasets: Array.isArray(attendanceData?.data)
@@ -111,17 +166,30 @@ function Dashboard() {
 					
 					const color = colors[idx % colors.length];
 					
+					// Har bir sana uchun soat qiymatini olish
+					const dataPoints = uniqueDates.map(date => {
+						// Ushbu sana uchun xodimning kirish vaqtini topish
+						const timeEntry = userDates.find(d => d.startsWith(date));
+						if (timeEntry) {
+							// Faqat soat:minut qismini olish (HH:mm formatida)
+							return timeEntry.split('T')[1].substring(0, 5); // "08:12" formatida
+						}
+						return null; // Agar kunga kirish bo'lmasa
+					});
+					
 					return {
 						label: name,
-						data: allDates.map((date) =>
-							userDates.includes(date) ? 1 : 0
-						),
+						data: dataPoints,
 						borderColor: color,
-						backgroundColor: color
+						backgroundColor: color,
+						pointRadius: 6,
+						pointHoverRadius: 8,
+						fill: false
 					};
 				})
 			: [],
 	};
+	
 	
 	// --------- usersScore ---------- //
 	const allDatesUsersScore = usersScore?.data?.find((d) => d?.all_date_line)?.all_date_line ?? [];
@@ -289,7 +357,31 @@ function Dashboard() {
 						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
-					<div className="w-full h-72"><Line data={dataAttendanceData} options={options}/></div>
+					<div className="w-full h-72"><Line data={dataAttendanceData} options={{
+						responsive: true,
+						maintainAspectRatio: false,
+						scales: {
+							y: {
+								type: 'category',
+								labels: allTimes,
+								reverse: false
+							},
+						},
+						plugins: {
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										const value = context.raw;
+										if (value === null) return `${context.dataset.label}: Kirish yo'q`;
+										return `${context.dataset.label}: ${value}`;
+									}
+								}
+							},
+							legend: {
+								position: 'top',
+							},
+						}
+					}}/></div>
 				</TitleCard>
 				<TitleCard title={"Users score"}>
 					<StatsFilter
