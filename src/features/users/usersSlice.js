@@ -4,7 +4,8 @@ import instance from "../../plugins/axios";
 const initialState = {
 	loading: true,
 	users: null,
-	user: null
+	user: null,
+	children: null
 }
 
 export const getUsers = createAsyncThunk(
@@ -64,6 +65,18 @@ export const updateUser = createAsyncThunk(
 			const response = await instance.patch(`/users/${params?.id}/`, params?.data);
 			await thunkAPI.dispatch(getUsers({ page_size: 10, page: 1 }));
 			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e)
+		}
+	}
+)
+
+export const getChildrenForUsers = createAsyncThunk(
+	"groups/getChildrenForUsers",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get("/users/filter/children_list/", params)
+			return response.data?.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)
 		}
@@ -138,6 +151,19 @@ const usersSlice = createSlice({
 				state.user = payload
 			})
 			.addCase(getUser.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getChildrenForUsers
+		builder
+			.addCase(getChildrenForUsers.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getChildrenForUsers.fulfilled, (state, {payload}) => {
+				state.loading = false
+				state.children = payload
+			})
+			.addCase(getChildrenForUsers.rejected, (state) => {
 				state.loading = false
 			})
 	}

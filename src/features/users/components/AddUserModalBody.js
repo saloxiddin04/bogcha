@@ -6,17 +6,15 @@ import ToggleInput from "../../../components/Input/ToggleInput";
 import SelectBox from "../../../components/Input/SelectBox";
 import {getRoles} from "../../roles/rolesSlice";
 import {showNotification} from "../../common/headerSlice";
-import {clearUserDetail, createUser, getUser, updateUser} from "../usersSlice";
+import {clearUserDetail, createUser, getChildrenForUsers, getUser, updateUser} from "../usersSlice";
 import Loader from "../../../containers/Loader";
 import FileUploadInput from "../../../components/Input/FileUploadInput";
-import {getAllChildren} from "../../groups/groupsSlice";
 
 const AddUserModalBody = ({closeModal, extraObject}) => {
 	const dispatch = useDispatch()
 	const {isOpen} = useSelector((state) => state.modal)
 	const {roles, loading: loaderRole} = useSelector((state) => state.roles)
-	const {loading} = useSelector((state) => state.users)
-	const {children} = useSelector(state => state.groups)
+	const {loading, children} = useSelector((state) => state.users)
 	
 	const [errorMessage, setErrorMessage] = useState("")
 	
@@ -76,7 +74,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 	
 	useEffect(() => {
 		dispatch(getRoles({page: 1, page_size: 1000}))
-		dispatch(getAllChildren({page: 1, page_size: 1000}))
+		dispatch(getChildrenForUsers({page: 1, page_size: 1000}))
 	}, [dispatch])
 	
 	useEffect(() => {
