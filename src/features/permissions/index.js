@@ -245,7 +245,7 @@ const PermissionItem = ({
 		<div className="flex flex-col gap-2">
 			{/* Parent / Child Row */}
 			<div className="flex items-center justify-between gap-2 border p-2 rounded">
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-2 w-2/3">
 					{item?.has_children && (
 						<button
 							className="transition"
