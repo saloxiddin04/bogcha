@@ -209,6 +209,11 @@ export const patchCheckChildrenList = createAsyncThunk(
 const eduPlanSlice = createSlice({
 	name: "edu",
 	initialState,
+	reducers: {
+		clearChildrenForEdu: (state) => {
+			state.childrenForEdu = null
+		}
+	},
 	extraReducers: (builder) => {
 		// getEduPlanList
 		builder
@@ -379,4 +384,5 @@ const eduPlanSlice = createSlice({
 	}
 })
 
+export const {clearChildrenForEdu} = eduPlanSlice.actions
 export default eduPlanSlice.reducer

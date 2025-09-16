@@ -51,7 +51,7 @@ function ModalLayout() {
 		DELETE_ATTENDANCE: (params) => dispatch(deleteAttendance({id: params})).then(({payload}) => {
 			return payload;
 		}),
-		DELETE_ATTENDANCE_DETAIL: (params) => dispatch(deleteAttendanceModalDetail({id: params})).then(({payload}) => {
+		DELETE_ATTENDANCE_DETAIL: (params) => dispatch(deleteAttendanceModalDetail({id: params?.attendance_id, attendance_group: params?.attendance_group})).then(({payload}) => {
 			return payload;
 		}),
 	};

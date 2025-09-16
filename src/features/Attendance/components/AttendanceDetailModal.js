@@ -124,10 +124,13 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				message: 'Are you sure you want to delete this attendance list?',
 				notification: 'Successfully deleted!',
 				actionKey: 'DELETE_ATTENDANCE_DETAIL',
-				payload: extraObject?.attendance_id
+				payload: extraObject
 			}
 		}));
 	};
+	
+	console.log(extraObject?.attendance_id)
+	console.log(extraObject)
 	
 	const statusOptions = [
 		{label: "Come", value: "COME"},
@@ -165,7 +168,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 			
 			<SelectBox
 				options={statusOptions}
-				labelTitle="Select status"
+				labelTitle="Status"
 				placeholder="Choose status..."
 				containerStyle={`w-full ${postObj.status ? "pointer-events-none opacity-25" : ""} ${postObj.status === "COME" ? "text-green-500" : "text-red-500"}`}
 				updateType="status"

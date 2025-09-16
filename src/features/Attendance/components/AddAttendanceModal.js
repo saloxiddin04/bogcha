@@ -33,7 +33,7 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 		if (postObj.person_type && postObj.person_type === "CHILDREN") {
 			dispatch(getGroupForAttendance());
 		} else if (postObj.person_type !== "CHILDREN") {
-			dispatch(getChildrenForAttendance({group_ids: null}));
+			dispatch(getChildrenForAttendance({group_ids: null, person_type: postObj.person_type}));
 		}
 	}, [dispatch, postObj.person_type]);
 	
@@ -47,7 +47,7 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 						group: payload?.data?.group?.id ?? "",
 						users: payload?.data?.users?.map((el) => el?.id) ?? [],
 					})
-					dispatch(getChildrenForAttendance({group_ids: JSON.stringify(payload?.data?.group?.id)}))
+					dispatch(getChildrenForAttendance({group_ids: JSON.stringify(payload?.data?.group?.id), person_type: payload?.data?.person_type}))
 				}
 			})
 		}
@@ -76,7 +76,7 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 			[updateType]: value
 		}));
 		if (updateType === "group") {
-			dispatch(getChildrenForAttendance({group_ids: JSON.stringify(value)}))
+			dispatch(getChildrenForAttendance({group_ids: JSON.stringify(value), person_type: postObj.person_type}))
 		}
 	};
 	

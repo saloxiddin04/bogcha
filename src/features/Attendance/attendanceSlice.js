@@ -154,10 +154,10 @@ export const updateAttendanceModalDetail = createAsyncThunk(
 
 export const deleteAttendanceModalDetail = createAsyncThunk(
 	"attendance/updateAttendanceModalDetail",
-	async ({id}, thunkAPI) => {
+	async ({id, attendance_group}, thunkAPI) => {
 		try {
 			const response = await instance.delete(`/attendance/check/${id}/`)
-			thunkAPI.dispatch(getAttendance({attendance_id: id}))
+			thunkAPI.dispatch(getAttendance({attendance_id: attendance_group}))
 			return response
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)

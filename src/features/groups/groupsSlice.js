@@ -49,7 +49,7 @@ export const getAllChildren = createAsyncThunk(
 	"groups/getAllChildren",
 	async (params, thunkAPI) => {
 		try {
-			const response = await instance.get("/group/filter/children/", params)
+			const response = await instance.get("/users/filter/children_list/", params)
 			return response.data?.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)

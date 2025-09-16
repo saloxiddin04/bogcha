@@ -5,6 +5,7 @@ import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import SelectBox from "../../../components/Input/SelectBox";
 import {
+	clearChildrenForEdu,
 	createCalendarList,
 	getCalendarEduDetail,
 	getChildrenForEdu,
@@ -91,14 +92,23 @@ const AddPlanEduModal = ({closeModal, extraObject}) => {
 			[updateType]: value
 		}));
 		if (updateType === "groups") {
-			dispatch(getChildrenForEdu({group_ids: JSON.stringify(value)})).then(({payload}) => {
-				if (payload) {
-					setPostObj(prev => ({
-						...prev,
-						children: payload?.data?.map((el) => el?.id),
-					}))
-				}
-			})
+			if (value.length > 0) {
+				dispatch(getChildrenForEdu({ group_ids: JSON.stringify(value) }))
+					.then(({ payload }) => {
+						if (payload) {
+							setPostObj(prev => ({
+								...prev,
+								children: payload?.data?.map((el) => el?.id),
+							}));
+						}
+					});
+			} else {
+				dispatch(clearChildrenForEdu());
+				setPostObj(prev => ({
+					...prev,
+					children: [],
+				}));
+			}
 		}
 	};
 	

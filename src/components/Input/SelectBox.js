@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 function SelectBox({
 	                   labelTitle,
@@ -10,37 +10,44 @@ function SelectBox({
 	                   updateFormValue,
 	                   isMulti = false,
 	                   defaultValue = null,
-	                   styles
+	                   styles,
+	                   value,
+	                   onChange
                    }) {
-	
-	const [value, setValue] = useState(defaultValue)
+	const [value1, setValue1] = useState(defaultValue);
 	
 	useEffect(() => {
-		setValue(defaultValue)
-	}, [defaultValue])
+		setValue1(defaultValue);
+	}, [defaultValue]);
 	
 	const handleChange = (selected) => {
+		setValue1(selected); // ✅ tanlovni yangilaymiz
+		
 		if (isMulti) {
-			updateFormValue({
+			updateFormValue?.({
 				updateType,
-				value: selected ? selected.map(opt => opt.value) : [],
+				value: selected ? selected.map((opt) => opt.value) : [],
 			});
 		} else {
-			updateFormValue({
+			updateFormValue?.({
 				updateType,
 				value: selected?.value || "",
 			});
+		}
+		
+		if (onChange) {
+			onChange(selected); // ✅ tashqariga ham uzatamiz
 		}
 	};
 	
 	return (
 		<div className={`form-control w-full ${containerStyle}`}>
-			<label className="label">{labelTitle}</label>
+			{labelTitle && <label className="label">{labelTitle}</label>}
 			<Select
 				options={options}
 				isMulti={isMulti}
 				placeholder={placeholder}
-				value={value}
+				value={value ?? value1}   // ✅ tashqaridan value kelsa ishlatamiz
 				onChange={handleChange}
 				styles={styles}
 			/>

@@ -13,6 +13,8 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 	const {isOpen} = useSelector((state) => state.modal)
 	const {loading, teachers, children} = useSelector((state) => state.groups)
 	
+	const [selectedChildren, setSelectedChildren] = useState([]);
+	
 	const [errorMessage, setErrorMessage] = useState("")
 	
 	const [groupObj, setGroupObj] = useState({
@@ -46,6 +48,13 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 						group_children: payload?.group_children ?? [],
 						teachers: payload?.teachers?.map((teacher) => Number(teacher?.id)) ?? [],
 					})
+					
+					setSelectedChildren(
+						payload?.group_children?.map((el) => ({
+							label: el?.full_name,
+							value: Number(el?.id),
+						})) ?? []
+					);
 				}
 			})
 		}
@@ -122,9 +131,9 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 			
 			<SelectBox
 				options={
-				isEditMode ?
-					groupObj?.group_children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
-					:
+				// isEditMode ?
+					// groupObj?.group_children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
+					// :
 					children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
 				}
 				labelTitle="Select children"
@@ -142,6 +151,15 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 					:
 					children?.map((child) => ({label: child?.full_name, value: Number(child?.id)}))
 				}
+				
+				value={selectedChildren}
+				onChange={(newValue) => {
+					setSelectedChildren(newValue);
+					updateSelectBoxValue({
+						updateType: "group_children",
+						value: newValue?.map((opt) => opt.value),
+					});
+				}}
 			/>
 			
 			<ErrorText styleClass="mt-16">{errorMessage}</ErrorText>
