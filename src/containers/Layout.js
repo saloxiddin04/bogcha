@@ -9,12 +9,20 @@ import 'react-notifications/lib/notifications.css';
 import ModalLayout from "./ModalLayout"
 import {getAccessToken} from "../auth/jwtService";
 import WebSocketHandler from "../auth/WebSocketHandler";
+import {useLocation} from "react-router-dom";
+import {clearStates} from "../features/dashboard/dashboardSlice";
 
 function Layout() {
 	const dispatch = useDispatch()
 	const {newNotificationMessage, newNotificationStatus} = useSelector(state => state.header)
 	
 	const token = getAccessToken()
+	
+	const {pathname} = useLocation()
+	
+	useEffect(() => {
+		dispatch(clearStates())
+	}, [pathname, dispatch])
 	
 	useEffect(() => {
 		if (newNotificationMessage !== "") {

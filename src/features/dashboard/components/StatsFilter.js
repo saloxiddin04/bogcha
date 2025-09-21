@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import moment from "moment";
 import SelectBox from "../../../components/Input/SelectBox";
 import InputText from "../../../components/Input/InputText";
@@ -10,8 +10,8 @@ const fieldConfigs = {
 		type: "select",
 		label: "Come / Went",
 		options: [
-			{ label: "Come", value: "come" },
-			{ label: "Went", value: "went" },
+			{label: "Come", value: "come"},
+			{label: "Went", value: "went"},
 		],
 		default: "come",
 	},
@@ -55,7 +55,7 @@ const fieldConfigs = {
 	},
 };
 
-const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) => {
+const StatsFilter = ({fields, onChange, groupOptions = [], userOptions = []}) => {
 	const dispatch = useDispatch()
 	
 	// initial filters state
@@ -70,12 +70,16 @@ const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) 
 		onChange(filters);
 	}, [filters]);
 	
-	const handleChange = ({ updateType, value }) => {
+	const handleChange = ({updateType, value}) => {
 		setFilters((prev) => ({
 			...prev,
 			[updateType]: value,
 		}));
 		if (updateType === "group_id") {
+			setFilters((prev) => ({
+				...prev,
+				user: null,
+			}));
 			dispatch(getUsersForDashboard({group_id: value}));
 		}
 	};
@@ -93,19 +97,33 @@ const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) 
 					if (f === "user") options = userOptions;
 					
 					return (
-						<SelectBox
-							key={f}
-							options={options}
-							labelTitle={cfg.label}
-							placeholder={`Choose ${cfg.label.toLowerCase()}...`}
-							containerStyle="w-full"
-							updateType={f}
-							updateFormValue={handleChange}
-							isMulti={false}
-							defaultValue={
-								options.find((opt) => opt.value === filters[f]) || cfg.default
-							}
-						/>
+						<div key={f} className="form-control w-full flex items-end gap-2 flex-row">
+							<SelectBox
+								key={f}
+								options={options}
+								labelTitle={cfg.label}
+								placeholder={`Choose ${cfg.label.toLowerCase()}...`}
+								containerStyle="w-full"
+								updateType={f}
+								updateFormValue={handleChange}
+								isMulti={false}
+								defaultValue={
+									options.find((opt) => opt.value === filters[f]) || cfg.default
+								}
+							/>
+							
+							{f !== "come_or_went" &&  f !== "person_type" && (
+								<button
+									type="button"
+									onClick={() => {
+										handleChange({updateType: f, value: cfg.default});
+									}}
+									className="mb-1 px-2 py-1 text-sm text-black bg-gray-200 hover:bg-gray-300 rounded"
+								>
+									✕
+								</button>
+							)}
+						</div>
 					);
 				}
 				
@@ -123,7 +141,7 @@ const StatsFilter = ({ fields, onChange, groupOptions = [], userOptions = [] }) 
 								type="button"
 								onClick={() => {
 									const today = moment().format("YYYY-MM-DD");
-									handleChange({ updateType: f, value: today });
+									handleChange({updateType: f, value: today});
 								}}
 								className="mb-1 px-2 py-1 text-sm text-black bg-gray-200 hover:bg-gray-300 rounded"
 							>

@@ -94,6 +94,7 @@ export const getGroupsForDashboard = createAsyncThunk(
 	"dashboard/getGroupsForDashboard",
 	async (params, thunkAPI) => {
 		try {
+			// const response = await instance.get('/result/dashboard/attendance_group_list/', {params})
 			const response = await instance.get('/result/dashboard/group_list/', {params})
 			return response.data
 		} catch (e) {
@@ -117,6 +118,9 @@ export const getUsersForDashboard = createAsyncThunk(
 const dashboardSlice = createSlice({
 	name: "dashboard",
 	initialState,
+	reducers: {
+		clearStates: () => initialState
+	},
 	extraReducers: (builder) => {
 		// getUsersCount
 		builder
@@ -224,4 +228,6 @@ const dashboardSlice = createSlice({
 	}
 })
 
+
+export const {clearStates} = dashboardSlice.actions
 export default dashboardSlice.reducer

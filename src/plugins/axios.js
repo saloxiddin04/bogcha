@@ -4,7 +4,7 @@ import store from "../app/store";
 import {showNotification} from "../features/common/headerSlice";
 
 const instance = axios.create({
-	baseURL: "https://e2dc8f953efb.ngrok-free.app/api/v1", //ngrok
+	baseURL: "https://b1a008aa04d9.ngrok-free.app/api/v1", //ngrok
 	// baseURL: "http://95.46.96.185/api/v1", //local_server
 	// baseURL: "http://0.0.0.0:8048/api/v1", //local_server
 	timeout: 20000,

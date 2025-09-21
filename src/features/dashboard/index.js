@@ -26,6 +26,7 @@ import {Bar, Line} from "react-chartjs-2";
 import TitleCard from "../../components/Cards/TitleCard";
 import moment from "moment";
 import StatsFilter from "./components/StatsFilter";
+import {useLocation, useNavigate} from "react-router-dom";
 
 ChartJS.register(
 	CategoryScale,
@@ -193,7 +194,7 @@ function Dashboard() {
 	
 	// --------- usersScore ---------- //
 	const allDatesUsersScore = usersScore?.data?.find((d) => d?.all_date_line)?.all_date_line ?? [];
-	const labelsUsersScore = Array.isArray(allDatesUsersScore) ? allDatesUsersScore.map((date) => moment(date).format("DD.MM.YYYY HH:mm")) : [];
+	const labelsUsersScore = Array.isArray(allDatesUsersScore) ? allDatesUsersScore.map((date) => moment(date).format("DD.MM.YYYY")) : [];
 	const dataUsersScore = {
 		labels: labelsUsersScore,
 		datasets: Array.isArray(usersScore?.data)
@@ -354,7 +355,7 @@ function Dashboard() {
 					<StatsFilter
 						fields={["come_or_went", "start_date", "end_date", "person_type", "group_id", "user"]}
 						onChange={(filters) => dispatch(getUsersAttendance(filters))}
-						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Line data={dataAttendanceData} options={{
@@ -387,7 +388,7 @@ function Dashboard() {
 					<StatsFilter
 						fields={["group_id", "start_date", "end_date", "user"]}
 						onChange={(filters) => dispatch(getUsersScore(filters))}
-						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Line data={dataUsersScore} options={options}/></div>
@@ -399,7 +400,7 @@ function Dashboard() {
 					<StatsFilter
 						fields={["group_id", "start_date", "end_date", "user"]}
 						onChange={(filters) => dispatch(getUsersTemperature(filters))}
-						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Line data={dataUsersTemperature} options={options}/></div>
@@ -414,7 +415,7 @@ function Dashboard() {
 					<StatsFilter
 						fields={["group_id", "date_time", "user"]}
 						onChange={(filters) => dispatch(getPlanStatusStatistics(filters))}
-						groupOptions={groups?.data?.map((el) => ({label: el?.name, value: el?.id}))}
+						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Bar data={dataPlanStatus} options={options}/></div>
