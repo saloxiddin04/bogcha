@@ -94,8 +94,8 @@ export const getGroupsForDashboard = createAsyncThunk(
 	"dashboard/getGroupsForDashboard",
 	async (params, thunkAPI) => {
 		try {
-			// const response = await instance.get('/result/dashboard/attendance_group_list/', {params})
-			const response = await instance.get('/result/dashboard/group_list/', {params})
+			const response = await instance.get('/result/dashboard/attendance_group_list/', {params})
+			// const response = await instance.get('/result/dashboard/group_list/', {params})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
