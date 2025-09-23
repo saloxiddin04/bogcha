@@ -26,7 +26,6 @@ import {Bar, Line} from "react-chartjs-2";
 import TitleCard from "../../components/Cards/TitleCard";
 import moment from "moment";
 import StatsFilter from "./components/StatsFilter";
-import {useLocation, useNavigate} from "react-router-dom";
 
 ChartJS.register(
 	CategoryScale,

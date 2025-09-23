@@ -43,7 +43,7 @@ function App() {
 						<Route
 							path="*"
 							element={
-								token ? <NotFound/> : <Navigate to={"/login"} replace/>
+								<Navigate to={"/login"} replace/>
 							}
 						/>
 					</Routes>

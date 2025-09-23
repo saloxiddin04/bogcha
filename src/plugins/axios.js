@@ -4,9 +4,10 @@ import store from "../app/store";
 import {showNotification} from "../features/common/headerSlice";
 
 const instance = axios.create({
-	// baseURL: "https://b1a008aa04d9.ngrok-free.app/api/v1", //ngrok
+	// baseURL: "https://467a234c499c.ngrok-free.app/api/v1", //ngrok
 	// baseURL: "http://95.46.96.185/api/v1", //local_server
-	baseURL: "http://0.0.0.0:8048/api/v1", //local_server
+	// baseURL: "http://0.0.0.0:8048/api/v1", //local_server
+	baseURL: "https://barakalla.uz/api/v1", // server
 	timeout: 20000,
 	
 	headers: {
@@ -32,26 +33,70 @@ instance.interceptors.request.use(
 	}
 );
 
+// instance.interceptors.response.use(
+// 	(response) => {
+// 		console.log(response)
+// 		return response
+// 	},
+// 	(error) => {
+// 		console.log("error", error)
+// 		if (error.response && error.response.status === 401) {
+// 			if (
+// 				window.location.pathname !== "/login" &&
+// 				window.location.pathname !== "/register"
+// 			) {
+// 				window.location.href = "/login";
+// 				const refresh = getRefreshToken()
+// 				logout({refresh}).then()
+// 				// window.location.reload()
+// 			}
+// 		}
+// 		// else if (error.response.status === 422) {
+// 		//   console.log("422", error.response);
+// 		// } else if (error.response.status === 500) {
+// 		//   toast.error("Error from server!");
+// 		// }
+// 		store.dispatch(showNotification({status: 0, message: error?.response?.data?.message}));
+// 		return Promise.reject(error);
+// 	}
+// );
+
 instance.interceptors.response.use(
 	(response) => response,
-	(error) => {
-		if (error.response && error.response.status === 401) {
+	async (error) => {
+		const status = error.response?.status;
+		
+		const refresh = getRefreshToken();
+		const access = getAccessToken()
+		
+		if (status === 401) {
 			if (
 				window.location.pathname !== "/login" &&
 				window.location.pathname !== "/register"
 			) {
-				window.location.href = "/login";
-				const refresh = getRefreshToken()
-				logout({refresh}).then()
-				// window.location.reload()
+				try {
+					await logout({refresh, headers: {Authorization: `Bearer ${access}`}});
+				} catch (e) {
+					const refresh = getRefreshToken();
+					await logout({refresh, headers: {Authorization: `Bearer ${access}`}});
+					console.error("Logout error:", e);
+				} finally {
+					const refresh = getRefreshToken();
+					await logout({refresh, headers: {Authorization: `Bearer ${access}`}});
+					window.location.href = "/login";
+				}
 			}
 		}
-		// else if (error.response.status === 422) {
-		//   console.log("422", error.response);
-		// } else if (error.response.status === 500) {
-		//   toast.error("Error from server!");
-		// }
-		store.dispatch(showNotification({status: 0, message: error?.response?.data?.message}));
+		
+		if (status && status !== 401) {
+			store.dispatch(
+				showNotification({
+					status: 0,
+					message: error?.response?.data?.message || "Server error",
+				})
+			);
+		}
+		
 		return Promise.reject(error);
 	}
 );

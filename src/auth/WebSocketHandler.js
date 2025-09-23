@@ -13,8 +13,9 @@ const WebSocketHandler = () => {
 	const connectWebSocket = () => {
 		if (!user?.id) return;
 		
-		ws.current = new WebSocket(`ws://0.0.0.0:8048/ws/?token=${token}`);
-		// ws.current = new WebSocket(`ws://b1a008aa04d9.ngrok-free.app/ws/?token=${token}`);
+		// ws.current = new WebSocket(`ws://0.0.0.0:8048/ws/?token=${token}`);
+		ws.current = new WebSocket(`wss://barakalla.uz/ws/?token=${token}`);
+		// ws.current = new WebSocket(`ws://467a234c499c.ngrok-free.app/ws/?token=${token}`);
 		// ws.current = new WebSocket(`ws://95.46.96.185:2990/ws/?token=${token}`);
 		
 		ws.current.onopen = () => {
@@ -28,8 +29,9 @@ const WebSocketHandler = () => {
 				message.action === "user_permission_update" &&
 				message.data.includes(`Log out user ${user.id}`)
 			) {
-				logout({refresh}).then()
-				navigate("/login");
+				logout({refresh}).then(() => {
+					navigate("/login")
+				})
 			}
 		};
 		

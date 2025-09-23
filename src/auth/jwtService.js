@@ -18,23 +18,23 @@ export function login(...args) {
 	});
 }
 
-export function logout(...args) {
+function clearCookies() {
 	document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 	document.cookie = "permissions=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-	
-	window.location.href = "/login";
-	return $axios.post(logoutEndpoint, ...args).then(() => {
-		document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-		document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-		document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-		document.cookie = "permissions=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-		
-		window.location.href = "/login";
-	})
-	// localStorage.clear()
-	// window.location.reload();
+}
+
+export function logout(...args) {
+	return $axios.post(logoutEndpoint, ...args)
+		.catch(() => {
+			clearCookies()
+			window.location.href = '/login'
+		})
+		.finally(() => {
+			clearCookies()
+			window.location.href = '/login'
+		})
 }
 
 export function setAccessToken(value) {
