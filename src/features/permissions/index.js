@@ -341,8 +341,6 @@ const InternalPage = () => {
 					message: "Permission updated!",
 					status: 1
 				}));
-			} else {
-				dispatch(showNotification({status: 0}));
 			}
 		});
 	};

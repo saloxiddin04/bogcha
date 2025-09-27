@@ -22,12 +22,12 @@ const TopSideButtons = () => {
 	return (
 		<div className="inline-block float-right">
 			{hasPermission("smm_add") && (
-			<button
-				className="btn px-6 btn-sm normal-case btn-primary"
-				onClick={() => openAddNewLeadModal()}
-			>
-				Add New Post
-			</button>
+				<button
+					className="btn px-6 btn-sm normal-case btn-primary"
+					onClick={() => openAddNewLeadModal()}
+				>
+					Add New Post
+				</button>
 			)}
 		</div>
 	)
@@ -97,6 +97,16 @@ const SmmPost = () => {
 								<td>
 									<button
 										className="btn btn-square btn-success text-white"
+										disabled={!item?.post_history?.length}
+										onClick={() => {
+											dispatch(openModal({
+												title: "Post history",
+												bodyType: MODAL_BODY_TYPES.POST_HISTORY,
+												extraObject: {
+													data: item?.post_history
+												}
+											}))
+										}}
 										// onClick={() => deleteCurrentGroup(item?.id)}
 									>
 										<Bars3Icon className="w-5"/>

@@ -54,8 +54,6 @@ const EduCheckChildren = ({closeModal, extraObject}) => {
 					status: 1
 				}));
 				closeModal();
-			} else {
-				dispatch(showNotification({ status: 0 }));
 			}
 		});
 	};
@@ -63,7 +61,7 @@ const EduCheckChildren = ({closeModal, extraObject}) => {
 	return (
 		<>
 			{data?.map((item, index) => (
-				<div className="flex justify-between items-center gap-2 mb-4">
+				<div key={index} className="flex justify-between items-center gap-2 mb-4">
 					<InputText
 						type="text"
 						defaultValue={item.full_name ?? ""}
@@ -72,9 +70,9 @@ const EduCheckChildren = ({closeModal, extraObject}) => {
 						disabled={true}
 					/>
 					
-					<div className="w-1/4">
+					<div className="w-1/2">
 						<InputText
-							type="text"
+							type="number"
 							defaultValue={item?.score ?? ""}
 							updateType="score"
 							labelTitle="Score"

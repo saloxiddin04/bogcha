@@ -27,9 +27,9 @@ const TopSideButtons = () => {
 	}
 	
 	return (
-		<div className="flex justify-between items-end gap-2 w-full">
+		<div className="flex justify-between items-end gap-2 w-full flex-wrap">
 			{hasPermission("par_ser") && (
-				<div className="w-1/3 flex gap-2 items-end">
+				<div className="flex gap-2 items-end w-full sm:w-2/3 md:w-1/3">
 					<InputText
 						type="text"
 						defaultValue={search ?? ""}
@@ -38,10 +38,10 @@ const TopSideButtons = () => {
 						updateFormValue={({value}) => searchPlan(value)}
 					/>
 					<button
-						className="btn px-6 btn-sm normal-case btn-error"
+						className="btn px-6 btn-sm normal-case btn-error sm:w-auto"
 						onClick={() => {
 							setSearch("")
-							dispatch(getAttendanceList({page: 1, page_size: 10}))
+							dispatch(getChildList({}))
 						}}
 					>
 						<XCircleIcon className="w-6"/>
@@ -75,23 +75,23 @@ const ParentPage = () => {
 							<table className="table w-full">
 								<thead>
 								<tr className="text-center">
-									<th>ID</th>
+									{window.innerWidth > 768 && <th>ID</th>}
 									<th>Photo</th>
 									<th>Full name</th>
-									<th>Birthday</th>
+									{window.innerWidth > 768 && <th>Birthday</th>}
 									<th>Actions</th>
 								</tr>
 								</thead>
 								<tbody>
 								{childList?.data?.map((item) => (
 									<tr className="text-center" key={item?.id}>
-										<td>{item?.id}</td>
+										{window.innerWidth > 768 && <td>{item?.id}</td>}
 										<td>
-											<img className="rounded-full mx-auto w-12 h-12 object-contain" src={item?.profile_picture}
+										<img className="rounded-full mx-auto w-12 h-12 object-contain" src={item?.profile_picture}
 											     alt=""/>
 										</td>
 										<td>{item?.full_name}</td>
-										<td>{item?.birth_day}</td>
+										{window.innerWidth > 768 && <td>{item?.birth_day}</td>}
 										<td className="flex gap-1 justify-center">
 											<button
 												className="btn btn-sm btn-success text-white"

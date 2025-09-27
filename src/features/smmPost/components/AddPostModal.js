@@ -42,7 +42,7 @@ const AddPostModal = ({closeModal, extraObject}) => {
 							description: payload?.data?.description ?? "",
 							author: payload?.data?.author ?? "",
 							groups: payload?.data?.groups?.map((item) => item?.id) ?? [],
-							users: payload?.data?.users?.map((item) => item?.id) ?? [],
+							users: payload?.data?.users ?? [],
 						})
 						setFileInputs(payload?.data?.files?.length > 0 ? payload?.data?.files : [{id: Date.now(), files: []}])
 					})
@@ -107,8 +107,6 @@ const AddPostModal = ({closeModal, extraObject}) => {
 					status: 1
 				}));
 				closeModal();
-			} else {
-				dispatch(showNotification({status: 0}));
 			}
 		});
 	}
@@ -161,9 +159,15 @@ const AddPostModal = ({closeModal, extraObject}) => {
 				updateFormValue={updateSelectBoxValue}
 				isMulti={true}
 				defaultValue={
-					parents?.data
-						?.map((parent) => ({ label: parent?.name, value: Number(parent?.id) }))
-						?.filter(opt => postObj?.users?.includes(opt.value))
+				isEditMode ?
+					postObj?.users?.map((el) => ({
+						label: el?.full_name,
+						value: Number(el?.id)
+					})) :
+					parents?.data?.map((el) => ({
+						label: el?.full_name,
+						value: Number(el?.id)
+					}))
 				}
 			/>
 			

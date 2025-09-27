@@ -14,8 +14,8 @@ const WebSocketHandler = () => {
 		if (!user?.id) return;
 		
 		// ws.current = new WebSocket(`ws://0.0.0.0:8048/ws/?token=${token}`);
-		ws.current = new WebSocket(`wss://barakalla.uz/ws/?token=${token}`);
-		// ws.current = new WebSocket(`ws://467a234c499c.ngrok-free.app/ws/?token=${token}`);
+		// ws.current = new WebSocket(`wss://barakalla.uz/ws/?token=${token}`);
+		ws.current = new WebSocket(`ws://a63801acdfd6.ngrok-free.app/ws/?token=${token}`);
 		// ws.current = new WebSocket(`ws://95.46.96.185:2990/ws/?token=${token}`);
 		
 		ws.current.onopen = () => {

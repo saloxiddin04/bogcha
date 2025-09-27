@@ -49,6 +49,8 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		weight: ""
 	});
 	
+	const [selectedChildren, setSelectedChildren] = useState([]);
+	
 	useEffect(() => {
 		if (extraObject?.is_edit && extraObject?.userId) {
 			dispatch(getUser(extraObject.userId)).then(({payload}) => {
@@ -56,7 +58,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 					setUserObj({
 						first_name: payload?.first_name ?? "",
 						last_name: payload?.last_name ?? "",
-						password: undefined,
+						password: payload?.note ?? "",
 						phone_number: payload?.phone_number ?? "",
 						birth_day: payload?.birth_day ?? "",
 						profile_picture: payload?.profile_picture ?? "",
@@ -67,6 +69,12 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 						height: payload?.height ?? "",
 						weight: payload?.weight ?? "",
 					});
+					
+					setSelectedChildren(
+						payload?.children?.map((el) => ({
+							label: el?.full_name,
+							value: Number(el?.id),
+						})) ?? [])
 				}
 			});
 		}
@@ -141,9 +149,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		formData.append("first_name", userObj?.first_name)
 		formData.append("last_name", userObj?.last_name)
 		formData.append("phone_number", userObj?.phone_number)
-		if (!isEditMode) {
-			formData.append("password", userObj?.password)
-		}
+		formData.append("password", userObj?.password)
 		formData.append("birth_day", formattedBirthDay);
 		userObj?.roles?.forEach(role => {
 			formData.append("roles", Number(role));
@@ -154,9 +160,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 		formData.append("height", userObj.height)
 		formData.append("weight", userObj.weight)
 		if (userObj.person_type === "FAMILY_MEMBER") {
-			userObj?.children?.map((child) => (
-				formData.append("children", Number(child))
-			))
+			userObj?.children?.map((el) => typeof el === "object" ? formData.append("children", Number(el.id)) : formData.append("children", Number(el)))
 		}
 		
 		const action = isEditMode ? updateUser : createUser;
@@ -170,8 +174,6 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				}));
 				setUserObj(initialUser)
 				closeModal();
-			} else {
-				dispatch(showNotification({status: 0}));
 			}
 		});
 	};
@@ -187,7 +189,6 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 	
 	return (
 		<>
-			
 			<InputText
 				type="text"
 				defaultValue={userObj.first_name ?? ""}
@@ -202,15 +203,13 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				labelTitle="Last name"
 				updateFormValue={updateFormValue}
 			/>
-			{!isEditMode && (
-				<InputText
-					type="text"
-					defaultValue={userObj.password ?? ""}
-					updateType="password"
-					labelTitle="Password"
-					updateFormValue={updateFormValue}
-				/>
-			)}
+			<InputText
+				type="text"
+				defaultValue={userObj.password ?? ""}
+				updateType="password"
+				labelTitle="Password"
+				updateFormValue={updateFormValue}
+			/>
 			<InputText
 				type="text"
 				defaultValue={userObj.phone_number ?? ""}
@@ -254,7 +253,7 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 				options={personTypeOptions}
 				labelTitle="Select person type"
 				placeholder="Choose person type..."
-				containerStyle="w-full"
+				containerStyle={`w-full ${isEditMode ? "opacity-25 pointer-events-none" : ""}`}
 				updateType="person_type"
 				updateFormValue={updateSelectBoxValue}
 				isMulti={false}
@@ -278,6 +277,15 @@ const AddUserModalBody = ({closeModal, extraObject}) => {
 							})) :
 							childrenOptions?.filter(opt => userObj?.children?.includes(opt.value))
 					}
+					
+					value={selectedChildren}
+					onChange={(newValue) => {
+						setSelectedChildren(newValue);
+						updateSelectBoxValue({
+							updateType: "children",
+							value: newValue?.map((opt) => opt.value),
+						});
+					}}
 				/>
 			)}
 			

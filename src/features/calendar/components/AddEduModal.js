@@ -25,7 +25,6 @@ const AddEduModal = ({closeModal, extraObject}) => {
 	useEffect(() => {
 		if (isEditMode && extraObject?.id) {
 			dispatch(getEduPlanDetail({id: extraObject?.id})).then(({payload}) => {
-				console.log(payload)
 				if (payload?.data) {
 					setPostObj({
 						title: payload?.data?.title,
@@ -67,8 +66,6 @@ const AddEduModal = ({closeModal, extraObject}) => {
 					status: 1
 				}));
 				closeModal();
-			} else {
-				dispatch(showNotification({status: 0}));
 			}
 		});
 	}

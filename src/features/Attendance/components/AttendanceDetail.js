@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {useLocation, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import moment from "moment";
 import {getAttendance} from "../attendanceSlice";
 import {setPageTitle} from "../../common/headerSlice";

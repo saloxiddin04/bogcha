@@ -40,8 +40,6 @@ function AddNewRoleModal({closeModal, extraObject}) {
 				if (payload?.id) {
 					dispatch(showNotification({message: extraObject?.is_edit ? "Role updated" : "New Role Added!", status: 1}))
 					closeModal()
-				} else {
-					dispatch(showNotification({status: 0}))
 				}
 			})
 		}

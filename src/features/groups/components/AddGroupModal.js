@@ -80,7 +80,14 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 		if (groupObj.teachers.length === 0) return setErrorMessage("Teacher is required!");
 		
 		const action = isEditMode ? updateGroup : createGroup
-		const params = isEditMode ? {id: extraObject?.id, data: groupObj} : groupObj
+		const params = isEditMode ? {
+			id: extraObject?.id,
+			data: {...groupObj,
+				group_children: groupObj.group_children?.map(el =>
+					typeof el === "object" ? Number(el.id) : Number(el)
+				) ?? []
+			}
+		} : groupObj
 		
 		dispatch(action(params)).then(({payload}) => {
 			if (payload?.status_code === 201 || payload?.status_code === 200) {
@@ -94,8 +101,6 @@ const AddGroupModal = ({closeModal, extraObject}) => {
 					teachers: []
 				})
 				closeModal();
-			} else {
-				dispatch(showNotification({status: 0}));
 			}
 		});
 	}

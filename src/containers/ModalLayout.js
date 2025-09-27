@@ -10,6 +10,7 @@ import {deleteRole} from "../features/roles/rolesSlice";
 import AddGroupModal from "../features/groups/components/AddGroupModal";
 import {deleteGroup} from "../features/groups/groupsSlice";
 import AddPostModal from "../features/smmPost/components/AddPostModal";
+import PostHistoryModal from "../features/smmPost/components/PostHistoryModal";
 import {deletePost, sendPost} from "../features/smmPost/smmPostSlice";
 import {deleteCalendar, deleteEduPlanList} from "../features/calendar/calendarSlice";
 import AddEduModal from "../features/calendar/components/AddEduModal";
@@ -75,6 +76,7 @@ function ModalLayout() {
 							[MODAL_BODY_TYPES.ROLE_ADD_NEW]: <AddNewRoleModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.GROUP_ADD_NEW]: <AddGroupModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.POST_ADD_NEW]: <AddPostModal closeModal={close} extraObject={extraObject} />,
+							[MODAL_BODY_TYPES.POST_HISTORY]: <PostHistoryModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.EDU_ADD_NEW]: <AddEduModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.EDU_PLAN_ADD_NEW]: <AddPlanEduModal closeModal={close} extraObject={extraObject} />,
 							[MODAL_BODY_TYPES.CHECK_CHILDREN_MODAL]: <EduCheckChildren closeModal={close} extraObject={extraObject} />,

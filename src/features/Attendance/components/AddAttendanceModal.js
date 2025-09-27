@@ -104,8 +104,6 @@ const AddAttendanceModal = ({closeModal, extraObject}) => {
 					status: 1
 				}));
 				closeModal();
-			} else {
-				dispatch(showNotification({status: 0}));
 			}
 		});
 	}

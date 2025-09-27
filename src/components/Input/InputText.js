@@ -105,7 +105,7 @@ function InputText({
 						value={value}
 						placeholder={placeholder || ""}
 						onChange={(e) => updateInputValue(e.target.value)}
-						className="input input-bordered w-full pr-10"
+						className="input input-bordered w-full pr-2"
 						disabled={disabled}
 					/>
 					{type === "password" && (

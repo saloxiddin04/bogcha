@@ -18,7 +18,6 @@ function ConfirmationModalBody({extraObject, closeModal, remove}) {
 					dispatch(showNotification({notification, status: 1}))
 					setLoading(false)
 				} else {
-					dispatch(showNotification({notification, status: 0}))
 					setLoading(false)
 				}
 			})

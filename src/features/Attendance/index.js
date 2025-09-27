@@ -30,9 +30,9 @@ const TopSideButtons = () => {
 	}
 	
 	return (
-		<div className="flex justify-between items-end gap-2 w-full">
+		<div className="flex justify-between items-end gap-2 w-full flex-wrap">
 			{hasPermission("att_s") && (
-				<div className="w-1/3 flex gap-2 items-end">
+				<div className="flex gap-2 items-end w-full sm:w-2/3 md:w-1/3">
 					<InputText
 						type="text"
 						defaultValue={search ?? ""}
@@ -53,7 +53,7 @@ const TopSideButtons = () => {
 			)}
 			{hasPermission("att_add") && (
 				<button
-					className="btn px-6 btn-sm normal-case btn-primary"
+					className="btn px-6 btn-sm normal-case btn-primary sm:w-auto"
 					onClick={() => openAddNewLeadModal()}
 				>
 					Add New Attendance
