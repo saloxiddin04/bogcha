@@ -152,28 +152,30 @@ const EduCalendar = () => {
 	}
 	
 	const handleDragEnd = (result) => {
-		const {destination, source, draggableId} = result;
-		if (!destination) return;
-		if (destination.droppableId === source.droppableId) return;
-		
-		const draggedEvent = events.find(e => e.id?.toString() === draggableId);
-		if (!draggedEvent) return;
-		
-		const newDate = destination.droppableId;
-		
-		setLoader(newDate)
-		dispatch(updateCalendarList({
-			id: draggedEvent.id,
-			edu_plan: id,
-			date: moment(newDate).format("DD.MM.YYYY"),
-			data: {
-				title: draggedEvent.title,
-				date_time: moment(newDate).format("YYYY-MM-DD HH:mm:ss")
-			}
-		})).then(() => {
-			reloadCalendar()
-			setLoader(null)
-		});
+		if (hasPermission("copy_a_drag_d")) {
+			const {destination, source, draggableId} = result;
+			if (!destination) return;
+			if (destination.droppableId === source.droppableId) return;
+			
+			const draggedEvent = events.find(e => e.id?.toString() === draggableId);
+			if (!draggedEvent) return;
+			
+			const newDate = destination.droppableId;
+			
+			setLoader(newDate)
+			dispatch(updateCalendarList({
+				id: draggedEvent.id,
+				edu_plan: id,
+				date: moment(newDate).format("DD.MM.YYYY"),
+				data: {
+					title: draggedEvent.title,
+					date_time: moment(newDate).format("YYYY-MM-DD HH:mm:ss")
+				}
+			})).then(() => {
+				reloadCalendar()
+				setLoader(null)
+			});
+		}
 	}
 	
 	const handleDayClick = (day) => {
@@ -184,28 +186,30 @@ const EduCalendar = () => {
 	};
 	
 	const handleDayDoubleClick = (day) => {
-		if (clickTimer) clearTimeout(clickTimer);
-		if (copiedEvent) {
-			dispatch(createCalendarList({
-				title: copiedEvent.title,
-				date_time: moment(day).toISOString(),
-				edu_plan: Number(id),
-				groups: copiedEvent?.groups,
-				children: copiedEvent?.children,
-				status: copiedEvent?.theme,
-				author: getUserData()?.id,
-				activities: copiedEvent?.activities,
-				goals: copiedEvent?.goals,
-			})).then(({payload}) => {
-				if (payload?.status_code === 201) {
-					reloadCalendar()
-					dispatch(showNotification({
-						message: "Successfully pasted",
-						status: 1
-					}));
-					setCopiedEvent(null);
-				}
-			})
+		if (hasPermission("copy_a_drag_d")) {
+			if (clickTimer) clearTimeout(clickTimer);
+			if (copiedEvent) {
+				dispatch(createCalendarList({
+					title: copiedEvent.title,
+					date_time: moment(day).toISOString(),
+					edu_plan: Number(id),
+					groups: copiedEvent?.groups,
+					children: copiedEvent?.children,
+					status: copiedEvent?.theme,
+					author: getUserData()?.id,
+					activities: copiedEvent?.activities,
+					goals: copiedEvent?.goals,
+				})).then(({payload}) => {
+					if (payload?.status_code === 201) {
+						reloadCalendar()
+						dispatch(showNotification({
+							message: "Successfully pasted",
+							status: 1
+						}));
+						setCopiedEvent(null);
+					}
+				})
+			}
 		}
 	};
 	
@@ -263,7 +267,6 @@ const EduCalendar = () => {
 				</div>
 				
 				{/*<div className="grid grid-cols-7 mt-1 place-items-center">*/}
-				{hasPermission("copy_a_drag_d") && (
 					<DragDropContext onDragEnd={handleDragEnd}>
 						<div className="grid grid-cols-7 mt-1 place-items-center">
 							{allDaysInMonth().map((day) => (
@@ -326,7 +329,6 @@ const EduCalendar = () => {
 							))}
 						</div>
 					</DragDropContext>
-				)}
 				
 				{/*</div>*/}
 				

@@ -341,6 +341,9 @@ const InternalPage = () => {
 					message: "Permission updated!",
 					status: 1
 				}));
+				dispatch(getAllPermissions(id));
+				setFalseIds([])
+				setTrueIds([])
 			}
 		});
 	};

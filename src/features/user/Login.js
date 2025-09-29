@@ -1,10 +1,11 @@
 import {useState} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import LandingIntro from './LandingIntro'
 import ErrorText from '../../components/Typography/ErrorText'
 import InputText from '../../components/Input/InputText'
 import {login} from "../../auth/jwtService";
 import {NotificationManager} from "react-notifications";
+import routes from "../../routes/sidebar";
 
 function Login() {
 	const navigate = useNavigate()
@@ -25,9 +26,14 @@ function Login() {
 		else {
 			setLoading(true)
 			login(loginObj)
-				.then(() => {
+				.then((res) => {
+					const userPermissions = res?.permissions;
+					
+					const firstAllowedRoute = routes.find((route) =>
+						userPermissions.includes(route.permission)
+					);
 					setTimeout(() => {
-						navigate("/app/dashboard");
+						navigate(firstAllowedRoute?.path || "/app/dashboard");
 						NotificationManager.success('Muvaffaqiyatli kirildi!', 'Success');
 					}, 200);
 				})

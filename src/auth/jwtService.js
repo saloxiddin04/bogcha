@@ -15,6 +15,7 @@ export function login(...args) {
 		setRefreshToken(res.data.refresh);
 		parseJwt(res?.data?.access)
 		setCookie("permissions", res?.data?.permissions)
+		return res.data
 	});
 }
 

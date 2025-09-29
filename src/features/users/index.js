@@ -33,24 +33,26 @@ const TopSideButtons = () => {
 	
 	return (
 		<div className="flex justify-between items-end gap-2 w-full flex-wrap">
-			<div className="flex gap-2 items-end w-full sm:w-2/3 md:w-1/3">
-				<InputText
-					type="text"
-					defaultValue={search ?? ""}
-					updateType="search"
-					labelTitle="Search"
-					updateFormValue={({value}) => searchPlan(value)}
-				/>
-				<button
-					className="btn px-6 btn-sm normal-case btn-error"
-					onClick={() => {
-						setSearch("")
-						dispatch(getUsers())
-					}}
-				>
-					<XCircleIcon className="w-6"/>
-				</button>
-			</div>
+			{hasPermission("user_ser") && (
+				<div className="flex gap-2 items-end w-full sm:w-2/3 md:w-1/3">
+					<InputText
+						type="text"
+						defaultValue={search ?? ""}
+						updateType="search"
+						labelTitle="Search"
+						updateFormValue={({value}) => searchPlan(value)}
+					/>
+					<button
+						className="btn px-6 btn-sm normal-case btn-error"
+						onClick={() => {
+							setSearch("")
+							dispatch(getUsers())
+						}}
+					>
+						<XCircleIcon className="w-6"/>
+					</button>
+				</div>
+			)}
 			{hasPermission("user_add") && (
 				<button
 					className="btn px-6 btn-sm normal-case btn-primary sm:w-auto"
