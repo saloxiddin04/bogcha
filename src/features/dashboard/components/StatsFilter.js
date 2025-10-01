@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import moment from "moment";
 import SelectBox from "../../../components/Input/SelectBox";
 import InputText from "../../../components/Input/InputText";
 import {useDispatch} from "react-redux";
@@ -18,17 +17,17 @@ const fieldConfigs = {
 	start_date: {
 		type: "date",
 		label: "Start date",
-		default: moment().subtract(1, "month").format("YYYY-MM-DD"),
+		default: null,
 	},
 	end_date: {
 		type: "date",
 		label: "End date",
-		default: moment().format("YYYY-MM-DD"),
+		default: null,
 	},
 	date_time: {
 		type: "date",
 		label: "Date time",
-		default: moment().format("YYYY-MM-DD"),
+		default: null,
 	},
 	person_type: {
 		type: "select",
@@ -130,17 +129,28 @@ const StatsFilter = ({fields, onChange, groupOptions = [], userOptions = []}) =>
 				if (cfg.type === "date" || cfg.type === "datetime-local") {
 					return (
 						<div key={f} className="form-control w-full flex items-end gap-2 flex-row">
-							<InputText
-								type={cfg.type}
-								defaultValue={filters[f]}
-								updateType={f}
-								labelTitle={cfg.label}
-								updateFormValue={handleChange}
-							/>
+							<div className="form-control w-full relative">
+								<label className="label">
+									<span className={`label-text text-base-content`}>{cfg.label}</span>
+								</label>
+								<input
+									type={cfg.type}
+									value={filters[f] || ""}
+									onChange={(e) => handleChange({updateType: f, value: e.target.value})}
+									className="input input-bordered w-full pr-2"
+								/>
+							</div>
+							{/*<InputText*/}
+							{/*	type={cfg.type}*/}
+							{/*	value={filters[f] || ""}*/}
+							{/*	updateType={f}*/}
+							{/*	labelTitle={cfg.label}*/}
+							{/*	updateFormValue={handleChange}*/}
+							{/*/>*/}
 							<button
 								type="button"
 								onClick={() => {
-									handleChange({updateType: f, value: undefined});
+									handleChange({updateType: f, value: null});
 								}}
 								className="mb-1 px-2 py-1 text-sm text-black bg-gray-200 hover:bg-gray-300 rounded"
 							>
