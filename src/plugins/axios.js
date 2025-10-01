@@ -4,10 +4,10 @@ import store from "../app/store";
 import {showNotification} from "../features/common/headerSlice";
 
 const instance = axios.create({
-	// baseURL: "https://a63801acdfd6.ngrok-free.app/api/v1", //ngrok
+	baseURL: "https://09ac667850b4.ngrok-free.app/api/v1", //ngrok
 	// baseURL: "http://95.46.96.185/api/v1", //local_server
 	// baseURL: "http://0.0.0.0:8048/api/v1", //local_server
-	baseURL: "https://barakalla.uz/api/v1", // server
+	// baseURL: "https://barakalla.uz/api/v1", // server
 	timeout: 20000,
 	
 	headers: {

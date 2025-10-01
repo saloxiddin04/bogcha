@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import {UserGroupIcon, UsersIcon, StarIcon, AcademicCapIcon, BellSlashIcon} from '@heroicons/react/24/outline'
 import {useDispatch, useSelector} from 'react-redux'
 import {
-	getGroupsForDashboard,
+	getGroupsForDashboard, getGroupsForDashboardPlan,
 	getPlanStatusStatistics,
 	getUsersAttendance,
 	getUsersCount,
@@ -53,11 +53,13 @@ function Dashboard() {
 		planStatus,
 		users,
 		groups,
+		groupsPlan
 	} = useSelector((state) => state.dashboard)
 	
 	useEffect(() => {
 		dispatch(getUsersCount())
 		dispatch(getGroupsForDashboard())
+		dispatch(getGroupsForDashboardPlan())
 		dispatch(getUsersTopByAttendance())
 	}, [dispatch])
 	
@@ -397,7 +399,7 @@ function Dashboard() {
 			<div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6">
 				<TitleCard title={"Users temperature"}>
 					<StatsFilter
-						fields={["group_id", "start_date", "end_date", "user"]}
+						fields={["come_or_went" ,"group_id", "start_date", "end_date", "user"]}
 						onChange={(filters) => dispatch(getUsersTemperature(filters))}
 						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
@@ -414,7 +416,7 @@ function Dashboard() {
 					<StatsFilter
 						fields={["group_id", "date_time", "user"]}
 						onChange={(filters) => dispatch(getPlanStatusStatistics(filters))}
-						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
+						groupOptions={groupsPlan?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Bar data={dataPlanStatus} options={options}/></div>

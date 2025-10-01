@@ -11,7 +11,7 @@ export const getRoles = createAsyncThunk(
 	"roles/getRoles",
 	async (params, thunkAPI) => {
 		try {
-			const response = await instance.get("/users/role_list/", {params})
+			const response = await instance.get("/users/role_list/?page=1&page_size=100000")
 			return response.data?.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)
@@ -36,7 +36,7 @@ export const createRole = createAsyncThunk(
 	async (payload, thunkAPI) => {
 		try {
 			const response = await instance.post("/users/role_create/", payload)
-			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
+			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10000}))
 			return response.data?.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)
@@ -49,7 +49,7 @@ export const updateRole = createAsyncThunk(
 	async (payload, thunkAPI) => {
 		try {
 			const response = await instance.patch(`/users/role_update/${payload?.id}/`, payload?.data)
-			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
+			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10000}))
 			return response.data?.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)
@@ -62,7 +62,7 @@ export const deleteRole = createAsyncThunk(
 	async (payload, thunkAPI) => {
 		try {
 			const response = await instance.delete(`/users/role_delete/${payload}/`)
-			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10}))
+			await thunkAPI.dispatch(getRoles({page: 1, page_size: 10000}))
 			return response
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e)

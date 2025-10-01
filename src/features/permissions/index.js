@@ -262,8 +262,8 @@ const PermissionItem = ({
 				<ToggleInput
 					updateType="status"
 					defaultValue={item?.is_active}
-					updateFormValue={() =>
-						handleToggleChange(item?.module?.id, item?.is_active)
+					updateFormValue={(newValue) =>
+						handleToggleChange(item?.module?.id, newValue)
 					}
 				/>
 			</div>
@@ -318,10 +318,23 @@ const InternalPage = () => {
 		}
 	};
 	
-	const handleToggleChange = (id, currentValue) => {
-		const newValue = !currentValue;
+	// const handleToggleChange = (id, currentValue) => {
+	// 	const newValue = !currentValue;
+	//
+	// 	console.log("currentValue:", currentValue, "newValue:", newValue);
+	//
+	// 	if (newValue === true) {
+	// 		setTrueIds((prev) => prev.includes(id) ? prev : [...prev, id]);
+	// 		setFalseIds((prev) => prev.filter((item) => item !== id));
+	// 	} else {
+	// 		setFalseIds((prev) => prev.includes(id) ? prev : [...prev, id]);
+	// 		setTrueIds((prev) => prev.filter((item) => item !== id));
+	// 	}
+	// };
+	
+	const handleToggleChange = (id, newValue) => {
 		
-		if (newValue === true) {
+		if (newValue?.value) {
 			setTrueIds((prev) => prev.includes(id) ? prev : [...prev, id]);
 			setFalseIds((prev) => prev.filter((item) => item !== id));
 		} else {

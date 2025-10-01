@@ -140,8 +140,7 @@ const StatsFilter = ({fields, onChange, groupOptions = [], userOptions = []}) =>
 							<button
 								type="button"
 								onClick={() => {
-									const today = moment().format("YYYY-MM-DD");
-									handleChange({updateType: f, value: today});
+									handleChange({updateType: f, value: undefined});
 								}}
 								className="mb-1 px-2 py-1 text-sm text-black bg-gray-200 hover:bg-gray-300 rounded"
 							>

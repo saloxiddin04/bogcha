@@ -12,6 +12,8 @@ const initialState = {
 	groups: null,
 	users: null,
 	
+	groupsPlan: null,
+	
 	attendanceLoading: false,
 	scoreLoading: false,
 	temperatureLoading: false,
@@ -95,6 +97,19 @@ export const getGroupsForDashboard = createAsyncThunk(
 	async (params, thunkAPI) => {
 		try {
 			const response = await instance.get('/result/dashboard/attendance_group_list/', {params})
+			// const response = await instance.get('/result/dashboard/group_list/', {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getGroupsForDashboardPlan = createAsyncThunk(
+	"dashboard/getGroupsForDashboardPlan",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get('/result/dashboard/edu_plan_group_list/', {params})
 			// const response = await instance.get('/result/dashboard/group_list/', {params})
 			return response.data
 		} catch (e) {
@@ -210,6 +225,19 @@ const dashboardSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getGroupsForDashboard.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getGroupsForDashboard
+		builder
+			.addCase(getGroupsForDashboardPlan.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getGroupsForDashboardPlan.fulfilled, (state, {payload}) => {
+				state.groupsPlan = payload
+				state.loading = false
+			})
+			.addCase(getGroupsForDashboardPlan.rejected, (state) => {
 				state.loading = false
 			})
 		

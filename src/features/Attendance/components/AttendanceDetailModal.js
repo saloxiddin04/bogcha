@@ -228,7 +228,7 @@ const AttendanceDetailModal = ({closeModal, extraObject}) => {
 				<button
 					className="btn btn-sm btn-error text-white"
 					onClick={() => deleteCurrentAttendanceDetail()}
-					disabled={hasPermission("att_d_modal_d") && !isEditMode}
+					disabled={!hasPermission("att_d_modal_d") && !isEditMode}
 				>
 					<TrashIcon className="w-6"/>
 				</button>
