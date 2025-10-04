@@ -1,7 +1,12 @@
 import React, {useState, useEffect} from "react";
 import SelectBox from "../../../components/Input/SelectBox";
 import {useDispatch} from "react-redux";
-import {getUsersForDashboard} from "../dashboardSlice";
+import {
+	getUsersForDashboard,
+	getUsersForDashboardAttendance,
+	getUsersForDashboardScore,
+	getUsersTopByAttendance
+} from "../dashboardSlice";
 
 const fieldConfigs = {
 	come_or_went: {
@@ -78,6 +83,9 @@ const StatsFilter = ({fields, onChange, groupOptions = [], userOptions = []}) =>
 				...prev,
 				user: null,
 			}));
+			dispatch(getUsersTopByAttendance({group_id: value}))
+			dispatch(getUsersForDashboardAttendance({group_id: value}))
+			dispatch(getUsersForDashboardScore({group_id: value}))
 			dispatch(getUsersForDashboard({group_id: value}));
 		}
 	};

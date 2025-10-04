@@ -35,7 +35,7 @@ const TopSideButtons = () => {
 
 const SmmPost = () => {
 	const dispatch = useDispatch()
-	const {loading, posts} = useSelector((state) => state.posts)
+	const {posts} = useSelector((state) => state.posts)
 	
 	useEffect(() => {
 		dispatch(getAllPosts())
@@ -73,7 +73,7 @@ const SmmPost = () => {
 	return (
 		<>
 			<TitleCard title="Current SMM Post" topMargin="mt-2" TopSideButtons={<TopSideButtons/>}>
-				{!hasPermission("smm_table") && (
+				{hasPermission("smm_table") && (
 					<>
 						<div className="overflow-x-auto w-full">
 							<table className="table w-full">

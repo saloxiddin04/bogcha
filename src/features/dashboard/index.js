@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {UserGroupIcon, UsersIcon, StarIcon, AcademicCapIcon, BellSlashIcon} from '@heroicons/react/24/outline'
 import {useDispatch, useSelector} from 'react-redux'
@@ -57,6 +57,8 @@ function Dashboard() {
 		attendanceUsers,
 		scoreUsers
 	} = useSelector((state) => state.dashboard)
+	
+	const [filters, setFilters] = useState(null)
 	
 	useEffect(() => {
 		dispatch(getUsersCount())
@@ -229,27 +231,30 @@ function Dashboard() {
 					}),
 				
 				// Default "come" dataset
-				{
-					label: "Default Come",
-					data: uniqueDates.map(() => attendanceData?.default?.come ?? null),
-					borderColor: "#4CAF50",
-					backgroundColor: "#4CAF50",
-					borderDash: [5, 5], // chiziqni punktir qilish
-					pointRadius: 0,
-					fill: false,
-				},
+				filters?.come_or_went === 'come' ?
+					{
+						label: "Default Come",
+						data: uniqueDates.map(() => attendanceData?.default?.come ?? null),
+						borderColor: "#4CAF50",
+						backgroundColor: "#4CAF50",
+						borderDash: [5, 5], // chiziqni punktir qilish
+						pointRadius: 0,
+						fill: false,
+					}
+				: null,
 				
-				// Default "went" dataset
-				{
-					label: "Default Went",
-					data: uniqueDates.map(() => attendanceData?.default?.went ?? null),
-					borderColor: "#F44336",
-					backgroundColor: "#F44336",
-					borderDash: [5, 5],
-					pointRadius: 0,
-					fill: false,
-				}
-			]
+				filters?.come_or_went === 'went' ?
+					{
+						label: "Default Went",
+						data: uniqueDates.map(() => attendanceData?.default?.went ?? null),
+						borderColor: "#F44336",
+						backgroundColor: "#F44336",
+						borderDash: [5, 5],
+						pointRadius: 0,
+						fill: false,
+					}
+				: null
+			].filter(Boolean)
 			: [],
 	};
 	
@@ -316,18 +321,17 @@ function Dashboard() {
 				
 				{
 					label: "From",
-					data: uniqueDates.map(() => usersTemperature?.norm?.from ?? null),
+					data: labelsUsersTemperature.map(() => usersTemperature?.norm?.from ?? null),
 					borderColor: "#4CAF50",
 					backgroundColor: "#4CAF50",
-					borderDash: [5, 5], // chiziqni punktir qilish
+					borderDash: [5, 5],
 					pointRadius: 0,
 					fill: false,
 				},
 				
-				// Default "went" dataset
 				{
 					label: "To",
-					data: uniqueDates.map(() => usersTemperature?.norm?.to ?? null),
+					data: labelsUsersTemperature.map(() => usersTemperature?.norm?.to ?? null),
 					borderColor: "#F44336",
 					backgroundColor: "#F44336",
 					borderDash: [5, 5],
@@ -337,6 +341,8 @@ function Dashboard() {
 			]
 			: [],
 	};
+	
+	console.log(labelsUsersTemperature)
 	
 	// --------- topUsersByAttendance ---------- //
 	const dataTopUsersByAttendance = {
@@ -438,7 +444,10 @@ function Dashboard() {
 				<TitleCard title={"Attendance data"}>
 					<StatsFilter
 						fields={["come_or_went", "start_date", "end_date", "person_type", "group_id", "user"]}
-						onChange={(filters) => dispatch(getUsersAttendance(filters))}
+						onChange={(filters) => {
+							dispatch(getUsersAttendance(filters))
+							setFilters(filters)
+						}}
 						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
 						userOptions={attendanceUsers?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
