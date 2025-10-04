@@ -3,11 +3,19 @@ import {NavLink, Link, useLocation} from 'react-router-dom'
 import SidebarSubmenu from './SidebarSubmenu';
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon'
 import {getCookie} from "../auth/jwtService";
+import {useEffect} from "react";
 
 function LeftSidebar() {
 	const location = useLocation();
-	
+	const {pathname} = useLocation()
 	const permissionList = getCookie("permissions")
+	
+	useEffect(() => {
+		const drawer = document.getElementById("left-sidebar-drawer");
+		if (drawer) {
+			drawer.checked = false;
+		}
+	}, [pathname]);
 	
 	const close = () => {
 		document.getElementById('left-sidebar-drawer').click()

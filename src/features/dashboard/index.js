@@ -485,7 +485,7 @@ function Dashboard() {
 						fields={["come_or_went" ,"group_id", "start_date", "end_date", "user"]}
 						onChange={(filters) => dispatch(getUsersTemperature(filters))}
 						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
-						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+						userOptions={attendanceUsers?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Line data={dataUsersTemperature} options={options}/></div>
 				</TitleCard>
