@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import SelectBox from "../../../components/Input/SelectBox";
-import InputText from "../../../components/Input/InputText";
 import {useDispatch} from "react-redux";
 import {getUsersForDashboard} from "../dashboardSlice";
 
@@ -136,7 +135,17 @@ const StatsFilter = ({fields, onChange, groupOptions = [], userOptions = []}) =>
 								<input
 									type={cfg.type}
 									value={filters[f] || ""}
-									onChange={(e) => handleChange({updateType: f, value: e.target.value})}
+									onChange={(e) => {
+										let value = e.target.value; // "2025-10-04"
+										if (value) {
+											const [year, month, day] = value.split("-");
+											const safeYear = year.slice(0, 4);
+											const fixed = [safeYear, month, day].filter(Boolean).join("-");
+											handleChange({ updateType: f, value: fixed });
+										} else {
+											handleChange({ updateType: f, value: "" });
+										}
+									}}
 									className="input input-bordered w-full pr-2"
 								/>
 							</div>

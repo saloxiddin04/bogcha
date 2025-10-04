@@ -14,6 +14,10 @@ const initialState = {
 	
 	groupsPlan: null,
 	
+	attendanceUsers: null,
+	
+	scoreUsers: null,
+	
 	attendanceLoading: false,
 	scoreLoading: false,
 	temperatureLoading: false,
@@ -123,6 +127,30 @@ export const getUsersForDashboard = createAsyncThunk(
 	async (params, thunkAPI) => {
 		try {
 			const response = await instance.get('/result/dashboard/user_list/', {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getUsersForDashboardAttendance = createAsyncThunk(
+	"dashboard/getUsersForDashboardAttendance",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get('/result/dashboard/attendance_user_list/?page=1&page_size=100000', {params})
+			return response.data
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e.response?.data || e.message)
+		}
+	}
+)
+
+export const getUsersForDashboardScore = createAsyncThunk(
+	"dashboard/getUsersForDashboardScore",
+	async (params, thunkAPI) => {
+		try {
+			const response = await instance.get('/result/dashboard/score_chart_user_list/?page=1&page_size=100000', {params})
 			return response.data
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e.response?.data || e.message)
@@ -251,6 +279,32 @@ const dashboardSlice = createSlice({
 				state.loading = false
 			})
 			.addCase(getUsersForDashboard.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getUsersForDashboardAttendance
+		builder
+			.addCase(getUsersForDashboardAttendance.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getUsersForDashboardAttendance.fulfilled, (state, {payload}) => {
+				state.attendanceUsers = payload
+				state.loading = false
+			})
+			.addCase(getUsersForDashboardAttendance.rejected, (state) => {
+				state.loading = false
+			})
+		
+		// getUsersForDashboardScore
+		builder
+			.addCase(getUsersForDashboardScore.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getUsersForDashboardScore.fulfilled, (state, {payload}) => {
+				state.scoreUsers = payload
+				state.loading = false
+			})
+			.addCase(getUsersForDashboardScore.rejected, (state) => {
 				state.loading = false
 			})
 	}

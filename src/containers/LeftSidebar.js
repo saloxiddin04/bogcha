@@ -2,18 +2,14 @@ import routes from '../routes/sidebar'
 import {NavLink, Link, useLocation} from 'react-router-dom'
 import SidebarSubmenu from './SidebarSubmenu';
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon'
-import {getCookie, hasPermission} from "../auth/jwtService";
-import {useState} from "react";
+import {getCookie} from "../auth/jwtService";
 
 function LeftSidebar() {
 	const location = useLocation();
 	
-	const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme"))
-	
 	const permissionList = getCookie("permissions")
 	
-	
-	const close = (e) => {
+	const close = () => {
 		document.getElementById('left-sidebar-drawer').click()
 	}
 	
@@ -32,7 +28,7 @@ function LeftSidebar() {
 				</li>
 				{
 					routes
-						?.filter(route => permissionList.includes(route.permission))
+						?.filter(route => permissionList?.includes(route.permission))
 						?.map((route, k) => {
 						return (
 							<li className="" key={k}>

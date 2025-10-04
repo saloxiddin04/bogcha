@@ -6,7 +6,7 @@ import {
 	getGroupsForDashboard, getGroupsForDashboardPlan,
 	getPlanStatusStatistics,
 	getUsersAttendance,
-	getUsersCount,
+	getUsersCount, getUsersForDashboardAttendance, getUsersForDashboardScore,
 	getUsersScore,
 	getUsersTemperature,
 	getUsersTopByAttendance
@@ -53,7 +53,9 @@ function Dashboard() {
 		planStatus,
 		users,
 		groups,
-		groupsPlan
+		groupsPlan,
+		attendanceUsers,
+		scoreUsers
 	} = useSelector((state) => state.dashboard)
 	
 	useEffect(() => {
@@ -61,6 +63,8 @@ function Dashboard() {
 		dispatch(getGroupsForDashboard())
 		dispatch(getGroupsForDashboardPlan())
 		dispatch(getUsersTopByAttendance())
+		dispatch(getUsersForDashboardAttendance())
+		dispatch(getUsersForDashboardScore())
 	}, [dispatch])
 	
 	const colors = [
@@ -157,41 +161,97 @@ function Dashboard() {
 		});
 	}
 	
+	// const dataAttendanceData = {
+	// 	labels: labelsAttendanceData,
+	// 	datasets: Array.isArray(attendanceData?.data)
+	// 		? attendanceData?.data
+	// 			.filter((d) => d?.user_data)
+	// 			.map((user, idx) => {
+	// 				const name = user?.user_data?.full_name || "No name";
+	// 				const userDates = user?.user_data?.date_line ?? [];
+	//
+	// 				const color = colors[idx % colors.length];
+	//
+	// 				// Har bir sana uchun soat qiymatini olish
+	// 				const dataPoints = uniqueDates.map(date => {
+	// 					// Ushbu sana uchun xodimning kirish vaqtini topish
+	// 					const timeEntry = userDates.find(d => d.startsWith(date));
+	// 					if (timeEntry) {
+	// 						// Faqat soat:minut qismini olish (HH:mm formatida)
+	// 						return timeEntry.split('T')[1].substring(0, 5); // "08:12" formatida
+	// 					}
+	// 					return null; // Agar kunga kirish bo'lmasa
+	// 				});
+	//
+	// 				return {
+	// 					label: name,
+	// 					data: dataPoints,
+	// 					borderColor: color,
+	// 					backgroundColor: color,
+	// 					pointRadius: 6,
+	// 					pointHoverRadius: 8,
+	// 					fill: false
+	// 				};
+	// 			})
+	// 		: [],
+	// };
+	
 	const dataAttendanceData = {
 		labels: labelsAttendanceData,
 		datasets: Array.isArray(attendanceData?.data)
-			? attendanceData?.data
-				.filter((d) => d?.user_data)
-				.map((user, idx) => {
-					const name = user?.user_data?.full_name || "No name";
-					const userDates = user?.user_data?.date_line ?? [];
-					
-					const color = colors[idx % colors.length];
-					
-					// Har bir sana uchun soat qiymatini olish
-					const dataPoints = uniqueDates.map(date => {
-						// Ushbu sana uchun xodimning kirish vaqtini topish
-						const timeEntry = userDates.find(d => d.startsWith(date));
-						if (timeEntry) {
-							// Faqat soat:minut qismini olish (HH:mm formatida)
-							return timeEntry.split('T')[1].substring(0, 5); // "08:12" formatida
-						}
-						return null; // Agar kunga kirish bo'lmasa
-					});
-					
-					return {
-						label: name,
-						data: dataPoints,
-						borderColor: color,
-						backgroundColor: color,
-						pointRadius: 6,
-						pointHoverRadius: 8,
-						fill: false
-					};
-				})
+			? [
+				// Foydalanuvchilar datasetlari
+				...attendanceData?.data
+					.filter((d) => d?.user_data)
+					.map((user, idx) => {
+						const name = user?.user_data?.full_name || "No name";
+						const userDates = user?.user_data?.date_line ?? [];
+						
+						const color = colors[idx % colors.length];
+						
+						const dataPoints = uniqueDates.map(date => {
+							const timeEntry = userDates.find(d => d.startsWith(date));
+							if (timeEntry) {
+								return timeEntry.split('T')[1].substring(0, 5);
+							}
+							return null;
+						});
+						
+						return {
+							label: name,
+							data: dataPoints,
+							borderColor: color,
+							backgroundColor: color,
+							pointRadius: 6,
+							pointHoverRadius: 8,
+							fill: false,
+						};
+					}),
+				
+				// Default "come" dataset
+				{
+					label: "Default Come",
+					data: uniqueDates.map(() => attendanceData?.default?.come ?? null),
+					borderColor: "#4CAF50",
+					backgroundColor: "#4CAF50",
+					borderDash: [5, 5], // chiziqni punktir qilish
+					pointRadius: 0,
+					fill: false,
+				},
+				
+				// Default "went" dataset
+				{
+					label: "Default Went",
+					data: uniqueDates.map(() => attendanceData?.default?.went ?? null),
+					borderColor: "#F44336",
+					backgroundColor: "#F44336",
+					borderDash: [5, 5],
+					pointRadius: 0,
+					fill: false,
+				}
+			]
 			: [],
 	};
-	
 	
 	// --------- usersScore ---------- //
 	const allDatesUsersScore = usersScore?.data?.find((d) => d?.all_date_line)?.all_date_line ?? [];
@@ -230,7 +290,8 @@ function Dashboard() {
 	const dataUsersTemperature = {
 		labels: labelsUsersTemperature,
 		datasets: Array.isArray(usersTemperature?.data)
-			? usersTemperature.data
+			? [
+				...usersTemperature.data
 				.filter((d) => d?.user_data)
 				.map((user, idx) => {
 					const name = user?.user_data?.full_name || "No name";
@@ -251,7 +312,29 @@ function Dashboard() {
 						backgroundColor: color,
 						tension: 0.3,
 					};
-				})
+				}),
+				
+				{
+					label: "From",
+					data: uniqueDates.map(() => usersTemperature?.norm?.from ?? null),
+					borderColor: "#4CAF50",
+					backgroundColor: "#4CAF50",
+					borderDash: [5, 5], // chiziqni punktir qilish
+					pointRadius: 0,
+					fill: false,
+				},
+				
+				// Default "went" dataset
+				{
+					label: "To",
+					data: uniqueDates.map(() => usersTemperature?.norm?.to ?? null),
+					borderColor: "#F44336",
+					backgroundColor: "#F44336",
+					borderDash: [5, 5],
+					pointRadius: 0,
+					fill: false,
+				}
+			]
 			: [],
 	};
 	
@@ -357,7 +440,7 @@ function Dashboard() {
 						fields={["come_or_went", "start_date", "end_date", "person_type", "group_id", "user"]}
 						onChange={(filters) => dispatch(getUsersAttendance(filters))}
 						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
-						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+						userOptions={attendanceUsers?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Line data={dataAttendanceData} options={{
 						responsive: true,
@@ -389,8 +472,8 @@ function Dashboard() {
 					<StatsFilter
 						fields={["group_id", "start_date", "end_date", "user"]}
 						onChange={(filters) => dispatch(getUsersScore(filters))}
-						groupOptions={groups?.data?.map((el) => ({label: el?.title, value: el?.id}))}
-						userOptions={users?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
+						groupOptions={groupsPlan?.data?.map((el) => ({label: el?.title, value: el?.id}))}
+						userOptions={scoreUsers?.data?.map((el) => ({label: el?.full_name, value: el?.id}))}
 					/>
 					<div className="w-full h-72"><Line data={dataUsersScore} options={options}/></div>
 				</TitleCard>
